@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_small"
+    tools:context="com.example.arthur.redcup.LoginActivity">
+
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="383dp"
+        android:layout_height="80dp"
+        android:inputType="textEmailAddress"
+        android:layout_marginBottom="211dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/space"
+        android:textColor="@color/white"
+        />
+
+    <EditText
+        android:id="@+id/pass"
+        android:layout_width="383dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="150dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/space"
+        android:textColor="@color/white"
+        android:inputType="textPassword"
+        />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/name"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/button_login"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_centerHorizontal="true"
+        android:text="Login"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp"
+        android:background="@color/RedCup"
+        android:textColor="@color/white"
+        />
+
+
+    <Button
+        android:id="@+id/button_register"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_centerHorizontal="true"
+        android:text="Register"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:background="@color/CinzaRedCup"
+        android:textColor="@color/white"
+
+        />
+
+
+</RelativeLayout>
