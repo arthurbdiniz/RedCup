@@ -94,6 +94,8 @@ public class NavigationActivity extends AppCompatActivity
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
+            startActivity(new Intent(NavigationActivity.this, MainActivity.class));
+
 
         } else if (id == R.id.nav_share) {
 

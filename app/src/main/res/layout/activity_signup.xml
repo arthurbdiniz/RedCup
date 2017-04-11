@@ -31,7 +31,8 @@
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -62,7 +63,7 @@
             android:layout_marginTop="16dp"
             android:background="@color/colorAccent"
             android:text="@string/action_sign_in_short"
-            android:textColor="@android:color/black"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
         <Button
