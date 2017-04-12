@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -99,6 +100,24 @@ public class NavigationActivity extends AppCompatActivity
                 public void onCancelled(DatabaseError databaseError) {
 
                 }
+        });
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent goTicket = new  Intent(getApplicationContext(), TicketActivity.class);
+                //UserClass userClassCalled = (UserClass) listView.getItemAtPosition(position);
+                //goClass.putExtra("Class", userClassCalled);
+
+                startActivity(goTicket);
+
+                //UserClass userClasses= userClasses.get(position);
+
+                //Snackbar.make(view, dataModel.getName()+"\n"+dataModel.getType()+" API: "+dataModel.getVersion_number(), Snackbar.LENGTH_LONG)
+                //        .setAction("No action", null).show();
+            }
         });
 
 
