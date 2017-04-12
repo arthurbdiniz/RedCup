@@ -4,11 +4,11 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_insert_ticket"
             android:title="Inserir Ticket" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_tickets"
             android:title="Tickets" />
         <item
             android:id="@+id/nav_manage"
@@ -16,15 +16,16 @@
             android:title="Minha Conta" />
         <item
             android:id="@+id/nav_slideshow"
+            android:icon="@drawable/ic_people"
             android:title="Fale Conosco" />
     </group>
 
     <item android:title="Comunicação">
         <menu>
-
             <item
 
                 android:id="@+id/nav_dividas_frequentes"
+                android:icon="@drawable/ic_help"
                 android:title="Dúvidas Frequentes" />
             <item
                 android:id="@+id/nav_share"

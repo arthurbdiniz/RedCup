@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -17,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -70,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = inputEmail.getText().toString();
+                final String email = inputEmail.getText().toString();
                 final String password = inputPassword.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
@@ -102,6 +104,20 @@ public class LoginActivity extends AppCompatActivity {
                                         Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                                     }
                                 } else {
+                                    //User user = new User(auth.getCurrentUser().toString(),"", email, password);
+                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                    if (user != null) {
+                                        // Name, email address, and profile photo Url
+                                        String name = user.getDisplayName();
+                                        String email = user.getEmail();
+                                        //Uri photoUrl = user.getPhotoUrl();
+
+                                        // Check if user's email is verified
+                                        //boolean emailVerified = user.isEmailVerified();
+
+                                        String uid = user.getUid();
+                                        Toast.makeText(LoginActivity.this, uid, Toast.LENGTH_LONG).show();
+                                    }
                                     Intent intent = new Intent(LoginActivity.this, NavigationActivity.class);
                                     startActivity(intent);
                                     finish();
@@ -111,4 +127,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
