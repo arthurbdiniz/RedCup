@@ -1,5 +1,10 @@
-package com.example.arthur.redcup;
+package com.example.arthur.redcup.View;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -8,8 +13,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.arthur.redcup.Model.User;
+import com.example.arthur.redcup.R;
+import com.example.arthur.redcup.Model.Ticket;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,12 +39,44 @@ public class CreateTicketActivity extends AppCompatActivity {
     private EditText price;
     private EditText CPF;
     private Button buttonSend;
-
+    private ImageButton buttonCamera;
+    private Intent intentRecover;
+    private FirebaseAuth.AuthStateListener authListener;
+    private User userLog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_ticket);
+
+        //get current user
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    // user auth state is changed - user is null
+                    // launch login activity
+                    startActivity(new Intent(CreateTicketActivity.this, LoginActivity.class));
+                    finish();
+                }
+            }
+        };
+
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            //String name = user.getDisplayName();
+            String email = user.getEmail();
+            String uid = user.getUid();
+            //Uri photoUrl = user.getPhotoUrl();
+
+            userLog = new User(uid, email);
+
+        }
+
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_create_ticket);
         setSupportActionBar(toolbar);
@@ -50,6 +93,7 @@ public class CreateTicketActivity extends AppCompatActivity {
         description = (EditText)findViewById(R.id.edit_text_description);
         price = (EditText) findViewById(R.id. editTextPrice);
         CPF = (EditText) findViewById(R.id.editTextCEP);
+        buttonCamera = (ImageButton) findViewById(R.id.camera_btn);
 
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,18 +103,34 @@ public class CreateTicketActivity extends AppCompatActivity {
                 String descriptionStr = description.getText().toString();
                 String priceStr = price.getText().toString();
                 String CEP_Str = CPF.getText().toString();
-
+                String userId = userLog.getId();
+                String userEmail = userLog.getEmail();
+                //Snackbar.make(v, userEmail  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
                 // Check for already existed userId
                 //if (TextUtils.isEmpty(userId)) {
-                    if(createUser(nameStr, descriptionStr, priceStr, CEP_Str)){
-                        onBackPressed();
+                    if(createTicket(nameStr, descriptionStr, priceStr, CEP_Str, userId, userEmail)){
+                        Snackbar.make(v, "Ticket criado com sucesso", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        //onBackPressed();
+                        finish();
                     }
                // } else {
                   //  updateUser(nameStr, descriptionStr, priceStr, CEP_Str);
                 //}
             }
         });
+
+        buttonCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                startActivityForResult(Intent.createChooser(intent, "Selecione uma imagem"), 123);
+                ;
+            }
+        });
+
 
         mFirebaseInstance = FirebaseDatabase.getInstance();
         mFirebaseDatabase = mFirebaseInstance.getReference("tickets");
@@ -105,7 +165,7 @@ public class CreateTicketActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean createUser(String title, String description, String price, String CEP) {
+    private boolean createTicket(String title, String description, String price, String CEP, String userId, String userEmail) {
         // TODO
         // In real apps this userId should be fetched
         // by implementing firebase auth
@@ -113,7 +173,7 @@ public class CreateTicketActivity extends AppCompatActivity {
             ticketId = mFirebaseDatabase.push().getKey();
         }
 
-        Ticket user = new Ticket(title, description, price, CEP);
+        Ticket user = new Ticket(title, description, price, CEP, userId, userEmail);
 
         mFirebaseDatabase.child(ticketId).setValue(user);
 
@@ -122,10 +182,22 @@ public class CreateTicketActivity extends AppCompatActivity {
     }
 
 
+
+    //Store the Galerry Image
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == Activity.RESULT_OK){
+            if(requestCode == 123){
+                Uri imagemSelecionada = data.getData();
+
+            }
+        }
+    }
+
+
     private void addUserChangeListener() {
         // Ticket data change listener
         mFirebaseDatabase.child(ticketId).addValueEventListener(new ValueEventListener() {
-            public static final String TAG = "sadasd";
+            public static final String TAG = "Create Ticket Activity";
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -158,7 +230,7 @@ public class CreateTicketActivity extends AppCompatActivity {
     }
 
 
-    private void updateUser(String title, String description, String price, String CEP) {
+    private void updateUser(String title, String description, String price, String CEP, String userId, String userEmail) {
         // updating the user via child nodes
         if (!TextUtils.isEmpty(title))
             mFirebaseDatabase.child(ticketId).child("title").setValue(title);
@@ -172,7 +244,16 @@ public class CreateTicketActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(CEP))
             mFirebaseDatabase.child(ticketId).child("CEP").setValue(CEP);
 
+        if (!TextUtils.isEmpty(userId))
+            mFirebaseDatabase.child(ticketId).child("userId").setValue(userId);
+
+        if (!TextUtils.isEmpty(userEmail))
+            mFirebaseDatabase.child(ticketId).child("userEmail").setValue(userEmail);
+
     }
+
+
+
 
 
 }

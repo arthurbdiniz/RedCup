@@ -1,19 +1,18 @@
-package com.example.arthur.redcup;
+package com.example.arthur.redcup.View;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.arthur.redcup.Model.User;
+import com.example.arthur.redcup.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -26,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private ProgressBar progressBar;
     private Button btnSignup, btnLogin, btnReset;
+    private User userLog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +42,6 @@ public class LoginActivity extends AppCompatActivity {
         // set the view now
         setContentView(R.layout.activity_login);
 
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
 
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
@@ -93,11 +91,10 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 // If sign in fails, display a message to the user. If sign in succeeds
-                                // the auth state listener will be notified and logic to handle the
-                                // signed in user can be handled in the listener.
+
                                 progressBar.setVisibility(View.GONE);
                                 if (!task.isSuccessful()) {
-                                    // there was an error
+                                    // There was an error
                                     if (password.length() < 6) {
                                         inputPassword.setError(getString(R.string.minimum_password));
                                     } else {
@@ -108,18 +105,22 @@ public class LoginActivity extends AppCompatActivity {
                                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                     if (user != null) {
                                         // Name, email address, and profile photo Url
-                                        String name = user.getDisplayName();
+                                        //String name = user.getDisplayName();
                                         String email = user.getEmail();
+                                        String uid = user.getUid();
                                         //Uri photoUrl = user.getPhotoUrl();
 
                                         // Check if user's email is verified
                                         //boolean emailVerified = user.isEmailVerified();
 
-                                        String uid = user.getUid();
-                                        Toast.makeText(LoginActivity.this, uid, Toast.LENGTH_LONG).show();
+                                       userLog = new User(uid, email);
+
                                     }
-                                    Intent intent = new Intent(LoginActivity.this, NavigationActivity.class);
-                                    startActivity(intent);
+
+                                    Intent goNavigation = new  Intent(getApplicationContext(), NavigationActivity.class);
+                                    goNavigation.putExtra("User", userLog);
+                                    startActivity(goNavigation);
+
                                     finish();
                                 }
                             }

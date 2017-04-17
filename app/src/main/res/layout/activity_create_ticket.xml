@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.arthur.redcup.CreateTicketActivity"
+    tools:context="com.example.arthur.redcup.View.CreateTicketActivity"
 
     android:background="@drawable/background_create_class"
 
@@ -37,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="180dp"
         android:hint="Ticket Title"
+        android:inputType="text"
 
         />
 
@@ -46,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/edit_text_title"
         android:layout_marginTop="10dp"
-
+        android:inputType="text"
         android:hint="Ticket Description"
         />
 
@@ -62,11 +63,23 @@
          />
 
     <EditText
+
+        android:id="@+id/editTextTelephone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Telephone"
+        android:inputType="number"
+        android:layout_below="@+id/editTextPrice"
+        android:layout_marginTop="10dp"
+        />
+
+    <EditText
         android:id="@+id/editTextCEP"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="CEP"
-        android:layout_below="@+id/editTextPrice"
+        android:inputType="numberSigned"
+        android:layout_below="@+id/editTextTelephone"
         android:layout_marginTop="10dp"
 
          />
@@ -85,16 +98,14 @@
         />
 
     <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="100dp"
+        android:id="@+id/camera_btn"
+        android:layout_width="match_parent"
         android:layout_height="100dp"
-
+        android:background="@color/CinzaEscuro"
         android:layout_below="@+id/appBarLayout"
-
-        android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
         app:srcCompat="@android:drawable/ic_menu_camera"
-        android:layout_marginLeft="10dp" />
+        />
 
 
     android:inputType="numberDecimal" />

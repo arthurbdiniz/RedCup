@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.arthur.redcup.TicketActivity"
-    android:background="@drawable/background_create_class">
+    tools:context="com.example.arthur.redcup.View.TicketActivity"
+    android:background="@drawable/background_create_class"
+    android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -29,12 +30,61 @@
 
 
     <TextView
+        android:id="@+id/text_view_ticket_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Descricao do Ticket"
-        android:textSize="40dp"
-        android:layout_marginTop="200dp"
+        android:text="Title"
+        android:textSize="30dp"
+        android:layout_marginTop="20dp"
+        />
+
+    <TextView
+        android:id="@+id/text_view_ticket_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        android:textSize="30dp"
+        android:layout_marginTop="30dp"
+        />
+
+    <TextView
+        android:id="@+id/text_view_ticket_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Price"
+        android:textSize="30dp"
+        android:layout_marginTop="30dp"
+        />
+    <TextView
+        android:id="@+id/text_view_ticket_user_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="E-mail"
+        android:textSize="30dp"
+        android:layout_marginTop="30dp"
+        />
+
+    <TextView
+        android:id="@+id/text_view_ticket_user_telephone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Telephone"
+        android:textSize="30dp"
+        android:layout_marginTop="30dp"
+        />
+
+    <Button
+        android:id="@+id/button_delete_ticket"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/RedCup"
+        android:text="Delete Ticket"
+        android:textColor="@color/white"
         />
 
 
-</RelativeLayout>
+
+
+
+</LinearLayout>
