@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.arthur.redcup.View.TicketActivity"
+    android:background="@drawable/background_create_class"
+    android:orientation="vertical">
+
+    
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:id="@+id/appBarLayout"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_ticket"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:background="@color/CinzaRedCup"
+                />
+
+            <TextView
+                android:id="@+id/text_view_ticket_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Title"
+                android:textSize="25dp"
+
+                />
+
+            <TextView
+                android:id="@+id/text_view_ticket_price"
+                android:layout_marginLeft="220dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="R$"
+                android:textSize="20dp"
+                android:textColor="@color/colorPrimary"
+
+                />
+
+            <TextView
+                android:id="@+id/text_view_ticket_date_created"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Criação:"
+                android:textSize="15dp"
+                />
+
+
+            <TextView
+                    android:id="@+id/text_view_ticket_date_expiration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vencimento:"
+                    android:textSize="15dp"
+                    />
+
+
+
+            <!--Divider-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/CinzaRedCup"
+                android:layout_marginTop="8dp"/>
+
+            <!--Categoria e Codigo ticket-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="5dp">
+
+
+                <TextView
+                    android:id="@+id/text_view_ticket_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Categoria:"
+                    android:textSize="15dp"
+
+                    />
+
+                <TextView
+                    android:id="@+id/text_view_ticket_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cód do Ticket:"
+                    android:textSize="15dp"
+                    android:layout_marginTop="10dp"
+                    />
+
+            </LinearLayout>
+
+            <!--Devider-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/CinzaRedCup"
+                android:layout_marginTop="8dp"/>
+
+            <!--Description-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/text_view_ticket_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Description Text comes here"
+                    android:textSize="15dp"
+                    android:layout_marginTop="5dp"/>
+
+            </LinearLayout>
+
+            <!--Devider-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/CinzaRedCup"
+                android:layout_marginTop="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="5dp">
+
+                <!--UserField-->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Anunciante"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/text_view_ticket_user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nome:"
+                    android:textSize="15dp"
+                    android:layout_marginTop="10dp"/>
+
+                <TextView
+                    android:id="@+id/text_view_ticket_user_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="E-mail:"
+                    android:textSize="15dp"
+                    android:layout_marginTop="10dp"/>
+
+                <TextView
+                    android:id="@+id/text_view_ticket_user_telephone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Telefone:"
+                    android:textSize="15dp"
+                    android:layout_marginTop="10dp"/>
+
+                <TextView
+                    android:id="@+id/text_view_ticket_user_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cód Anunciante:"
+                    android:textSize="15dp"
+                    android:layout_marginTop="10dp"
+                    />
+
+                <Button
+                    android:id="@+id/button_delete_ticket"
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/RedCup"
+                    android:text="Delete Ticket"
+                    android:textColor="@color/white"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
