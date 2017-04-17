@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "960802857280",
+    "firebase_url": "https://red-cup.firebaseio.com",
+    "project_id": "red-cup",
+    "storage_bucket": "red-cup.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:960802857280:android:a9397f19d19c85df",
+        "android_client_info": {
+          "package_name": "com.example.arthur.redcup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "960802857280-ocfratuo9bfrli95fq1ptollvnsrl9uo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.arthur.redcup",
+            "certificate_hash": "2fec153e186c85aaad4c7820dbef9b61552cb3e1"
+          }
+        },
+        {
+          "client_id": "960802857280-mbv1im7bgvr480cmuh4971ifl3c40l4h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvn21JPCjmHurENVgyUVLsPLHK19B5luo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "960802857280-mbv1im7bgvr480cmuh4971ifl3c40l4h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

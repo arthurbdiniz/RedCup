@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
 
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,64 +7,106 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_small"
-    tools:context="com.example.arthur.redcup.LoginActivity">
+    android:fitsSystemWindows="true"
+    tools:context="com.example.arthur.redcup.View.LoginActivity">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/name"
+            />
 
 
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="383dp"
-        android:layout_height="80dp"
-        android:inputType="textEmailAddress"
-        android:layout_marginBottom="211dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/space"
-        android:textColor="@color/white"
-        />
 
-    <EditText
-        android:id="@+id/pass"
-        android:layout_width="383dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="150dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/space"
-        android:textColor="@color/white"
-        android:inputType="textPassword"
-        />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/name"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:id="@+id/button_login"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_centerHorizontal="true"
-        android:text="Login"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80dp"
-        android:background="@color/RedCup"
-        android:textColor="@color/white"
-        />
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
 
-    <Button
-        android:id="@+id/button_register"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_centerHorizontal="true"
-        android:text="Register"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
-        android:background="@color/CinzaRedCup"
-        android:textColor="@color/white"
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="10dp"
+                android:hint="@string/hint_email"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/white"
+                android:textColorHint="@android:color/white"
+                android:background="@color/whiteaAlpha"/>
+        </android.support.design.widget.TextInputLayout>
 
-        />
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="10dp"
+                android:hint="@string/hint_password"
+                android:inputType="textPassword"
+                android:textColor="@color/white"
+                android:textColorHint="@android:color/white"
+                android:background="@color/whiteaAlpha"/>
+        </android.support.design.widget.TextInputLayout>
 
 
-</RelativeLayout>
+
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:text="Login"
+            android:background="@color/RedCup"
+            android:textColor="@color/white"/>
+
+        <Button
+            android:id="@+id/btn_reset_password"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:background="@null"
+            android:text="@string/btn_forgot_password"
+            android:textAllCaps="false"
+            android:textColor="@color/colorAccent"
+            />
+
+
+        <Button
+            android:id="@+id/btn_signup"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+
+            android:background="@null"
+            android:text="@string/btn_link_to_register"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="15dp" />
+
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="325dp"
+        android:visibility="gone" />
+
+
+</android.support.design.widget.CoordinatorLayout>
