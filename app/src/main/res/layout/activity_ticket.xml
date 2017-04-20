@@ -201,6 +201,31 @@
                     />
 
                 <Button
+
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/RedCup"
+                    android:text="Call"
+                    android:onClick="makePhoneCall"
+                    android:textColor="@color/white"
+                    />
+
+                <Button
+
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/RedCup"
+                    android:text="SMS"
+                    android:onClick="sendSMS"
+                    android:textColor="@color/white"
+                    />
+
+
+
+
+                <Button
                     android:id="@+id/button_delete_ticket"
                     android:layout_marginTop="20dp"
                     android:layout_width="match_parent"

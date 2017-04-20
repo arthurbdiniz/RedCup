@@ -78,7 +78,7 @@ public class CreateTicketActivity extends AppCompatActivity  {
     private EditText description;
     private EditText price;
     private EditText telephone;
-    private EditText CPF;
+    private EditText CEP;
 
     private TextView expirationDateView;
     private TextView expirationTimeView;
@@ -164,20 +164,27 @@ public class CreateTicketActivity extends AppCompatActivity  {
         getSupportActionBar().setTitle("Inserir Ticket");
 
 
-        buttonSend = (Button)findViewById(R.id.button_enviar);
-
         nameTicket = (EditText) findViewById(R.id.edit_text_title);
         description = (EditText)findViewById(R.id.edit_text_description);
         price = (EditText) findViewById(R.id. editTextPrice);
-        CPF = (EditText) findViewById(R.id.editTextCEP);
+        CEP = (EditText) findViewById(R.id.editTextCEP);
+        telephone = (EditText) findViewById(R.id.editTextTelephone);
+
         buttonCamera = (ImageButton) findViewById(R.id.camera_btn);
+
+        buttonSend = (Button)findViewById(R.id.button_enviar);
         buttonCategory = (Button) findViewById(R.id.button_category);
         buttonDate = (Button) findViewById(R.id.button_date);
 
         expirationDateView = (TextView) findViewById(R.id.text_view_event_date);
         expirationTimeView = (TextView) findViewById(R.id.text_view_event_time);
 
-        telephone = (EditText) findViewById(R.id.editTextTelephone);
+
+
+        //************************************//
+        //           FORMACTS TELEPHONE       //
+        //************************************//
+
         telephone.addTextChangedListener(new PhoneNumberFormattingTextWatcher() {
             //we need to know if the user is erasing or inputing some new character
             private boolean backspacingFlag = false;
@@ -216,11 +223,11 @@ public class CreateTicketActivity extends AppCompatActivity  {
                     //we start verifying the worst case, many characters mask need to be added
                     //example: 999999999 <- 6+ digits already typed
                     // masked: (999) 999-999
-                    if (phone.length() >= 6 && !backspacingFlag) {
+                    if (phone.length() >= 7 && !backspacingFlag) {
                         //we will edit. next call on this textWatcher will be ignored
                         editedFlag = true;
                         //here is the core. we substring the raw digits and add the mask as convenient
-                        String ans = "(" + phone.substring(0, 3) + ") " + phone.substring(3,6) + "-" + phone.substring(6);
+                        String ans = "(" + phone.substring(0, 2) + ") " + phone.substring(2,7) + "-" + phone.substring(7);
                         telephone.setText(ans);
                         //we deliver the cursor to its original position relative to the end of the string
                         telephone.setSelection(telephone.getText().length()-cursorComplement);
@@ -228,9 +235,9 @@ public class CreateTicketActivity extends AppCompatActivity  {
                         //we end at the most simple case, when just one character mask is needed
                         //example: 99999 <- 3+ digits already typed
                         // masked: (999) 99
-                    } else if (phone.length() >= 3 && !backspacingFlag) {
+                    } else if (phone.length() >= 2 && !backspacingFlag) {
                         editedFlag = true;
-                        String ans = "(" +phone.substring(0, 3) + ") " + phone.substring(3);
+                        String ans = "(" +phone.substring(0, 2) + ") " + phone.substring(2);
                         telephone.setText(ans);
                         telephone.setSelection(telephone.getText().length()-cursorComplement);
                     }
@@ -242,6 +249,72 @@ public class CreateTicketActivity extends AppCompatActivity  {
         });
 
 
+        //************************************//
+        //             FORMACTS CEP           //
+        //************************************//
+        CEP.addTextChangedListener(new PhoneNumberFormattingTextWatcher() {
+            //we need to know if the user is erasing or inputing some new character
+            private boolean backspacingFlag = false;
+            //we need to block the :afterTextChanges method to be called again after we just replaced the EditText text
+            private boolean editedFlag = false;
+            //we need to mark the cursor position and restore it after the edition
+            private int cursorComplement;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //we store the cursor local relative to the end of the string in the EditText before the edition
+                cursorComplement = s.length()-telephone.getSelectionStart();
+                //we check if the user ir inputing or erasing a character
+                if (count > after) {
+                    backspacingFlag = true;
+                } else {
+                    backspacingFlag = false;
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // nothing to do here =D
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String string = s.toString();
+                //what matters are the phone digits beneath the mask, so we always work with a raw string with only digits
+                String phone = string.replaceAll("[^\\d]", "");
+
+                //if the text was just edited, :afterTextChanged is called another time... so we need to verify the flag of edition
+                //if the flag is false, this is a original user-typed entry. so we go on and do some magic
+                if (!editedFlag) {
+
+                    //we start verifying the worst case, many characters mask need to be added
+                    //example: 999999999 <- 6+ digits already typed
+                    // masked: (999) 999-999
+                    if (phone.length() >= 5 && !backspacingFlag) {
+                        //we will edit. next call on this textWatcher will be ignored
+                        editedFlag = true;
+                        //here is the core. we substring the raw digits and add the mask as convenient
+                        String ans =  phone.substring(0,5) + "-" + phone.substring(5);
+                        CEP.setText(ans);
+                        //we deliver the cursor to its original position relative to the end of the string
+                        CEP.setSelection(CEP.getText().length());
+
+                        //we end at the most simple case, when just one character mask is needed
+                        //example: 99999 <- 3+ digits already typed
+                        // masked: (999) 99
+                    }
+                    // We just edited the field, ignoring this cicle of the watcher and getting ready for the next
+                } else {
+                    editedFlag = false;
+                }
+            }
+        });
+
+
+
+
+
+
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
@@ -250,7 +323,7 @@ public class CreateTicketActivity extends AppCompatActivity  {
                 String nameStr = nameTicket.getText().toString();
                 String descriptionStr = description.getText().toString();
                 String priceStr = price.getText().toString();
-                String CEP_Str = CPF.getText().toString();
+                String CEP_Str = CEP.getText().toString();
                 String userId = userLog.getId();
                 String userEmail = userLog.getEmail();
                 String userTelephone = telephone.getText().toString();
@@ -280,7 +353,7 @@ public class CreateTicketActivity extends AppCompatActivity  {
 //                Log.i("data_completa", data_completa);
 //                Log.i("data_atual", data_atual.toString());
 //                Log.i("hora_atual", hora_atual);
-                addNotification("Ticket para Expirar", "Seu ticket esta para expirar, reanuncie ou pague para vende mais rapido");
+                //addNotification("Ticket para Expirar", "Seu ticket esta para expirar, reanuncie ou pague para vende mais rapido");
 
                 // Check for already existed userId
                 //if (TextUtils.isEmpty(userId)) {
@@ -473,24 +546,71 @@ public class CreateTicketActivity extends AppCompatActivity  {
 
     }
 
-/*****************************************CAMERA*****************************************************/
 
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if(userChoosenTask.equals("Take Photo"))
-                        cameraIntent();
-                    else if(userChoosenTask.equals("Choose from Library"))
-                        galleryIntent();
-                } else {
-                    //code for deny
-                }
-                break;
-        }
+    //********************************//
+    //               CAMERA           //
+    //********************************//
+
+
+
+//    //Store the Galerry Image
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if(resultCode == Activity.RESULT_OK){
+//            if(requestCode == 123){
+//                Uri imagemSelecionada = data.getData();
+//                buttonCamera.setImageURI(imagemSelecionada);
+//
+//            }
+//        }
+//
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode == Activity.RESULT_OK) {
+//            if (requestCode == SELECT_FILE)
+//                onSelectFromGalleryResult(data);
+//            else if (requestCode == REQUEST_CAMERA)
+//                onCaptureImageResult(data);
+//        }
+//
+//
+//    }
+
+
+    //
+//    private void takePhoto(){
+//        final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(this)) );
+//        startActivityForResult(intent, TAKE_PHOTO_CODE);
+//    }
+
+
+//    private File getTempFile(Context context){
+//        //it will return /sdcard/image.tmp
+//        final File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName() );
+//        if(!path.exists()){
+//            path.mkdir();
+//        }
+//        return new File(path, "image.tmp");
+//    }
+
+
+
+
+@Override
+public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    switch (requestCode) {
+        case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if(userChoosenTask.equals("Take Photo"))
+                    cameraIntent();
+                else if(userChoosenTask.equals("Choose from Library"))
+                    galleryIntent();
+            } else {
+                //code for deny
+            }
+            break;
     }
+}
 
 
 
@@ -532,46 +652,6 @@ public class CreateTicketActivity extends AppCompatActivity  {
                 onCaptureImageResult(data);
         }
     }
-
-
-//    //Store the Galerry Image
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if(resultCode == Activity.RESULT_OK){
-//            if(requestCode == 123){
-//                Uri imagemSelecionada = data.getData();
-//                buttonCamera.setImageURI(imagemSelecionada);
-//
-//            }
-//        }
-//
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == Activity.RESULT_OK) {
-//            if (requestCode == SELECT_FILE)
-//                onSelectFromGalleryResult(data);
-//            else if (requestCode == REQUEST_CAMERA)
-//                onCaptureImageResult(data);
-//        }
-//
-//
-//    }
-
-
-    //
-//    private void takePhoto(){
-//        final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(this)) );
-//        startActivityForResult(intent, TAKE_PHOTO_CODE);
-//    }
-
-
-//    private File getTempFile(Context context){
-//        //it will return /sdcard/image.tmp
-//        final File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName() );
-//        if(!path.exists()){
-//            path.mkdir();
-//        }
-//        return new File(path, "image.tmp");
-//    }
 
 
     @SuppressWarnings("deprecation")

@@ -1,6 +1,10 @@
 package com.example.arthur.redcup.View;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -20,6 +24,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.support.v7.widget.SearchView;
 
 import com.example.arthur.redcup.Model.User;
 import com.example.arthur.redcup.R;
@@ -36,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -45,6 +52,7 @@ public class NavigationActivity extends AppCompatActivity
     private User userLog;
     private FirebaseAuth.AuthStateListener authListener;
     private ProgressBar progressBar;
+    private TextView navUserTextView;
 
     public ArrayList<Ticket> listTickets;
     @Override
@@ -82,7 +90,7 @@ public class NavigationActivity extends AppCompatActivity
 
         }
 
-        setTitle(userLog.getEmail());
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -107,6 +115,12 @@ public class NavigationActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        View header=navigationView.getHeaderView(0);
+
+        navUserTextView = (TextView) header.findViewById(R.id.text_view_user_nav_name);
+        navUserTextView.setText(userLog.email);
+
         navigationView.setNavigationItemSelectedListener(this);
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("tickets");
@@ -180,10 +194,39 @@ public class NavigationActivity extends AppCompatActivity
         }
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+       // getMenuInflater().inflate(R.menu.menu_navigation, menu);
         getMenuInflater().inflate(R.menu.navigation, menu);
+
+        MenuItem searchViewItem = menu.findItem(R.id.action_search);
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) searchViewItem.getActionView();
+        searchView.setQueryHint("Search");
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false);// Do not iconify the widget; expand it by defaul
+
+        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+            public boolean onQueryTextChange(String newText) {
+                // This is your adapter that will be filtered
+                Toast.makeText(getApplicationContext(),"textChanged :"+newText,Toast.LENGTH_LONG).show();
+
+                return true;
+            }
+
+            public boolean onQueryTextSubmit(String query) {
+                // **Here you can get the value "query" which is entered in the search box.**
+
+                Toast.makeText(getApplicationContext(),"searchvalue :"+query,Toast.LENGTH_LONG).show();
+
+                return true;
+            }
+        };
+        searchView.setOnQueryTextListener(queryTextListener);
         return true;
     }
 
@@ -192,13 +235,14 @@ public class NavigationActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_search: // should I need to add intent ?
+
+                return true;
+
+
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -222,7 +266,22 @@ public class NavigationActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
+            //Share with friends
+            try {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "RedCup");
+                String sAux = "\nDeixa eu te recomendar este aplicatico\n\n";
+                sAux = sAux + "https://play.google.com/store/apps/details?id=fga.mds.gpp&hl=en\n\n";
+                i.putExtra(Intent.EXTRA_TEXT, sAux);
+                startActivity(Intent.createChooser(i, "choose one"));
+            } catch(Exception e) {
+                //e.toString();
+            }
+
         } else if (id == R.id.nav_send) {
+            //Use Terms
+            onClickWhatsApp(mListView);
 
         }
 
@@ -230,6 +289,31 @@ public class NavigationActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public void onClickWhatsApp(View view) {
+
+        PackageManager pm=getPackageManager();
+        try {
+
+            Intent waIntent = new Intent(Intent.ACTION_SEND);
+            waIntent.setType("text/plain");
+            String text = "YOUR TEXT HERE";
+
+            PackageInfo info=pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
+            //Check if package exists or not. If not then code
+            //in catch block will be called
+            waIntent.setPackage("com.whatsapp");
+
+            waIntent.putExtra(Intent.EXTRA_TEXT, text);
+            startActivity(Intent.createChooser(waIntent, "Share with"));
+
+        } catch (PackageManager.NameNotFoundException e) {
+            Toast.makeText(this, "WhatsApp not Installed", Toast.LENGTH_SHORT)
+                    .show();
+        }
+
+    }
+
 
     private void collectPhoneNumbers(Map<String,Object> users) {
         List<Ticket> tickets = new ArrayList  <Ticket>();

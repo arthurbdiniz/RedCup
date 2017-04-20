@@ -1,13 +1,23 @@
 package com.example.arthur.redcup.View;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.arthur.redcup.Model.Ticket;
@@ -24,15 +34,24 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import android.support.v7.widget.ShareActionProvider;
+import android.widget.Toast;
+
 public class TicketActivity extends AppCompatActivity {
 
     private Ticket userTicket;
     private TextView textViewTitle, textViewDescription, textViewPrice, textViewUserEmail, textViewTelephone,
-                            textViewTicketId, textViewCategory, textViewDateCreation, textViewDateExpiration, textViewUserId;
+            textViewTicketId, textViewCategory, textViewDateCreation, textViewDateExpiration, textViewUserId;
 
     private Button deleteTicketButton;
+
     private FirebaseAuth.AuthStateListener authListener;
     private User userLog;
+    private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 1;
+
+
+    private ShareActionProvider mShareActionProvider;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,10 +113,11 @@ public class TicketActivity extends AppCompatActivity {
 
         deleteTicketButton = (Button) findViewById(R.id.button_delete_ticket);
 
+
         textViewTitle.setText(userTicket.title);
         textViewDescription.setText(userTicket.description);
         textViewPrice.append(userTicket.price);
-        textViewUserEmail.append(" "+ userTicket.userEmail);
+        textViewUserEmail.append(" " + userTicket.userEmail);
         textViewTicketId.append(" " + userTicket.ticketId);
         textViewDateCreation.append(" " + userTicket.dateCreation);
         textViewDateExpiration.append(" " + userTicket.dateExpiration);
@@ -106,9 +126,9 @@ public class TicketActivity extends AppCompatActivity {
         //textViewTelephone.setText(userTicket.);
 
 
-        if(userTicket.userId.equals(userLog.getId())){
+        if (userTicket.userId.equals(userLog.getId())) {
             deleteTicketButton.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             deleteTicketButton.setVisibility(View.GONE);
         }
 
@@ -121,7 +141,32 @@ public class TicketActivity extends AppCompatActivity {
             }
         });
 
+
+
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate menu resource file.
+        getMenuInflater().inflate(R.menu.share_menu, menu);
+
+        // Locate MenuItem with ShareActionProvider
+        MenuItem item = menu.findItem(R.id.menu_item_share);
+
+        // Fetch and store ShareActionProvider
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+
+        // Return true to display menu
+        return true;
+    }
+
+    // Call to update the share intent
+    private void setShareIntent(Intent shareIntent) {
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(shareIntent);
+        }
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -132,4 +177,61 @@ public class TicketActivity extends AppCompatActivity {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("tickets");
         ref.child(userTicket.ticketId).removeValue();
     }
+
+
+
+
+    public String refactorTelephoneNumber(TextView phoneView){
+        String phoneFormact;
+
+        phoneFormact = phoneView.getText().toString().replace("(", "");
+        return phoneFormact = phoneFormact.replace(")", "");
+    }
+
+    //******************************//
+    //             PHONE            //
+    //******************************//
+    private void callPhone() {
+        Intent intent = new Intent(Intent.ACTION_CALL);
+        //textViewTelephone.getText().toString()
+        intent.setData(Uri.parse("tel:" + refactorTelephoneNumber(textViewTelephone)));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            startActivity(intent);
+        }
+    }
+
+
+    public void makePhoneCall(View view) {
+
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, MY_PERMISSIONS_REQUEST_CALL_PHONE);
+        } else {
+            callPhone();
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CALL_PHONE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    callPhone();
+                }
+            }
+        }
+    }
+
+
+    //******************************//
+    //             SMS              //
+    //******************************//
+
+    public void sendSMS(View view){
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", refactorTelephoneNumber(textViewTelephone), null)));
+    }
+
+
+
 }

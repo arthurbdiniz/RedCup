@@ -149,6 +149,8 @@
         android:layout_height="wrap_content"
         android:hint="CEP"
         android:inputType="numberSigned"
+        android:lines="1"
+        android:maxLength="9"
         android:layout_below="@+id/editTextTelephone"
         android:layout_marginTop="10dp"
 
