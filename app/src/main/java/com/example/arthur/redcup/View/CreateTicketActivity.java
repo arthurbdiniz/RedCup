@@ -162,7 +162,7 @@ public class CreateTicketActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Inserir Ticket");
+        getSupportActionBar().setTitle(getString(R.string.title));
 
 
         nameTicket = (EditText) findViewById(R.id.edit_text_title);
@@ -233,6 +233,7 @@ public class CreateTicketActivity extends AppCompatActivity {
                     //we start verifying the worst case, many characters mask need to be added
                     //example: 999999999 <- 6+ digits already typed
                     // masked: (999) 999-999
+
                     if (phone.length() >= 7 && !backspacingFlag) {
                         //we will edit. next call on this textWatcher will be ignored
                         editedFlag = true;
@@ -340,13 +341,31 @@ public class CreateTicketActivity extends AppCompatActivity {
 
                 String yearStr = String.valueOf((year));
 
-
+                if (TextUtils.isEmpty(nameStr)) {
+                    nameTicket.setError(getString(R.string.name_ticket));
+                    return;
+                }
+                if (TextUtils.isEmpty(priceStr)) {
+                    price.setError(getString(R.string.price));
+                    return;
+                }
+                if (TextUtils.isEmpty(descriptionStr)) {
+                    description.setError(getString(R.string.description));
+                    return;
+                }
+                if (TextUtils.isEmpty(userTelephone)) {
+                    telephone.setError(getString(R.string.telephone));
+                    return;
+                }
+                if (userTelephone.length() < 11) {
+                    telephone.setError(getString(R.string.telephone));
+                    return;
+                }
                 if (TextUtils.isEmpty(codigoEnderecamentoPostal)) {
-                    //Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
-                    cepEditText.setError("Digite o CEP!");
+                    cepEditText.setError(getString(R.string.cep_error));
                     return;
                 }else if (codigoEnderecamentoPostal.length() < 8) {
-                    cepEditText.setError("Digite um CEP com 8 digitos!");
+                    cepEditText.setError(getString(R.string.cep_numbers));
                     return;
                 }
 
@@ -376,9 +395,9 @@ public class CreateTicketActivity extends AppCompatActivity {
                     String str_result = searchCEPTask.execute(codigoEnderecamentoPostal).get();
                     JSONObject object = new JSONObject(str_result);
 
-                    uf = object.getString("uf");
-                    location = object.getString("localidade");
-                    neighborhood = object.getString("bairro");
+                    uf = object.getString(getString(R.string.cep_uf));
+                    location = object.getString(getString(R.string.cep_location));
+                    neighborhood = object.getString(getString(R.string.cep_neighborhood));
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -393,30 +412,30 @@ public class CreateTicketActivity extends AppCompatActivity {
 
 
                 //Verify if CEP is valid
-                if (TextUtils.isEmpty(uf)) {
+             /*   if (TextUtils.isEmpty(uf)) {
                     //Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
-                    cepEditText.setError("CEP Incorreto, vetifique os campos e tente novamente!");
+                    cepEditText.setError("ola");
 
                     return;
                 }else if (TextUtils.isEmpty(location)) {
                     //Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
-                    cepEditText.setError("CEP Incorreto, vetifique os campos e tente novamente!");
+                    cepEditText.setError("hi");
 
                     return;
                 }else if (TextUtils.isEmpty(neighborhood)) {
                     //Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
-                    cepEditText.setError("CEP Incorreto, vetifique os campos e tente novamente!");
+                    cepEditText.setError("oi");
 
                     return;
                 }else if (uf.isEmpty() || location.isEmpty() || neighborhood.isEmpty()) {
 
                     cepEditText.requestFocus();
-                    cepEditText.setError("CEP Incorreto, vetifique os campos e tente novamente!");
+                    cepEditText.setError("hello");
 
                     return;
 
                 }
-
+                */
 
                 //Snackbar.make(v, dateTime  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
 //                Log.i("data_completa", data_completa);
@@ -598,7 +617,7 @@ public class CreateTicketActivity extends AppCompatActivity {
 
                 // Check for null
                 if (user == null) {
-                    Log.e(TAG, "Ticket data is null!");
+                    Log.e(TAG, getString(R.string.ticket_null));
                     return;
                 }
 
@@ -607,7 +626,7 @@ public class CreateTicketActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
-                Log.e(TAG, "Failed to read user", error.toException());
+                Log.e(TAG, getString(R.string.failed_read), error.toException());
             }
         });
     }
@@ -689,9 +708,9 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
     switch (requestCode) {
         case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if(userChoosenTask.equals("Take Photo"))
+                if(userChoosenTask.equals(getString(R.string.take_photo)))
                     cameraIntent();
-                else if(userChoosenTask.equals("Choose from Library"))
+                else if(userChoosenTask.equals(getString(R.string.library)))
                     galleryIntent();
             } else {
                 //code for deny
@@ -703,24 +722,24 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
 
 
     private void selectImage() {
-        final CharSequence[] items = { "Take Photo", "Choose from Library",
-                "Cancel" };
+        final CharSequence[] items = { getString(R.string.take_photo), getString(R.string.library),
+                getString(R.string.cancel) };
         AlertDialog.Builder builder = new AlertDialog.Builder(CreateTicketActivity.this);
-        builder.setTitle("Add Photo!");
+        builder.setTitle(getString(R.string.add_photo));
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 boolean result=Utility.checkPermission(CreateTicketActivity.this);
                 String userChoosenTask;
-                if (items[item].equals("Take Photo")) {
-                    userChoosenTask="Take Photo";
+                if (items[item].equals(getString(R.string.take_photo))) {
+                    userChoosenTask=getString(R.string.take_photo);
                     if(result)
                         cameraIntent();
-                } else if (items[item].equals("Choose from Library")) {
-                    userChoosenTask="Choose from Library";
+                } else if (items[item].equals(getString(R.string.library))) {
+                    userChoosenTask=getString(R.string.library);
                     if(result)
                         galleryIntent();
-                } else if (items[item].equals("Cancel")) {
+                } else if (items[item].equals(getString(R.string.cancel))) {
                     dialog.dismiss();
                 }
             }

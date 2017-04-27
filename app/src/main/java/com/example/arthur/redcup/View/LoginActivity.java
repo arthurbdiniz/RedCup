@@ -79,14 +79,21 @@ public class LoginActivity extends AppCompatActivity {
                 final String password = inputPassword.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
+
                     //Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
-                    inputEmail.setError("Enter email address!");
+
+                    inputEmail.setError(getString(R.string.inputEmail));
+
                     return;
                 }
 
                 if (TextUtils.isEmpty(password)) {
+
                     //Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
-                    inputPassword.setError("Enter password!");
+
+
+                    inputPassword.setError(getString(R.string.inputPassword));
+
                     return;
                 }
 
@@ -104,7 +111,11 @@ public class LoginActivity extends AppCompatActivity {
                                     // There was an error
                                     if (password.length() < 6) {
                                         inputPassword.setError(getString(R.string.minimum_password));
-                                    } else{
+
+                                    } else if (password.length() > 16){
+                                        inputPassword.setError(getString(R.string.maximum_password));
+                                    } else {
+
                                         Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
 
                                     }
