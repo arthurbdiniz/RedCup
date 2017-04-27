@@ -103,7 +103,7 @@ public class TicketActivity extends AppCompatActivity {
         textViewDescription = (TextView) findViewById(R.id.text_view_ticket_description);
         textViewPrice = (TextView) findViewById(R.id.text_view_ticket_price);
         textViewUserEmail = (TextView) findViewById(R.id.text_view_ticket_user_email);
-        textViewTelephone = (TextView) findViewById(R.id.text_view_ticket_user_email);
+        textViewTelephone = (TextView) findViewById(R.id.text_view_ticket_user_telephone);
         textViewCategory = (TextView) findViewById(R.id.text_view_ticket_category);
         textViewTicketId = (TextView) findViewById(R.id.text_view_ticket_id);
         textViewUserId = (TextView) findViewById(R.id.text_view_ticket_user_id);
