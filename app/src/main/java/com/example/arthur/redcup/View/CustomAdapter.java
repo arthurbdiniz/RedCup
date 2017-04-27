@@ -1,6 +1,7 @@
 package com.example.arthur.redcup.View;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,10 +21,12 @@ import com.example.arthur.redcup.R;
 
 
 
-public class CustomAdapter extends ArrayAdapter<Ticket> implements View.OnClickListener{
+public class CustomAdapter extends ArrayAdapter<Ticket> implements View.OnClickListener ,Filterable {
 
     private ArrayList<Ticket> dataSet;
-    Context mContext;
+    private ArrayList<Ticket> filteredList;
+    private FriendFilter friendFilter;
+    private Context mContext;
 
     // View lookup cache
     private static class ViewHolder {
@@ -34,7 +39,10 @@ public class CustomAdapter extends ArrayAdapter<Ticket> implements View.OnClickL
     public CustomAdapter(ArrayList<Ticket> data, Context context) {
         super(context, R.layout.row_item, data);
         this.dataSet = data;
+        this.filteredList = data;
         this.mContext=context;
+
+        getFilter();
     }
 
     @Override
@@ -72,8 +80,6 @@ public class CustomAdapter extends ArrayAdapter<Ticket> implements View.OnClickL
             viewHolder.ticketPrice = (TextView) convertView.findViewById(R.id.price_number);
             viewHolder.ticketLocation = (TextView) convertView.findViewById(R.id.ticketLocation);
 
-            //viewHolder.cutOff = (double) convertView.findViewById(R.id.version_number);
-            // Teacher here
             viewHolder.ticketPhoto = (ImageView) convertView.findViewById(R.id.ticketPhoto);
 
             result=convertView;
@@ -98,4 +104,65 @@ public class CustomAdapter extends ArrayAdapter<Ticket> implements View.OnClickL
         // Return the completed view to render on screen
         return convertView;
     }
+
+    @Override
+    public int getCount() {
+        return filteredList.size();
+    }
+
+
+    @Override
+    public Ticket getItem(int i) {
+        return filteredList.get(i);
+    }
+
+
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
+
+    @Override
+    public Filter getFilter() {
+        if (friendFilter == null) {
+            friendFilter = new FriendFilter();
+        }
+
+        return friendFilter;
+    }
+
+    private class FriendFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults filterResults = new FilterResults();
+            if (constraint!=null && constraint.length()>0) {
+                ArrayList<Ticket> tempList = new ArrayList<Ticket>();
+
+                // search content in friend list
+                for (Ticket ticket : dataSet) {
+                    if (ticket.getTitle().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        tempList.add(ticket);
+                    }
+                }
+
+                filterResults.count = tempList.size();
+                filterResults.values = tempList;
+            } else {
+                filterResults.count = dataSet.size();
+                filterResults.values = dataSet;
+            }
+
+            return filterResults;
+        }
+
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredList = (ArrayList<Ticket>) results.values;
+            notifyDataSetChanged();
+        }
+    }
 }
+
