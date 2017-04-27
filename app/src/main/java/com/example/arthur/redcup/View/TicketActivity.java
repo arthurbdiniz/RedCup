@@ -41,7 +41,7 @@ public class TicketActivity extends AppCompatActivity {
 
     private Ticket userTicket;
     private TextView textViewTitle, textViewDescription, textViewPrice, textViewUserEmail, textViewTelephone,
-            textViewTicketId, textViewCategory, textViewDateCreation, textViewDateExpiration, textViewUserId;
+            textViewTicketId, textViewCategory, textViewDateCreation, textViewDateExpiration, textViewUserId, textViewLocation;
 
     private Button deleteTicketButton;
 
@@ -110,6 +110,7 @@ public class TicketActivity extends AppCompatActivity {
         textViewDateCreation = (TextView) findViewById(R.id.text_view_ticket_date_created);
         textViewDateExpiration = (TextView) findViewById(R.id.text_view_ticket_date_expiration);
         textViewTelephone = (TextView) findViewById(R.id.text_view_ticket_user_telephone);
+        textViewLocation = (TextView) findViewById(R.id.ticketLocation);
 
         deleteTicketButton = (Button) findViewById(R.id.button_delete_ticket);
 
@@ -123,6 +124,7 @@ public class TicketActivity extends AppCompatActivity {
         textViewDateExpiration.append(" " + userTicket.dateExpiration);
         textViewUserId.append(" " + userTicket.userId);
         textViewTelephone.append(" " + userTicket.userTelephone);
+        textViewLocation.setText(userTicket.getLocation() + " - " + userTicket.getUf() + " - " + userTicket.getNeighborhood());
         //textViewTelephone.setText(userTicket.);
 
 

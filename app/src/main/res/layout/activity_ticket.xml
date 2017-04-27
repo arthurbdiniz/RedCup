@@ -81,6 +81,34 @@
                     />
 
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                >
+
+
+                <ImageView
+                    android:id="@+id/iconLocation"
+                    android:layout_marginTop="0dp"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_location" />
+
+                <TextView
+                    android:id="@+id/ticketLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/name"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="0dp"
+                    android:text="Location"
+                    android:textColor="@color/CinzaRedCup" />
+
+
+            </LinearLayout>
+
+
 
             <!--Divider-->
             <View
@@ -132,18 +160,18 @@
                 android:layout_marginTop="5dp">
 
                 <TextView
+                    android:id="@+id/text_view_ticket_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Description Text comes here"
+                    android:textSize="15dp" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Description"
                     android:textSize="20dp" />
-
-                <TextView
-                    android:id="@+id/text_view_ticket_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Description Text comes here"
-                    android:textSize="15dp"
-                    android:layout_marginTop="5dp"/>
 
             </LinearLayout>
 

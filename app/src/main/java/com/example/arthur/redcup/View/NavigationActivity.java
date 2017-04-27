@@ -53,6 +53,7 @@ public class NavigationActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener authListener;
     private ProgressBar progressBar;
     private TextView navUserTextView;
+    private static CustomAdapter adapter;
 
     public ArrayList<Ticket> listTickets;
     @Override
@@ -165,14 +166,21 @@ public class NavigationActivity extends AppCompatActivity
                                                                         player.child("userEmail").getValue().toString(),
                                                                             player.child("userTelephone").getValue().toString(),
                                                                                 player.child("dateCreation").getValue().toString(),
-                                                                                    player.child("dateExpiration").getValue().toString());
+                                                                                    player.child("dateExpiration").getValue().toString(),
+                                                                                        player.child("uf").getValue().toString(),
+                                                                                            player.child("location").getValue().toString(),
+                                                                                                player.child("neighborhood").getValue().toString());
+
+
                         ticket.setTicketId(player.getKey());
                         //friends.add(player.child("title").getValue().toString());
                         friends.add(ticket);
 
                     }
-                    ArrayAdapter arrayAdapter = new ArrayAdapter(NavigationActivity.this, android.R.layout.simple_list_item_1, friends);
-                    listView.setAdapter(arrayAdapter);
+                    adapter = new CustomAdapter(friends,getApplicationContext());
+                    //ArrayAdapter arrayAdapter = new ArrayAdapter(NavigationActivity.this, android.R.layout.simple_list_item_1, friends);
+                    //listView.setAdapter(arrayAdapter);
+                    listView.setAdapter(adapter);
                 }
 
                 @Override
@@ -281,7 +289,7 @@ public class NavigationActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
             //Use Terms
-            onClickWhatsApp(mListView);
+            //onClickWhatsApp(mListView);
 
         }
 
@@ -334,7 +342,10 @@ public class NavigationActivity extends AppCompatActivity
                                                         singleUser.get("userEmail").toString(),
                                                             singleUser.get("userTelephone").toString(),
                                                                 singleUser.get("dateCreation").toString(),
-                                                                    singleUser.get("dateExpiration").toString()));
+                                                                    singleUser.get("dateExpiration").toString(),
+                                                                        singleUser.get("uf").toString(),
+                                                                            singleUser.get("location").toString(),
+                                                                                singleUser.get("neighborhood").toString()));
         }
 
 

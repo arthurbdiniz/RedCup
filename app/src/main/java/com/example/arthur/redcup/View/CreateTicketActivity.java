@@ -1,32 +1,25 @@
 package com.example.arthur.redcup.View;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -35,11 +28,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.arthur.redcup.Model.EventData;
+import com.example.arthur.redcup.Model.SearchCEPTask;
 import com.example.arthur.redcup.Model.User;
 import com.example.arthur.redcup.R;
 import com.example.arthur.redcup.Model.Ticket;
@@ -51,7 +43,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -61,24 +54,23 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
-
-
-import static android.R.attr.data;
-
-public class CreateTicketActivity extends AppCompatActivity  {
+public class CreateTicketActivity extends AppCompatActivity {
 
     private static final int SELECT_FILE = 1;
     private static final int REQUEST_CAMERA = 0;
     private DatabaseReference mFirebaseDatabase;
     private FirebaseDatabase mFirebaseInstance;
+    private ProgressBar progressBar;
+
     private String ticketId;
 
     private EditText nameTicket;
     private EditText description;
     private EditText price;
     private EditText telephone;
-    private EditText CEP;
+    private EditText cepEditText;
 
     private TextView expirationDateView;
     private TextView expirationTimeView;
@@ -95,6 +87,7 @@ public class CreateTicketActivity extends AppCompatActivity  {
     private FirebaseAuth.AuthStateListener authListener;
 
     private User userLog;
+    //public CEP cep;
 
 
 
@@ -102,8 +95,16 @@ public class CreateTicketActivity extends AppCompatActivity  {
     private Calendar calendar;
     private TextView dateView;
     private int year, month, day;
-    public String dateExpiration;
 
+
+   // public JSONObject object;
+    public SearchCEPTask searchCEPTask;
+    public String dateExpiration;
+    public String uf = "";
+    public String location = "";
+    public String neighborhood = "";
+
+    public String codigoEnderecamentoPostal;
 
 
 
@@ -167,18 +168,27 @@ public class CreateTicketActivity extends AppCompatActivity  {
         nameTicket = (EditText) findViewById(R.id.edit_text_title);
         description = (EditText)findViewById(R.id.edit_text_description);
         price = (EditText) findViewById(R.id. editTextPrice);
-        CEP = (EditText) findViewById(R.id.editTextCEP);
+        cepEditText = (EditText) findViewById(R.id.editTextCep);
         telephone = (EditText) findViewById(R.id.editTextTelephone);
 
         buttonCamera = (ImageButton) findViewById(R.id.camera_btn);
-
         buttonSend = (Button)findViewById(R.id.button_enviar);
         buttonCategory = (Button) findViewById(R.id.button_category);
         buttonDate = (Button) findViewById(R.id.button_date);
 
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
         expirationDateView = (TextView) findViewById(R.id.text_view_event_date);
         expirationTimeView = (TextView) findViewById(R.id.text_view_event_time);
 
+
+        cepEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+
+            }
+        });
 
 
         //************************************//
@@ -249,68 +259,68 @@ public class CreateTicketActivity extends AppCompatActivity  {
         });
 
 
+
+
         //************************************//
         //             FORMACTS CEP           //
         //************************************//
-        CEP.addTextChangedListener(new PhoneNumberFormattingTextWatcher() {
-            //we need to know if the user is erasing or inputing some new character
-            private boolean backspacingFlag = false;
-            //we need to block the :afterTextChanges method to be called again after we just replaced the EditText text
-            private boolean editedFlag = false;
-            //we need to mark the cursor position and restore it after the edition
-            private int cursorComplement;
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //we store the cursor local relative to the end of the string in the EditText before the edition
-                cursorComplement = s.length()-telephone.getSelectionStart();
-                //we check if the user ir inputing or erasing a character
-                if (count > after) {
-                    backspacingFlag = true;
-                } else {
-                    backspacingFlag = false;
-                }
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // nothing to do here =D
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String string = s.toString();
-                //what matters are the phone digits beneath the mask, so we always work with a raw string with only digits
-                String phone = string.replaceAll("[^\\d]", "");
-
-                //if the text was just edited, :afterTextChanged is called another time... so we need to verify the flag of edition
-                //if the flag is false, this is a original user-typed entry. so we go on and do some magic
-                if (!editedFlag) {
-
-                    //we start verifying the worst case, many characters mask need to be added
-                    //example: 999999999 <- 6+ digits already typed
-                    // masked: (999) 999-999
-                    if (phone.length() >= 5 && !backspacingFlag) {
-                        //we will edit. next call on this textWatcher will be ignored
-                        editedFlag = true;
-                        //here is the core. we substring the raw digits and add the mask as convenient
-                        String ans =  phone.substring(0,5) + "-" + phone.substring(5);
-                        CEP.setText(ans);
-                        //we deliver the cursor to its original position relative to the end of the string
-                        CEP.setSelection(CEP.getText().length());
-
-                        //we end at the most simple case, when just one character mask is needed
-                        //example: 99999 <- 3+ digits already typed
-                        // masked: (999) 99
-                    }
-                    // We just edited the field, ignoring this cicle of the watcher and getting ready for the next
-                } else {
-                    editedFlag = false;
-                }
-            }
-        });
-
-
+//        CEP.addTextChangedListener(new PhoneNumberFormattingTextWatcher() {
+//            //we need to know if the user is erasing or inputing some new character
+//            private boolean backspacingFlag = false;
+//            //we need to block the :afterTextChanges method to be called again after we just replaced the EditText text
+//            private boolean editedFlag = false;
+//            //we need to mark the cursor position and restore it after the edition
+//            private int cursorComplement;
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                //we store the cursor local relative to the end of the string in the EditText before the edition
+//                cursorComplement = s.length()-telephone.getSelectionStart();
+//                //we check if the user ir inputing or erasing a character
+//                if (count > after) {
+//                    backspacingFlag = true;
+//                } else {
+//                    backspacingFlag = false;
+//                }
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                // nothing to do here =D
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                String string = s.toString();
+//                //what matters are the phone digits beneath the mask, so we always work with a raw string with only digits
+//                String phone = string.replaceAll("[^\\d]", "");
+//
+//                //if the text was just edited, :afterTextChanged is called another time... so we need to verify the flag of edition
+//                //if the flag is false, this is a original user-typed entry. so we go on and do some magic
+//                if (!editedFlag) {
+//
+//                    //we start verifying the worst case, many characters mask need to be added
+//                    //example: 999999999 <- 6+ digits already typed
+//                    // masked: (999) 999-999
+//                    if (phone.length() >= 5 && !backspacingFlag) {
+//                        //we will edit. next call on this textWatcher will be ignored
+//                        editedFlag = true;
+//                        //here is the core. we substring the raw digits and add the mask as convenient
+//                        String ans =  phone.substring(0,5) + "-" + phone.substring(5);
+//                        CEP.setText(ans);
+//                        //we deliver the cursor to its original position relative to the end of the string
+//                        CEP.setSelection(CEP.getText().length());
+//
+//                        //we end at the most simple case, when just one character mask is needed
+//                        //example: 99999 <- 3+ digits already typed
+//                        // masked: (999) 99
+//                    }
+//                    // We just edited the field, ignoring this cicle of the watcher and getting ready for the next
+//                } else {
+//                    editedFlag = false;
+//                }
+//            }
+//        });
 
 
 
@@ -323,12 +333,22 @@ public class CreateTicketActivity extends AppCompatActivity  {
                 String nameStr = nameTicket.getText().toString();
                 String descriptionStr = description.getText().toString();
                 String priceStr = price.getText().toString();
-                String CEP_Str = CEP.getText().toString();
+                codigoEnderecamentoPostal = cepEditText.getText().toString();
                 String userId = userLog.getId();
                 String userEmail = userLog.getEmail();
                 String userTelephone = telephone.getText().toString();
 
                 String yearStr = String.valueOf((year));
+
+
+                if (TextUtils.isEmpty(codigoEnderecamentoPostal)) {
+                    //Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+                    cepEditText.setError("Digite o CEP!");
+                    return;
+                }else if (codigoEnderecamentoPostal.length() < 8) {
+                    cepEditText.setError("Digite um CEP com 8 digitos!");
+                    return;
+                }
 
 
 
@@ -348,7 +368,56 @@ public class CreateTicketActivity extends AppCompatActivity  {
                 String hora_atual = dateFormat_hora.format(data_atual);
 
 
-                //Snackbar.make(v, data_completa  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+                searchCEPTask = new SearchCEPTask();
+
+
+                try {
+                    String str_result = searchCEPTask.execute(codigoEnderecamentoPostal).get();
+                    JSONObject object = new JSONObject(str_result);
+
+                    uf = object.getString("uf");
+                    location = object.getString("localidade");
+                    neighborhood = object.getString("bairro");
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                //Verify if CEP is valid
+
+
+
+                //Verify if CEP is valid
+                if (TextUtils.isEmpty(uf)) {
+                    //Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+                    cepEditText.setError("CEP Incorreto, vetifique os campos e tente novamente!");
+
+                    return;
+                }else if (TextUtils.isEmpty(location)) {
+                    //Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+                    cepEditText.setError("CEP Incorreto, vetifique os campos e tente novamente!");
+
+                    return;
+                }else if (TextUtils.isEmpty(neighborhood)) {
+                    //Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+                    cepEditText.setError("CEP Incorreto, vetifique os campos e tente novamente!");
+
+                    return;
+                }else if (uf.isEmpty() || location.isEmpty() || neighborhood.isEmpty()) {
+
+                    cepEditText.requestFocus();
+                    cepEditText.setError("CEP Incorreto, vetifique os campos e tente novamente!");
+
+                    return;
+
+                }
+
+
                 //Snackbar.make(v, dateTime  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
 //                Log.i("data_completa", data_completa);
 //                Log.i("data_atual", data_atual.toString());
@@ -357,12 +426,22 @@ public class CreateTicketActivity extends AppCompatActivity  {
 
                 // Check for already existed userId
                 //if (TextUtils.isEmpty(userId)) {
-                    if(createTicket(nameStr, descriptionStr, priceStr, CEP_Str, userId, userEmail, userTelephone, dateCreation, dateExpiration)){
-                        Snackbar.make(v, "Ticket criado com sucesso", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
-                        //onBackPressed();
+
+                try {
+                    if(createTicket(nameStr, descriptionStr, priceStr, codigoEnderecamentoPostal, userId,
+                                        userEmail, userTelephone, dateCreation, dateExpiration,  uf,
+                                            location, neighborhood)){
+//                        Snackbar.make(v, "Ticket criado com sucesso", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
                         finish();
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+
 //               // } else {
                   //  updateUser(nameStr, descriptionStr, priceStr, CEP_Str);
                 //}
@@ -459,6 +538,13 @@ public class CreateTicketActivity extends AppCompatActivity  {
 
     }
 
+
+    public void SearchCEP(){
+
+
+
+    }
+
     //Notification
     private void addNotification(String title, String text) {
         NotificationCompat.Builder builder =
@@ -483,7 +569,8 @@ public class CreateTicketActivity extends AppCompatActivity  {
         return true;
     }
 
-    private boolean createTicket(String title, String description, String price, String CEP, String userId, String userEmail, String userTelephone,String dateCreation, String dateExpiration) {
+    private boolean createTicket(String title, String description, String price, String codigoEnderecamentoPostal, String userId, String userEmail,
+                                        String userTelephone,String dateCreation, String dateExpiration, String uf, String location, String neighborhood) throws JSONException {
         // TODO
         // In real apps this userId should be fetched
         // by implementing firebase auth
@@ -491,9 +578,10 @@ public class CreateTicketActivity extends AppCompatActivity  {
             ticketId = mFirebaseDatabase.push().getKey();
         }
 
-        Ticket user = new Ticket(title, description, price, CEP, userId, userEmail, userTelephone, dateCreation, dateExpiration);
+        Ticket user = new Ticket(title, description, price, codigoEnderecamentoPostal, userId, userEmail, userTelephone, dateCreation, dateExpiration, uf,  location, neighborhood);
 
         mFirebaseDatabase.child(ticketId).setValue(user);
+        //mFirebaseDatabase.child(ticketId).child("address").setValue("teste", "teste2");
 
         addUserChangeListener();
         return  true;
@@ -524,27 +612,27 @@ public class CreateTicketActivity extends AppCompatActivity  {
         });
     }
 
-    private void updateUser(String title, String description, String price, String CEP, String userId, String userEmail) {
-        // updating the user via child nodes
-        if (!TextUtils.isEmpty(title))
-            mFirebaseDatabase.child(ticketId).child("title").setValue(title);
-
-        if (!TextUtils.isEmpty(price))
-            mFirebaseDatabase.child(ticketId).child("price").setValue(price);
-
-        if (!TextUtils.isEmpty(description))
-            mFirebaseDatabase.child(ticketId).child("description").setValue(description);
-
-        if (!TextUtils.isEmpty(CEP))
-            mFirebaseDatabase.child(ticketId).child("CEP").setValue(CEP);
-
-        if (!TextUtils.isEmpty(userId))
-            mFirebaseDatabase.child(ticketId).child("userId").setValue(userId);
-
-        if (!TextUtils.isEmpty(userEmail))
-            mFirebaseDatabase.child(ticketId).child("userEmail").setValue(userEmail);
-
-    }
+//    private void updateUser(String title, String description, String price, String CEP, String userId, String userEmail) {
+//        // updating the user via child nodes
+//        if (!TextUtils.isEmpty(title))
+//            mFirebaseDatabase.child(ticketId).child("title").setValue(title);
+//
+//        if (!TextUtils.isEmpty(price))
+//            mFirebaseDatabase.child(ticketId).child("price").setValue(price);
+//
+//        if (!TextUtils.isEmpty(description))
+//            mFirebaseDatabase.child(ticketId).child("description").setValue(description);
+//
+//        if (!TextUtils.isEmpty(CEP))
+//            mFirebaseDatabase.child(ticketId).child("CEP").setValue(CEP);
+//
+//        if (!TextUtils.isEmpty(userId))
+//            mFirebaseDatabase.child(ticketId).child("userId").setValue(userId);
+//
+//        if (!TextUtils.isEmpty(userEmail))
+//            mFirebaseDatabase.child(ticketId).child("userEmail").setValue(userEmail);
+//
+//    }
 
 
 
@@ -701,5 +789,6 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
         intent.setAction(Intent.ACTION_GET_CONTENT);//
         startActivityForResult(Intent.createChooser(intent, "Select File"),SELECT_FILE);
     }
+
 
 }
