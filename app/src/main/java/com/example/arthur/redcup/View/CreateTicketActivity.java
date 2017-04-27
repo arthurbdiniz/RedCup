@@ -408,34 +408,15 @@ public class CreateTicketActivity extends AppCompatActivity {
                 }
 
                 //Verify if CEP is valid
-
-
-
-                //Verify if CEP is valid
-             /*   if (TextUtils.isEmpty(uf)) {
-                    //Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
-                    cepEditText.setError("ola");
-
-                    return;
-                }else if (TextUtils.isEmpty(location)) {
-                    //Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
-                    cepEditText.setError("hi");
-
-                    return;
-                }else if (TextUtils.isEmpty(neighborhood)) {
-                    //Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
-                    cepEditText.setError("oi");
-
-                    return;
-                }else if (uf.isEmpty() || location.isEmpty() || neighborhood.isEmpty()) {
+               if (uf.isEmpty() || location.isEmpty() || neighborhood.isEmpty()) {
 
                     cepEditText.requestFocus();
-                    cepEditText.setError("hello");
+                    cepEditText.setError("CEP nao encontrado, tente novamente!");
 
                     return;
 
                 }
-                */
+
 
                 //Snackbar.make(v, dateTime  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
 //                Log.i("data_completa", data_completa);

@@ -90,9 +90,9 @@
 
     <string name="title">Inserir Ticket</string>
     <string name="cep_error">Digite o CEP!</string>
-    <string name="cep_location">Localidade</string>
-    <string name="cep_neighborhood">Bairro</string>
-    <string name="cep_uf">UF</string>
+    <string name="cep_location">localidade</string>
+    <string name="cep_neighborhood">bairro</string>
+    <string name="cep_uf">uf</string>
     <string name="cep_numbers">O CEP deve ser Válido!</string>
     <string name="cep_incorrect">CEP Incorreto, verifique os campos e tente novamente!</string>
     <string name="add_photo">Adicionar Foto!</string>
