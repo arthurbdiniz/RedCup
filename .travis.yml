@@ -35,7 +35,7 @@ android:
     - 'google-gdk-license-.+'
 
 before_install:
-- bash .travis-android-license-script.sh
+  - bash .travis-android-license-script.sh
 
   before_script:
     - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
