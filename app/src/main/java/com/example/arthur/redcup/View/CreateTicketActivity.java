@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -417,11 +418,6 @@ public class CreateTicketActivity extends AppCompatActivity {
 
                 }
 
-
-                //Snackbar.make(v, dateTime  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
-//                Log.i("data_completa", data_completa);
-//                Log.i("data_atual", data_atual.toString());
-//                Log.i("hora_atual", hora_atual);
                 //addNotification("Ticket para Expirar", "Seu ticket esta para expirar, reanuncie ou pague para vende mais rapido");
 
                 // Check for already existed userId
@@ -457,8 +453,8 @@ public class CreateTicketActivity extends AppCompatActivity {
 //              startActivityForResult(Intent.createChooser(intent, "Selecione uma imagem"), 123);
 
                 //boolean result=Utility.checkPermission(CreateTicketActivity.this);
-
-                selectImage();
+                Snackbar.make(v, "Estamos trabalhando nessa funcionalidade..."  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                //selectImage();
 //
 //
 //              Intent intent = new Intent();
@@ -720,6 +716,7 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
                     userChoosenTask=getString(R.string.library);
                     if(result)
                         galleryIntent();
+
                 } else if (items[item].equals(getString(R.string.cancel))) {
                     dialog.dismiss();
                 }

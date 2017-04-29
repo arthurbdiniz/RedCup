@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -54,6 +55,8 @@ public class NavigationActivity extends AppCompatActivity
     private ProgressBar progressBar;
     private TextView navUserTextView;
     private static CustomAdapter adapter;
+    public ViewGroup viewGroup;
+
 
     public ArrayList<Ticket> listTickets;
     @Override
@@ -62,7 +65,7 @@ public class NavigationActivity extends AppCompatActivity
         setContentView(R.layout.activity_navigation);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
+        viewGroup = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
 
         //get current user
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -91,12 +94,8 @@ public class NavigationActivity extends AppCompatActivity
 
         }
 
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
 
         final FloatingActionButton createTicketFloatingButton = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -255,36 +254,41 @@ public class NavigationActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_create_ticket) {
             Intent intent = new Intent(NavigationActivity.this, CreateTicketActivity.class);
             startActivity(intent);
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_tickets) {
 
         } else if (id == R.id.nav_manage) {
             startActivity(new Intent(NavigationActivity.this, MainActivity.class));
 
 
-        } else if (id == R.id.nav_share) {
+        }else if (id == R.id.nav_talk) {
+            Snackbar.make(viewGroup , "Em breve voce poderá estar entrando em contato conosco!"  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
-            //Share with friends
-            try {
-                Intent i = new Intent(Intent.ACTION_SEND);
-                i.setType("text/plain");
-                i.putExtra(Intent.EXTRA_SUBJECT, "RedCup");
-                String sAux = "\nDeixa eu te recomendar este aplicatico\n\n";
-                sAux = sAux + "https://play.google.com/store/apps/details?id=fga.mds.gpp&hl=en\n\n";
-                i.putExtra(Intent.EXTRA_TEXT, sAux);
-                startActivity(Intent.createChooser(i, "choose one"));
-            } catch(Exception e) {
-                //e.toString();
-            }
 
-        } else if (id == R.id.nav_send) {
-            //Use Terms
+        }else if(id == R.id.nav_frequently_questions){
+            Snackbar.make(viewGroup , "Estamos trabalhando nessa funcionalidade..."  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+
+        }else if (id == R.id.nav_share) {
+            Snackbar.make(viewGroup , "Estamos trabalhando nessa funcionalidade..."  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
+//            try {
+//                Intent i = new Intent(Intent.ACTION_SEND);
+//                i.setType("text/plain");
+//                i.putExtra(Intent.EXTRA_SUBJECT, "RedCup");
+//                String sAux = "\nDeixa eu te recomendar este aplicatico\n\n";
+//                sAux = sAux + "https://play.google.com/store/apps/details?id=fga.mds.gpp&hl=en\n\n";
+//                i.putExtra(Intent.EXTRA_TEXT, sAux);
+//                startActivity(Intent.createChooser(i, "choose one"));
+//            } catch(Exception e) {
+//                //e.toString();
+//            }
+
+        } else if (id == R.id.nav_use_terms) {
             //onClickWhatsApp(mListView);
+            Snackbar.make(viewGroup , "Estamos trabalhando em nossos Termos de Uso!"  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
         }
 
