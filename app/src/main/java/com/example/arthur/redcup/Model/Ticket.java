@@ -6,6 +6,7 @@ import java.io.Serializable;
 public class Ticket implements Serializable {
 
 
+
     public String ticketId;
     public String userId;
     public String title;
@@ -17,12 +18,20 @@ public class Ticket implements Serializable {
     public String dateCreation;
     public String dateExpiration;
 
+
+
+    public String uf;
+    public String location;
+    public String neighborhood;
+
     // Default constructor required for calls to
     // DataSnapshot.getValue(Ticket.class)
     public Ticket() {
     }
 
-    public Ticket(String title, String description, String price, String CEP, String userId, String userEmail, String userTelephone, String dateCreation, String dateExpiration) {
+    public Ticket(String title, String description, String price, String CEP,
+                  String userId, String userEmail, String userTelephone, String dateCreation,
+                  String dateExpiration, String uf, String location, String neighborhood) {
 
         this.title = title;
         this.description = description;
@@ -33,6 +42,10 @@ public class Ticket implements Serializable {
         this.dateExpiration = dateExpiration;
         this.userId = userId;
         this.userEmail = userEmail;
+
+        this.uf = uf;
+        this.location = location;
+        this.neighborhood = neighborhood;
 
 
     }
@@ -50,6 +63,23 @@ public class Ticket implements Serializable {
     public String getTitle(){
         return title;
     }
+    public String getPrice(){
+        return price;
+    }
+
+    public String getUf() {
+        return uf;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getNeighborhood() {
+        return neighborhood;
+    }
+
+
 
 
 

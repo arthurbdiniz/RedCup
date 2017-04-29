@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
 
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -13,162 +13,180 @@
     android:orientation="vertical">
 
 
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        android:id="@+id/appBarLayout">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_create_ticket"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
-
-
-
-    <ImageButton
-        android:id="@+id/camera_btn"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@color/CinzaEscuro"
-        android:layout_below="@+id/appBarLayout"
-        app:srcCompat="@android:drawable/ic_menu_camera"
-        />
-
-
-    <EditText
-        android:id="@+id/edit_text_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:hint="Titulo"
-        android:inputType="text"
-
-        />
-
-    <EditText
-        android:id="@+id/edit_text_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/edit_text_title"
-        android:layout_marginTop="10dp"
-        android:inputType="text"
-        android:hint="Descrição"
-        />
-
-    <EditText
-
-        android:id="@+id/editTextPrice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Preco (R$)"
-        android:inputType="numberDecimal"
-        android:layout_below="@+id/edit_text_description"
-        android:layout_marginTop="10dp"
-         />
-
-    <Button
-        android:id="@+id/button_category"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/editTextPrice"
-        android:background="@color/CinzaEscuro"
-        android:text="Categoria"
-        android:textColor="@color/white"
-        android:layout_marginTop="5dp"/>
-
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            android:id="@+id/appBarLayout">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_create_ticket"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        </android.support.design.widget.AppBarLayout>
 
 
 
+        <ImageButton
+            android:id="@+id/camera_btn"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@color/CinzaEscuro"
+            android:layout_below="@+id/appBarLayout"
+            app:srcCompat="@android:drawable/ic_menu_camera"
+            />
+
+
+        <EditText
+            android:id="@+id/edit_text_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Titulo"
+            android:inputType="text"
+
+            />
+
+        <EditText
+
+            android:id="@+id/editTextPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_text_description"
+            android:layout_marginTop="10dp"
+            android:hint="Preco (R$)"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/edit_text_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_text_title"
+            android:layout_marginTop="10dp"
+            android:inputType="text"
+            android:hint="Descrição"
+            />
 
         <Button
-            android:id="@+id/button_date"
-            android:layout_width="200dp"
+            android:id="@+id/button_category"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Data Evento"
+            android:layout_below="@id/editTextPrice"
             android:background="@color/CinzaEscuro"
+            android:text="Categoria"
             android:textColor="@color/white"
-           />
-
-
+            android:layout_marginTop="5dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginLeft="10dp">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
-            <TextView
-                android:layout_marginTop="5dp"
-                android:id="@+id/text_view_event_date"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/button_date"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text=""/>
+                android:text="Data Evento"
+                android:background="@color/CinzaEscuro"
+                android:textColor="@color/white"
+                />
 
-            <TextView
-                android:id="@+id/text_view_event_time"
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=""/>
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp">
+
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/text_view_event_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""/>
+
+                <TextView
+                    android:id="@+id/text_view_event_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""/>
 
 
+
+            </LinearLayout>
 
         </LinearLayout>
+
+
+
+        <EditText
+
+            android:id="@+id/editTextTelephone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Telefone"
+            android:layout_below="@+id/button_category"
+
+            android:inputType="phone"
+            android:lines="1"
+            android:maxLength="15"
+
+            android:layout_marginTop="10dp"
+            />
+
+        <EditText
+            android:id="@+id/editTextCep"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="CEP"
+            android:inputType="numberSigned"
+            android:lines="1"
+            android:maxLength="8"
+            android:layout_below="@+id/editTextTelephone"
+            android:layout_marginTop="10dp"
+
+            />
+
+        <Button
+            android:id="@+id/button_enviar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_below="@+id/editTextCEP"
+            android:layout_marginTop="18dp"
+            android:text="Enviar"
+            android:background="@color/RedCup"
+            android:textColor="@color/white"
+            />
 
 
     </LinearLayout>
 
 
-    <EditText
-
-        android:id="@+id/editTextTelephone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Telefone"
-        android:layout_below="@+id/button_category"
-
-        android:inputType="phone"
-        android:lines="1"
-        android:maxLength="15"
-
-        android:layout_marginTop="10dp"
-        />
-
-    <EditText
-        android:id="@+id/editTextCEP"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="CEP"
-        android:inputType="numberSigned"
-        android:layout_below="@+id/editTextTelephone"
-        android:layout_marginTop="10dp"
-
-         />
-
-    <Button
-        android:id="@+id/button_enviar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_below="@+id/editTextCEP"
-        android:layout_marginTop="18dp"
-        android:text="Enviar"
-        android:background="@color/RedCup"
-        android:textColor="@color/white"
-        />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="2dp"
+        android:visibility="gone" />
 
 
 
 
 
+</android.support.design.widget.CoordinatorLayout>
 
-</LinearLayout>
+

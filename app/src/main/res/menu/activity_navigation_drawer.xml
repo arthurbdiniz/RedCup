@@ -3,11 +3,11 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_create_ticket"
             android:icon="@drawable/ic_insert_ticket"
             android:title="Inserir Ticket" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_tickets"
             android:icon="@drawable/ic_tickets"
             android:title="Tickets" />
         <item
@@ -15,7 +15,7 @@
             android:icon="@drawable/ic_menu_manage"
             android:title="Minha Conta" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_talk"
             android:icon="@drawable/ic_people"
             android:title="Fale Conosco" />
     </group>
@@ -24,7 +24,7 @@
         <menu>
             <item
 
-                android:id="@+id/nav_dividas_frequentes"
+                android:id="@+id/nav_frequently_questions"
                 android:icon="@drawable/ic_help"
                 android:title="Dúvidas Frequentes" />
             <item
@@ -32,7 +32,7 @@
                 android:icon="@drawable/ic_menu_share"
                 android:title="Compartilhe com Amigos" />
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/nav_use_terms"
                 android:title="Termos de Uso" />
         </menu>
     </item>
