@@ -24,13 +24,16 @@ import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arthur.redcup.Model.SearchCEPTask;
 import com.arthur.redcup.Model.User;
@@ -46,6 +49,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -57,6 +61,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 public class CreateTicketActivity extends AppCompatActivity {
 
     private static final int SELECT_FILE = 1;
@@ -67,6 +74,9 @@ public class CreateTicketActivity extends AppCompatActivity {
 
     private String ticketId;
 
+    private LinearLayout dateTimeLayout;
+    private LinearLayout cepLayout;
+
     private EditText nameTicket;
     private EditText description;
     private EditText price;
@@ -75,6 +85,7 @@ public class CreateTicketActivity extends AppCompatActivity {
 
     private TextView expirationDateView;
     private TextView expirationTimeView;
+    private TextView locationView;
 
 
 
@@ -165,6 +176,8 @@ public class CreateTicketActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.title));
 
+        dateTimeLayout = (LinearLayout) findViewById(R.id.date_time_layout);
+        cepLayout = (LinearLayout) findViewById(R.id.cep_layout);
 
         nameTicket = (EditText) findViewById(R.id.edit_text_title);
         description = (EditText)findViewById(R.id.edit_text_description);
@@ -181,6 +194,7 @@ public class CreateTicketActivity extends AppCompatActivity {
 
         expirationDateView = (TextView) findViewById(R.id.text_view_event_date);
         expirationTimeView = (TextView) findViewById(R.id.text_view_event_time);
+        locationView = (TextView) findViewById(R.id.text_view_location);
 
 
         cepEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -188,6 +202,52 @@ public class CreateTicketActivity extends AppCompatActivity {
             public void onFocusChange(View v, boolean hasFocus) {
 
 
+            }
+        });
+
+
+        //Listener of CEP EditText
+        cepEditText.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    searchCEPTask = new SearchCEPTask();
+                    codigoEnderecamentoPostal = cepEditText.getText().toString().replace( "/" , "");
+
+                    try {
+                        String str_result = searchCEPTask.execute(codigoEnderecamentoPostal).get();
+                        JSONObject object = new JSONObject(str_result);
+
+                        uf = object.getString(getString(R.string.cep_uf));
+                        location = object.getString(getString(R.string.cep_location));
+                        neighborhood = object.getString(getString(R.string.cep_neighborhood));
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    //Verify if CEP is valid
+                    if (uf.isEmpty() || location.isEmpty() || neighborhood.isEmpty()) {
+
+                        cepEditText.requestFocus();
+                        cepEditText.setError("CEP nao encontrado, tente novamente!");
+
+                        return false;
+
+                    }else{
+                        cepLayout.setVisibility(VISIBLE);
+                        cepEditText.setVisibility(View.GONE);
+
+                        locationView.setText(location + " - " + uf + " - " + neighborhood);
+
+                    }
+
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -266,63 +326,63 @@ public class CreateTicketActivity extends AppCompatActivity {
         //************************************//
         //             FORMACTS CEP           //
         //************************************//
-//        CEP.addTextChangedListener(new PhoneNumberFormattingTextWatcher() {
-//            //we need to know if the user is erasing or inputing some new character
-//            private boolean backspacingFlag = false;
-//            //we need to block the :afterTextChanges method to be called again after we just replaced the EditText text
-//            private boolean editedFlag = false;
-//            //we need to mark the cursor position and restore it after the edition
-//            private int cursorComplement;
-//
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                //we store the cursor local relative to the end of the string in the EditText before the edition
-//                cursorComplement = s.length()-telephone.getSelectionStart();
-//                //we check if the user ir inputing or erasing a character
-//                if (count > after) {
-//                    backspacingFlag = true;
-//                } else {
-//                    backspacingFlag = false;
-//                }
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                // nothing to do here =D
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                String string = s.toString();
-//                //what matters are the phone digits beneath the mask, so we always work with a raw string with only digits
-//                String phone = string.replaceAll("[^\\d]", "");
-//
-//                //if the text was just edited, :afterTextChanged is called another time... so we need to verify the flag of edition
-//                //if the flag is false, this is a original user-typed entry. so we go on and do some magic
-//                if (!editedFlag) {
-//
-//                    //we start verifying the worst case, many characters mask need to be added
-//                    //example: 999999999 <- 6+ digits already typed
-//                    // masked: (999) 999-999
-//                    if (phone.length() >= 5 && !backspacingFlag) {
-//                        //we will edit. next call on this textWatcher will be ignored
-//                        editedFlag = true;
-//                        //here is the core. we substring the raw digits and add the mask as convenient
-//                        String ans =  phone.substring(0,5) + "-" + phone.substring(5);
-//                        CEP.setText(ans);
-//                        //we deliver the cursor to its original position relative to the end of the string
-//                        CEP.setSelection(CEP.getText().length());
-//
-//                        //we end at the most simple case, when just one character mask is needed
-//                        //example: 99999 <- 3+ digits already typed
-//                        // masked: (999) 99
-//                    }
-//                    // We just edited the field, ignoring this cicle of the watcher and getting ready for the next
-//                } else {
-//                    editedFlag = false;
-//                }
-//            }
-//        });
+        cepEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher() {
+            //we need to know if the user is erasing or inputing some new character
+            private boolean backspacingFlag = false;
+            //we need to block the :afterTextChanges method to be called again after we just replaced the EditText text
+            private boolean editedFlag = false;
+            //we need to mark the cursor position and restore it after the edition
+            private int cursorComplement;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //we store the cursor local relative to the end of the string in the EditText before the edition
+                cursorComplement = s.length()-telephone.getSelectionStart();
+                //we check if the user ir inputing or erasing a character
+                if (count > after) {
+                    backspacingFlag = true;
+                } else {
+                    backspacingFlag = false;
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // nothing to do here =D
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String string = s.toString();
+                //what matters are the phone digits beneath the mask, so we always work with a raw string with only digits
+                String phone = string.replaceAll("[^\\d]", "");
+
+                //if the text was just edited, :afterTextChanged is called another time... so we need to verify the flag of edition
+                //if the flag is false, this is a original user-typed entry. so we go on and do some magic
+                if (!editedFlag) {
+
+                    //we start verifying the worst case, many characters mask need to be added
+                    //example: 999999999 <- 6+ digits already typed
+                    // masked: (999) 999-999
+                    if (phone.length() >= 5 && !backspacingFlag) {
+                        //we will edit. next call on this textWatcher will be ignored
+                        editedFlag = true;
+                        //here is the core. we substring the raw digits and add the mask as convenient
+                        String ans =  phone.substring(0,5) + "-" + phone.substring(5);
+                        cepEditText.setText(ans);
+                        //we deliver the cursor to its original position relative to the end of the string
+                        cepEditText.setSelection(cepEditText.getText().length());
+
+                        //we end at the most simple case, when just one character mask is needed
+                        //example: 99999 <- 3+ digits already typed
+                        // masked: (999) 99
+                    }
+                    // We just edited the field, ignoring this cicle of the watcher and getting ready for the next
+                } else {
+                    editedFlag = false;
+                }
+            }
+        });
 
 
 
@@ -335,7 +395,7 @@ public class CreateTicketActivity extends AppCompatActivity {
                 String nameStr = nameTicket.getText().toString();
                 String descriptionStr = description.getText().toString();
                 String priceStr = price.getText().toString();
-                codigoEnderecamentoPostal = cepEditText.getText().toString();
+                codigoEnderecamentoPostal = cepEditText.getText().toString().replace( "/" , "");;
                 String userId = userLog.getId();
                 String userEmail = userLog.getEmail();
                 String userTelephone = telephone.getText().toString();
@@ -503,6 +563,8 @@ public class CreateTicketActivity extends AppCompatActivity {
 
                 DialogFragment dateFragment = new DatePickerFragment();
                 dateFragment.show(getFragmentManager(),"DatePicker");
+
+                dateTimeLayout.setVisibility(VISIBLE);
 
             }
         });
