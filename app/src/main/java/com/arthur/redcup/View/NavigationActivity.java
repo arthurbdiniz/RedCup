@@ -271,18 +271,18 @@ public class NavigationActivity extends AppCompatActivity
 
 
         }else if (id == R.id.nav_share) {
-            Snackbar.make(viewGroup , "Estamos trabalhando nessa funcionalidade..."  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
-//            try {
-//                Intent i = new Intent(Intent.ACTION_SEND);
-//                i.setType("text/plain");
-//                i.putExtra(Intent.EXTRA_SUBJECT, "RedCup");
-//                String sAux = "\nDeixa eu te recomendar este aplicatico\n\n";
-//                sAux = sAux + "https://play.google.com/store/apps/details?id=fga.mds.gpp&hl=en\n\n";
-//                i.putExtra(Intent.EXTRA_TEXT, sAux);
-//                startActivity(Intent.createChooser(i, "choose one"));
-//            } catch(Exception e) {
-//                //e.toString();
-//            }
+            
+            try {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "RedCup");
+                String sAux = "\nDeixa eu te recomendar este aplicatico\n\n";
+                sAux = sAux + "https://play.google.com/store/apps/details?id=com.arthur.redcup&hl=en\n\n";
+                i.putExtra(Intent.EXTRA_TEXT, sAux);
+                startActivity(Intent.createChooser(i, "choose one"));
+            } catch(Exception e) {
+                //e.toString();
+            }
 
         } else if (id == R.id.nav_use_terms) {
             //onClickWhatsApp(mListView);
