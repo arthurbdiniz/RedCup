@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -41,6 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.arthur.redcup.R.id.fab;
+
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -54,6 +57,8 @@ public class NavigationActivity extends AppCompatActivity
     private TextView navUserTextView;
     private static CustomAdapter adapter;
     public ViewGroup viewGroup;
+    private ListView listView;
+    private  FloatingActionButton createTicketFloatingButton;
 
 
     public ArrayList<Ticket> listTickets;
@@ -95,7 +100,7 @@ public class NavigationActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final FloatingActionButton createTicketFloatingButton = (FloatingActionButton) findViewById(R.id.fab);
+        createTicketFloatingButton = (FloatingActionButton) findViewById(fab);
 
         createTicketFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,7 +133,7 @@ public class NavigationActivity extends AppCompatActivity
         final ArrayList<Ticket> friends = new ArrayList<Ticket>();
         //friends.clear();
 
-        final ListView listView = (ListView) findViewById(R.id.list);
+        listView = (ListView) findViewById(R.id.list);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -178,14 +183,41 @@ public class NavigationActivity extends AppCompatActivity
                     //ArrayAdapter arrayAdapter = new ArrayAdapter(NavigationActivity.this, android.R.layout.simple_list_item_1, friends);
                     //listView.setAdapter(arrayAdapter);
                     listView.setAdapter(adapter);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
 
                 }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+
         });
         //adapter.notifyDataSetChanged();
+
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                int btn_initPosY=createTicketFloatingButton.getScrollY();
+                if(scrollState == SCROLL_STATE_TOUCH_SCROLL){
+                    createTicketFloatingButton.setVisibility(View.INVISIBLE);
+//                    createTicketFloatingButton.animate().translationYBy(150);
+//                    createTicketFloatingButton.animate().cancel();
+                }else {
+                    //createTicketFloatingButton.animate().translationYBy(btn_initPosY);
+//                        createTicketFloatingButton.animate().cancel();
+//                        createTicketFloatingButton.animate().translationYBy(-150);
+                        createTicketFloatingButton.setVisibility(View.VISIBLE);
+                }
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+
 
     }
 
@@ -271,7 +303,7 @@ public class NavigationActivity extends AppCompatActivity
 
 
         }else if (id == R.id.nav_share) {
-            
+
             try {
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");

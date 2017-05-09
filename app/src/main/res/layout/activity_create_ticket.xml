@@ -116,6 +116,7 @@
                         android:layout_marginTop="5dp"
                         android:layout_gravity="center_horizontal"
                         android:visibility="gone"
+                        android:onClick="clickDateTime"
                         >
 
                         <ImageView
@@ -131,7 +132,7 @@
                             android:id="@+id/text_view_event_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Date"/>
+                            android:text=""/>
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -144,7 +145,7 @@
                             android:id="@+id/text_view_event_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text=" Time"/>
+                            android:text=""/>
 
 
 
@@ -232,7 +233,7 @@
 
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progressBarCreateTicket"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center"

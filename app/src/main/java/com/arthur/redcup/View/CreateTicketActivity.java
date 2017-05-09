@@ -61,7 +61,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
-import static android.view.View.INVISIBLE;
+import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 public class CreateTicketActivity extends AppCompatActivity {
@@ -70,7 +70,7 @@ public class CreateTicketActivity extends AppCompatActivity {
     private static final int REQUEST_CAMERA = 0;
     private DatabaseReference mFirebaseDatabase;
     private FirebaseDatabase mFirebaseInstance;
-    private ProgressBar progressBar;
+    private   ProgressBar progressBar;
 
     private String ticketId;
 
@@ -86,6 +86,8 @@ public class CreateTicketActivity extends AppCompatActivity {
     private TextView expirationDateView;
     private TextView expirationTimeView;
     private TextView locationView;
+
+
 
 
 
@@ -190,7 +192,7 @@ public class CreateTicketActivity extends AppCompatActivity {
         buttonCategory = (Button) findViewById(R.id.button_category);
         buttonDate = (Button) findViewById(R.id.button_date);
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) findViewById(R.id.progressBarCreateTicket);
 
         expirationDateView = (TextView) findViewById(R.id.text_view_event_date);
         expirationTimeView = (TextView) findViewById(R.id.text_view_event_time);
@@ -208,11 +210,13 @@ public class CreateTicketActivity extends AppCompatActivity {
 
         //Listener of CEP EditText
         cepEditText.setOnKeyListener(new View.OnKeyListener() {
+
+
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+
                     searchCEPTask = new SearchCEPTask();
                     codigoEnderecamentoPostal = cepEditText.getText().toString().replace( "/" , "");
-
                     try {
                         String str_result = searchCEPTask.execute(codigoEnderecamentoPostal).get();
                         JSONObject object = new JSONObject(str_result);
@@ -239,16 +243,20 @@ public class CreateTicketActivity extends AppCompatActivity {
 
                     }else{
                         cepLayout.setVisibility(VISIBLE);
-                        cepEditText.setVisibility(View.GONE);
-
                         locationView.setText(location + " - " + uf + " - " + neighborhood);
 
                     }
 
+
                     return true;
+
+
                 }
                 return false;
+
             }
+
+            //progressBar.setVisibility(GONE);
         });
 
 
@@ -399,6 +407,23 @@ public class CreateTicketActivity extends AppCompatActivity {
                 String userId = userLog.getId();
                 String userEmail = userLog.getEmail();
                 String userTelephone = telephone.getText().toString();
+                dateExpiration=(expirationDateView.getText().toString() + "  " + expirationTimeView.getText());
+
+
+                //Date Creates
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy  HH:mm");
+                SimpleDateFormat dateFormat_hora = new SimpleDateFormat("HH:mm:ss");
+                Date data = new Date();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(data);
+
+                Date data_atual = cal.getTime();
+                String dateCreation = dateFormat.format(data_atual);
+                String hora_atual = dateFormat_hora.format(data_atual);
+
+//                if(dateExpiration.equals(" "));{
+//                    dateExpiration = "";
+//                }
 
                 String yearStr = String.valueOf((year));
 
@@ -412,6 +437,10 @@ public class CreateTicketActivity extends AppCompatActivity {
                 }
                 if (TextUtils.isEmpty(descriptionStr)) {
                     description.setError(getString(R.string.description));
+                    return;
+                }
+                if((dateExpiration.length() < 5)){
+                    buttonDate.setError("Seu ticket precisa ter uma data de validade");
                     return;
                 }
                 if (TextUtils.isEmpty(userTelephone)) {
@@ -430,27 +459,7 @@ public class CreateTicketActivity extends AppCompatActivity {
                     return;
                 }
 
-
-
-                dateExpiration=(expirationDateView.getText().toString() + "  " + expirationTimeView.getText());
-
-//              PhoneNumberUtils.formatNumber(telephone.getText().toString());
-
-                //Date Creates
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy  HH:mm");
-                SimpleDateFormat dateFormat_hora = new SimpleDateFormat("HH:mm:ss");
-                Date data = new Date();
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(data);
-
-                Date data_atual = cal.getTime();
-                String dateCreation = dateFormat.format(data_atual);
-                String hora_atual = dateFormat_hora.format(data_atual);
-
-
-
                 searchCEPTask = new SearchCEPTask();
-
 
                 try {
                     String str_result = searchCEPTask.execute(codigoEnderecamentoPostal).get();
@@ -564,10 +573,31 @@ public class CreateTicketActivity extends AppCompatActivity {
                 DialogFragment dateFragment = new DatePickerFragment();
                 dateFragment.show(getFragmentManager(),"DatePicker");
 
+
+                buttonDate.setVisibility(GONE);
                 dateTimeLayout.setVisibility(VISIBLE);
 
             }
         });
+
+        dateTimeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buttonDate.callOnClick();
+
+            }
+        });
+
+        cepLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cepLayout.setVisibility(GONE);
+                cepEditText.setVisibility(VISIBLE);
+                cepEditText.setText("");
+                
+            }
+        });
+
 
         mFirebaseInstance = FirebaseDatabase.getInstance();
         mFirebaseDatabase = mFirebaseInstance.getReference("tickets");
@@ -848,6 +878,8 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
         intent.setAction(Intent.ACTION_GET_CONTENT);//
         startActivityForResult(Intent.createChooser(intent, "Select File"),SELECT_FILE);
     }
+
+
 
 
 }
