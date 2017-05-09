@@ -211,7 +211,6 @@ public class CreateTicketActivity extends AppCompatActivity {
         //Listener of CEP EditText
         cepEditText.setOnKeyListener(new View.OnKeyListener() {
 
-
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
 
@@ -243,6 +242,7 @@ public class CreateTicketActivity extends AppCompatActivity {
 
                     }else{
                         cepLayout.setVisibility(VISIBLE);
+                        cepEditText.setVisibility(GONE);
                         locationView.setText(location + " - " + uf + " - " + neighborhood);
 
                     }
@@ -253,10 +253,8 @@ public class CreateTicketActivity extends AppCompatActivity {
 
                 }
                 return false;
-
             }
 
-            //progressBar.setVisibility(GONE);
         });
 
 

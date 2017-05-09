@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -13,10 +14,12 @@ import android.os.Bundle;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arthur.redcup.Model.Ticket;
 import com.arthur.redcup.Model.User;
@@ -30,9 +33,12 @@ public class TicketActivity extends AppCompatActivity {
 
     private Ticket userTicket;
     private TextView textViewTitle, textViewDescription, textViewPrice, textViewUserEmail, textViewTelephone,
-            textViewTicketId, textViewCategory, textViewDateCreation, textViewDateExpiration, textViewUserId, textViewLocation;
+            textViewTicketId, textViewCategory, textViewDateCreation, textViewDateExpiration, textViewUserId, textViewLocation, textViewReport;
 
     private Button deleteTicketButton;
+
+    private  Intent shareIntent;
+
 
     private FirebaseAuth.AuthStateListener authListener;
     private User userLog;
@@ -100,8 +106,10 @@ public class TicketActivity extends AppCompatActivity {
         textViewDateExpiration = (TextView) findViewById(R.id.text_view_ticket_date_expiration);
         textViewTelephone = (TextView) findViewById(R.id.text_view_ticket_user_telephone);
         textViewLocation = (TextView) findViewById(R.id.ticketLocation);
+        textViewReport = (TextView) findViewById(R.id.text_view_report);
 
         deleteTicketButton = (Button) findViewById(R.id.button_delete_ticket);
+
 
 
         textViewTitle.setText(userTicket.title);
@@ -132,13 +140,36 @@ public class TicketActivity extends AppCompatActivity {
             }
         });
 
+        textViewReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent send = new Intent(Intent.ACTION_SENDTO);
+                String uriText = "mailto:" + Uri.encode("arthurbdiniz@gmail.com") +
+                        "?subject=" + Uri.encode("Denuncia ticket:  " + userTicket.ticketId) +
+                        "&body=" + Uri.encode("ID usuario denunciado: " + userTicket.userId + "\nMotivo: ");
+                Uri uri = Uri.parse(uriText);
+
+                send.setData(uri);
+                startActivity(Intent.createChooser(send, "Send mail..."));
+
+            }
+        });
+
+
+
+
+
+
 
 
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate menu resource file.
+        //MenuInflater inflater = getMenuInflater();
         getMenuInflater().inflate(R.menu.share_menu, menu);
 
         // Locate MenuItem with ShareActionProvider
@@ -147,21 +178,77 @@ public class TicketActivity extends AppCompatActivity {
         // Fetch and store ShareActionProvider
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
 
+        mShareActionProvider.setShareIntent(getShareIntent());
+        mShareActionProvider.setOnShareTargetSelectedListener(new ShareActionProvider.OnShareTargetSelectedListener() {
+            @Override
+            public boolean onShareTargetSelected(ShareActionProvider actionProvider, Intent intent) {
+//                try {
+//                    startActivity(Intent.createChooser(shareIntent, "Compatilhe"));
+//                } catch (android.content.ActivityNotFoundException ex) {
+//                    Toast.makeText(TicketActivity.this, ".", Toast.LENGTH_SHORT).show();
+//                }
+                return false;
+            }
+        });
+
         // Return true to display menu
         return true;
     }
 
+
+    private Intent getShareIntent() {
+        shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT   , "Ticket: "           +   userTicket.getTitle()      + "\n" +
+                                                   "Categoria: "                                       + "\n" +
+                                                   "Preco: "            +   userTicket.price           + "\n" +
+                                                   "Email contato: "    +   userTicket.userEmail       + "\n" +
+                                                   "Telefonecontato: "  +   userTicket.userTelephone   + "\n" );
+        //Rest of Atributes
+
+        return shareIntent;
+    }
     // Call to update the share intent
     private void setShareIntent(Intent shareIntent) {
+
         if (mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(shareIntent);
         }
     }
 
+
+
+    //Snackbar.make(, "Your ticket was successfully deleted!", Snackbar.LENGTH_LONG).setAction("No action", null).show();
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_share:
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("message/rfc822");
+                shareIntent.putExtra(Intent.EXTRA_EMAIL  , new String[]{"recipient@example.com"});
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "subject of email");
+                shareIntent.putExtra(Intent.EXTRA_TEXT   , "body of email");
+                try {
+                    startActivity(Intent.createChooser(shareIntent, "Send mail..."));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    Toast.makeText(TicketActivity.this, ".", Toast.LENGTH_SHORT).show();
+                }
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+
+
     }
 
     public void deleteTicket(){
