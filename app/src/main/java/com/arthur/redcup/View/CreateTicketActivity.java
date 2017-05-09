@@ -594,7 +594,7 @@ public class CreateTicketActivity extends AppCompatActivity {
                 cepLayout.setVisibility(GONE);
                 cepEditText.setVisibility(VISIBLE);
                 cepEditText.setText("");
-                
+
             }
         });
 

@@ -7,7 +7,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
 
-
     <!--Login-->
 
 
@@ -66,7 +65,6 @@
     <string name="change_password">Trocar Senha</string>
 
 
-
     <!--SendPasswordReset-->
 
     <string name="email">Email</string>
@@ -106,9 +104,6 @@
     <string name="description">O anúncio deve conter uma descrição do ticket</string>
     <string name="price">O anúncio deve conter o valor do ticket</string>
     <string name="name_ticket">O anúncio deve conter o nome do ticket</string>
-
-
-
 
 
     <!-- TODO: Remove or change this placeholder text -->
