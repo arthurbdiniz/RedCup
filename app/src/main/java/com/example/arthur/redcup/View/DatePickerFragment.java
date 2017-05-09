@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
-import com.example.arthur.redcup.R;
+import com.arthur.redcup.R;
 
 import java.util.Calendar;
 import java.util.Date;
