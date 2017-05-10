@@ -19,9 +19,8 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
             android:layout_gravity="center_horizontal"
             app:srcCompat="@drawable/name"
             />
@@ -64,6 +63,7 @@
 
 
 
+
         <Button
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
@@ -73,6 +73,12 @@
             android:text="Login"
             android:background="@color/RedCup"
             android:textColor="@color/white"/>
+
+        <com.google.android.gms.common.SignInButton
+            android:layout_marginTop="10dp"
+            android:id="@+id/sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/btn_reset_password"

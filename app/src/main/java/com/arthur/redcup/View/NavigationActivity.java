@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -309,14 +310,23 @@ public class NavigationActivity extends AppCompatActivity
                 i.setType("text/plain");
                 i.putExtra(Intent.EXTRA_SUBJECT, "RedCup");
                 String sAux = "\nDeixa eu te recomendar este aplicatico\n\n";
-                sAux = sAux + "https://play.google.com/store/apps/details?id=com.arthur.redcup&hl=en\n\n";
+                sAux = sAux + "https://play.google.com/store/apps/details?id=com.arthur.redcup \n\n";
                 i.putExtra(Intent.EXTRA_TEXT, sAux);
                 startActivity(Intent.createChooser(i, "choose one"));
             } catch(Exception e) {
                 //e.toString();
             }
 
-        } else if (id == R.id.nav_use_terms) {
+        } else if(id == R.id.nav_open_google_play){
+
+            final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+            }
+
+        }else if (id == R.id.nav_use_terms) {
             //onClickWhatsApp(mListView);
             Snackbar.make(viewGroup , "Estamos trabalhando em nossos Termos de Uso!"  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
