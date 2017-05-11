@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,6 +62,7 @@ public class NavigationActivity extends AppCompatActivity
     private ViewGroup viewGroup;
     private FloatingActionButton createTicketFloatingButton;
     private RecyclerView recyclerView;
+    private AppBarLayout appBarLayout;
     final   ArrayList<Ticket> tickets = new ArrayList<Ticket>();
 
 
@@ -101,10 +106,11 @@ public class NavigationActivity extends AppCompatActivity
         }
 
         initToolbar();
+        initAppBarLayout();
         initFloatingButton();
         initDrawerLayout();
         initRecyclerView();
-        
+
         mDatabase = FirebaseDatabase.getInstance().getReference().child("tickets");
 //      DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("tickets");
 
@@ -332,11 +338,21 @@ public class NavigationActivity extends AppCompatActivity
     }
 
     private void initAppBarLayout(){
-
+        appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
     }
 
     private void initRecyclerView(){
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
+        recyclerView.setOnScrollListener(new HidingScrollListener() {
+            @Override
+            public void onHide() {
+                hideViews();
+            }
+            @Override
+            public void onShow() {
+                showViews();
+            }
+        });
     }
 
     public void actionOpenGooglePLay(){
@@ -362,6 +378,18 @@ public class NavigationActivity extends AppCompatActivity
         } catch(Exception e) {
 
         }
+    }
+
+    private void hideViews() {
+        appBarLayout.animate().translationY(-appBarLayout.getHeight()).setInterpolator(new AccelerateInterpolator(2));
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) createTicketFloatingButton.getLayoutParams();
+        int fabBottomMargin = lp.bottomMargin;
+        createTicketFloatingButton.animate().translationY(createTicketFloatingButton.getHeight()+fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
+    }
+
+    private void showViews() {
+        appBarLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
+        createTicketFloatingButton.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
     }
 
 

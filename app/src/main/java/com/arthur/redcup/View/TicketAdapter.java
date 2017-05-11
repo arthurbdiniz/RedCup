@@ -40,7 +40,7 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(context)
-                .inflate(R.layout.row_item, parent, false);
+                .inflate(R.layout.ticket_item, parent, false);
 
 
         TicketViewHolder ticketViewHolder = new TicketViewHolder(view);
