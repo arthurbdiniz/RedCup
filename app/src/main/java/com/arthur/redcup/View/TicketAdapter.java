@@ -86,6 +86,7 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
 
         Intent goTicket = new  Intent(context, TicketActivity.class);
         goTicket.putExtra("Ticket", ticket);
+        goTicket.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(goTicket);
 
         switch (v.getId()){
