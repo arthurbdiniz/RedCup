@@ -8,32 +8,32 @@
     android:layout_margin="4dp"
     android:weightSum="1"
     card_view:cardCornerRadius="5dp"
+    card_view:cardBackgroundColor="@color/colorPrimary"
     >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF"
-        >
+        android:background="@color/CinzaEscuro">
 
-    <ImageView
-        android:id="@+id/ticketPhoto"
-        android:layout_width="173dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="0dp"
-        android:background="@color/colorPrimary"/>
+        <ImageView
+            android:id="@+id/ticketPhoto"
+            android:layout_width="173dp"
+            android:layout_height="102dp"
+            android:layout_marginTop="0dp"
+
+            android:src="@drawable/ic_boate" />
 
 
-    <TextView
-        android:id="@+id/nome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:text="Nome"
-        android:textColor="@color/cardview_dark_background"
-        android:textSize="20dp"
-        android:layout_marginTop="110dp"
-        android:layout_marginLeft="50dp"/>
+        <TextView
+            android:id="@+id/nome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="110dp"
+            android:text="Nome"
+            android:textColor="#FFF"
+            android:textSize="20dp" />
 
     </RelativeLayout>
 
