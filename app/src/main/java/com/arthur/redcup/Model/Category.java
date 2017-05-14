@@ -3,8 +3,10 @@ package com.arthur.redcup.Model;
 import android.support.annotation.StringDef;
 import android.widget.ImageView;
 
+import java.io.Serializable;
 
-public class Category {
+
+public class Category implements Serializable {
 
     private final String nome;
     public final int photo;

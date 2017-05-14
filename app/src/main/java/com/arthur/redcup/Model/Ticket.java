@@ -17,6 +17,7 @@ public class Ticket implements Serializable {
     public String userEmail;
     public String dateCreation;
     public String dateExpiration;
+    public String category;
 
 
 
@@ -31,7 +32,7 @@ public class Ticket implements Serializable {
 
     public Ticket(String title, String description, String price, String CEP,
                   String userId, String userEmail, String userTelephone, String dateCreation,
-                  String dateExpiration, String uf, String location, String neighborhood) {
+                  String dateExpiration, String uf, String location, String neighborhood, String category) {
 
         this.title = title;
         this.description = description;
@@ -46,6 +47,7 @@ public class Ticket implements Serializable {
         this.uf = uf;
         this.location = location;
         this.neighborhood = neighborhood;
+        this.category = category;
 
 
     }
@@ -63,6 +65,7 @@ public class Ticket implements Serializable {
     public String getTitle(){
         return title;
     }
+
     public String getPrice(){
         return price;
     }
@@ -79,7 +82,9 @@ public class Ticket implements Serializable {
         return neighborhood;
     }
 
-
+    public String getCategory(){
+        return category;
+    }
 
 
 

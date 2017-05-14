@@ -30,42 +30,6 @@
 
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="bottom"
-            android:orientation="horizontal"
-            >
-
-
-            <Button
-
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
-                android:background="@color/colorPrimary"
-                android:onClick="makePhoneCall"
-                android:text="Call"
-                android:textColor="@color/white" />
-
-            <View
-                android:layout_width="2dp"
-                android:layout_height="10dp" />
-
-            <Button
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
-                android:background="@color/colorPrimary"
-                android:onClick="sendSMS"
-                android:text="SMS"
-                android:textColor="@color/white" />
-
-
-        </LinearLayout>
-
-
 
 
     <LinearLayout
@@ -73,14 +37,48 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="bottom">
+
+                    <Button
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="0dp"
+                        android:background="@color/colorPrimary"
+                        android:onClick="makePhoneCall"
+                        android:text="Call"
+                        android:textColor="@color/white" />
+
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="10dp" />
+
+                    <Button
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="0dp"
+                        android:background="@color/colorPrimary"
+                        android:onClick="sendSMS"
+                        android:text="SMS"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -94,6 +92,7 @@
                     android:layout_height="wrap_content"
                     android:text="Title"
                     android:textSize="25dp"
+                    android:layout_marginLeft="10dp"
 
                     />
 
@@ -114,6 +113,7 @@
                     android:layout_height="wrap_content"
                     android:text="Criação:"
                     android:textSize="15dp"
+                    android:layout_marginLeft="5dp"
                     />
 
 
@@ -123,6 +123,8 @@
                     android:layout_height="wrap_content"
                     android:text="Vencimento:"
                     android:textSize="15dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
                     />
 
 
@@ -155,6 +157,8 @@
 
 
 
+
+
                 <!--Divider-->
                 <View
                     android:layout_width="match_parent"
@@ -170,14 +174,33 @@
                     android:layout_marginTop="5dp">
 
 
-                    <TextView
-                        android:id="@+id/text_view_ticket_category"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Categoria:"
-                        android:textSize="15dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="5dp"
+                        >
 
-                        />
+
+                        <ImageView
+                            android:id="@+id/iconCategory"
+                            android:layout_marginTop="0dp"
+                            android:layout_width="25dp"
+                            android:layout_height="wrap_content"
+
+                            app:srcCompat="@drawable/ic_category" />
+
+                        <TextView
+                            android:id="@+id/ticketCategory"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/name"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="0dp"
+                            android:text="Category"
+                            android:textColor="@color/CinzaRedCup" />
+
+
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/text_view_ticket_id"
@@ -185,6 +208,7 @@
                         android:layout_height="wrap_content"
                         android:text="Cód do Ticket:"
                         android:textSize="15dp"
+                        android:layout_marginLeft="5dp"
                         android:layout_marginTop="10dp"
                         />
 
@@ -202,7 +226,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="5dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -233,7 +258,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="5dp">
 
                     <!--UserField-->
                     <TextView
@@ -286,22 +312,17 @@
                         android:layout_marginTop="20dp"
                         android:layout_marginBottom="20dp"/>
 
-
-
-
-
-
-                    <Button
-                        android:id="@+id/button_delete_ticket"
-                        android:layout_marginTop="20dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/RedCup"
-                        android:text="Delete Ticket"
-                        android:textColor="@color/white"
-                        />
-
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/button_delete_ticket"
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/RedCup"
+                    android:text="Delete Ticket"
+                    android:textColor="@color/white"
+                    />
 
             </LinearLayout>
 

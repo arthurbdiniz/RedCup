@@ -61,7 +61,6 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
         ticketViewHolder.nome.setText(ticket.getTitle());
         ticketViewHolder.preco.setText(ticket.getPrice());
         ticketViewHolder.location.setText(ticket.getLocation() + " - " + ticket.getUf() + " - " + ticket.getNeighborhood());
-
     }
 
     @Override

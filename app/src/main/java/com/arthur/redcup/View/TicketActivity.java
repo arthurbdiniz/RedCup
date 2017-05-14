@@ -90,16 +90,13 @@ public class TicketActivity extends AppCompatActivity {
         //Recover Information of ticket from List View
         Intent intent = getIntent();
         userTicket = (Ticket) intent.getSerializableExtra("Ticket");
-//        if(userTicket != null){
-//            setTitle(userTicket.getTitle());
-//        }
 
         textViewTitle = (TextView) findViewById(R.id.text_view_ticket_title);
         textViewDescription = (TextView) findViewById(R.id.text_view_ticket_description);
         textViewPrice = (TextView) findViewById(R.id.text_view_ticket_price);
         textViewUserEmail = (TextView) findViewById(R.id.text_view_ticket_user_email);
         textViewTelephone = (TextView) findViewById(R.id.text_view_ticket_user_telephone);
-        textViewCategory = (TextView) findViewById(R.id.text_view_ticket_category);
+        textViewCategory = (TextView) findViewById(R.id.ticketCategory);
         textViewTicketId = (TextView) findViewById(R.id.text_view_ticket_id);
         textViewUserId = (TextView) findViewById(R.id.text_view_ticket_user_id);
         textViewDateCreation = (TextView) findViewById(R.id.text_view_ticket_date_created);
@@ -109,8 +106,6 @@ public class TicketActivity extends AppCompatActivity {
         textViewReport = (TextView) findViewById(R.id.text_view_report);
 
         deleteTicketButton = (Button) findViewById(R.id.button_delete_ticket);
-
-
 
         textViewTitle.setText(userTicket.title);
         textViewDescription.setText(userTicket.description);
@@ -122,7 +117,7 @@ public class TicketActivity extends AppCompatActivity {
         textViewUserId.append(" " + userTicket.userId);
         textViewTelephone.append(" " + userTicket.userTelephone);
         textViewLocation.setText(userTicket.getLocation() + " - " + userTicket.getUf() + " - " + userTicket.getNeighborhood());
-        //textViewTelephone.setText(userTicket.);
+        textViewCategory.setText(userTicket.getCategory());
 
 
         if (userTicket.userId.equals(userLog.getId())) {
@@ -200,10 +195,10 @@ public class TicketActivity extends AppCompatActivity {
         shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT   , "Ticket: "           +   userTicket.getTitle()      + "\n" +
-                                                   "Categoria: "                                       + "\n" +
+                                                   "Categoria: "        +   userTicket.getCategory()   + "\n" +
                                                    "Preco: "            +   userTicket.price           + "\n" +
                                                    "Email contato: "    +   userTicket.userEmail       + "\n" +
-                                                   "Telefonecontato: "  +   userTicket.userTelephone   + "\n" );
+                                                   "Telefone contato: " +   userTicket.userTelephone   + "\n" );
         //Rest of Atributes
 
         return shareIntent;
@@ -256,9 +251,6 @@ public class TicketActivity extends AppCompatActivity {
         ref.child(userTicket.ticketId).removeValue();
     }
 
-
-
-
     public String refactorTelephoneNumber(TextView phoneView){
         String phoneFormact;
 
@@ -271,13 +263,11 @@ public class TicketActivity extends AppCompatActivity {
     //******************************//
     private void callPhone() {
         Intent intent = new Intent(Intent.ACTION_CALL);
-        //textViewTelephone.getText().toString()
         intent.setData(Uri.parse("tel:" + refactorTelephoneNumber(textViewTelephone)));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
             startActivity(intent);
         }
     }
-
 
     public void makePhoneCall(View view) {
 
@@ -300,11 +290,6 @@ public class TicketActivity extends AppCompatActivity {
             }
         }
     }
-
-
-    //******************************//
-    //             SMS              //
-    //******************************//
 
     public void sendSMS(View view){
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", refactorTelephoneNumber(textViewTelephone), null)));

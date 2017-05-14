@@ -137,7 +137,8 @@ public class NavigationActivity extends AppCompatActivity
                                                     player.child("dateExpiration").getValue().toString(),
                                                     player.child("uf").getValue().toString(),
                                                     player.child("location").getValue().toString(),
-                                                    player.child("neighborhood").getValue().toString());
+                                                    player.child("neighborhood").getValue().toString(),
+                                                    player.child("category").getValue().toString());
 
 
                         ticket.setTicketId(player.getKey());
@@ -284,18 +285,19 @@ public class NavigationActivity extends AppCompatActivity
             Map singleUser = (Map) entry.getValue();
             //Get phone field and append to list
 
-            tickets.add(new Ticket(singleUser.get("title").toString(),
-                                        singleUser.get("price").toString(),
-                                            singleUser.get("description").toString(),
-                                                singleUser.get("CEP").toString(),
-                                                    singleUser.get("userId").toString(),
-                                                        singleUser.get("userEmail").toString(),
-                                                            singleUser.get("userTelephone").toString(),
-                                                                singleUser.get("dateCreation").toString(),
-                                                                    singleUser.get("dateExpiration").toString(),
-                                                                        singleUser.get("uf").toString(),
-                                                                            singleUser.get("location").toString(),
-                                                                                singleUser.get("neighborhood").toString()));
+            tickets.add(new Ticket( singleUser.get("title").toString(),
+                                    singleUser.get("price").toString(),
+                                    singleUser.get("description").toString(),
+                                    singleUser.get("CEP").toString(),
+                                    singleUser.get("userId").toString(),
+                                    singleUser.get("userEmail").toString(),
+                                    singleUser.get("userTelephone").toString(),
+                                    singleUser.get("dateCreation").toString(),
+                                    singleUser.get("dateExpiration").toString(),
+                                    singleUser.get("uf").toString(),
+                                    singleUser.get("location").toString(),
+                                    singleUser.get("neighborhood").toString(),
+                                    singleUser.get("category").toString()));
         }
 
 

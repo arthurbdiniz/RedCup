@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.icu.util.ULocale;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -19,8 +20,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arthur.redcup.Model.Category;
+import com.arthur.redcup.Model.Ticket;
 import com.arthur.redcup.R;
 
 import java.util.ArrayList;
@@ -47,10 +50,9 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         categoryList.add(new Category("Teatro/Dança", R.drawable.ic_teatro));
 
         CardView cardView = (CardView) findViewById(R.id.cardView);
-        cardView.setOnClickListener(this);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
-        recyclerView.setAdapter(new Adapter(categoryList, getApplicationContext()));
+        recyclerView.setAdapter(new Adapter(categoryList, getApplicationContext(), recyclerView));
         RecyclerView.LayoutManager layout = new GridLayoutManager(CategoryActivity.this, 2);
         recyclerView.setLayoutManager(layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_category);
@@ -63,9 +65,6 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         getSupportActionBar().setTitle("Categoria");
 
 
-
-
-
     }
 
     @Override
@@ -74,23 +73,22 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         return true;
     }
 
-
     @Override
     public void onClick(View v) {
-        //startActivity(new Intent(this, CreateTicketActivity.class));
-
 
     }
 
-    private class Adapter extends RecyclerView.Adapter {
+
+    private class Adapter extends RecyclerView.Adapter implements View.OnClickListener {
 
         private final List<Category> category;
         private Context context;
+        private RecyclerView recyclerView;
 
-
-        public Adapter(List<Category> category, Context context) {
+        public Adapter(List<Category> category, Context context, RecyclerView recyclerView) {
             this.category = category;
             this.context = context;
+            this.recyclerView = recyclerView;
         }
 
         @Override
@@ -98,6 +96,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
             View view = LayoutInflater.from(context).inflate(R.layout.category_item, parent, false);
             ViewHolder holder = new ViewHolder(view);
+            view.setOnClickListener(this);
 
             return holder;
         }
@@ -117,6 +116,25 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         public int getItemCount() {
 
             return category.size();
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            int itemPosition = recyclerView.getChildLayoutPosition(v);
+            Category category = categoryList.get(itemPosition);
+
+            Intent intent = new Intent();
+            intent.putExtra("Category", category);
+            setResult(RESULT_OK, intent);
+            finish();
+
+//            switch (v.getId()){
+//                case R.id.ticketPhoto:
+//                    Snackbar.make(v, "Estamos trabalhando nisso, em breve estará disponivel!", Snackbar.LENGTH_LONG)
+//                            .setAction("No action", null).show();
+//                    break;
+//            }
         }
     }
 

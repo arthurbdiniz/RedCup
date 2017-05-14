@@ -86,75 +86,6 @@
                     android:hint="Descrição"
                     />
 
-                <Button
-                    android:id="@+id/button_category"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/editTextPrice"
-                    android:background="@color/CinzaEscuro"
-                    android:text="Categoria"
-                    android:textColor="@color/white"
-                    android:layout_marginTop="5dp"/>
-
-                <Button
-                    android:id="@+id/button_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Data Evento"
-                    android:background="@color/CinzaEscuro"
-                    android:textColor="@color/white"
-                    />
-
-
-
-                    <LinearLayout
-                        android:id="@+id/date_time_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="5dp"
-                        android:layout_gravity="center_horizontal"
-                        android:visibility="gone"
-                        android:onClick="clickDateTime"
-                        >
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="50dp"
-                            app:srcCompat="@drawable/ic_date"/>
-
-                        <TextView
-                            android:layout_marginTop="5dp"
-                            android:layout_marginLeft="20dp"
-
-                            android:id="@+id/text_view_event_date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=""/>
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="30dp"
-                            app:srcCompat="@drawable/ic__time"/>
-
-                        <TextView
-                            android:layout_marginTop="5dp"
-                            android:layout_marginLeft="20dp"
-                            android:id="@+id/text_view_event_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=""/>
-
-
-
-                    </LinearLayout>
-
-
-
-
-
                 <EditText
 
                     android:id="@+id/editTextTelephone"
@@ -170,6 +101,119 @@
                     android:layout_marginTop="10dp"
                     />
 
+                <Button
+                    android:id="@+id/button_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/editTextPrice"
+                    android:background="@color/CinzaEscuro"
+                    android:text="Categoria"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="5dp"/>
+
+                <!--Category Show-->
+                <LinearLayout
+                    android:id="@+id/category_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:background="#c9c9c9"
+                    android:visibility="gone">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical">
+
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="110dp"
+                            android:layout_gravity="center_vertical"
+                            app:srcCompat="@drawable/ic_category"/>
+
+                        <TextView
+
+                            android:layout_marginLeft="20dp"
+                            android:textSize="20dp"
+
+                            android:textColor="@color/CinzaEscuro"
+                            android:id="@+id/text_view_category"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|center_horizontal"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/button_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Data Evento"
+                    android:background="@color/CinzaEscuro"
+                    android:textColor="@color/white"
+                    />
+
+                <!--Date-->
+                <LinearLayout
+                    android:id="@+id/date_time_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone"
+                    android:onClick="clickDateTime"
+                    android:background="#c9c9c9">
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="80dp"
+                            android:layout_gravity="center_vertical"
+                            app:srcCompat="@drawable/ic_date"/>
+
+                        <TextView
+
+                            android:layout_marginLeft="20dp"
+                            android:layout_gravity="center_vertical"
+
+                            android:id="@+id/text_view_event_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""/>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="30dp"
+                            app:srcCompat="@drawable/ic__time"/>
+
+                        <TextView
+
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="20dp"
+                            android:id="@+id/text_view_event_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
                 <EditText
                     android:id="@+id/editTextCep"
                     android:layout_width="match_parent"
@@ -179,35 +223,46 @@
                     android:lines="1"
                     android:maxLength="9"
                     android:layout_below="@+id/editTextTelephone"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="10dp" />
 
-                    />
+                <!--CEP Show-->
                 <LinearLayout
                     android:id="@+id/cep_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:orientation="horizontal"
-                    android:layout_marginTop="10dp"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:background="#c9c9c9"
                     android:visibility="gone"
                     >
 
-                    <ImageView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        app:srcCompat="@drawable/ic_location"/>
-
-                    <TextView
-
-                        android:layout_marginLeft="20dp"
-                        android:textSize="20dp"
-                        android:id="@+id/text_view_location"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Location"/>
+                        android:layout_gravity="center_horizontal|center_vertical">
 
 
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="45dp"
+                            app:srcCompat="@drawable/ic_location"/>
+
+                        <TextView
+
+                            android:layout_marginLeft="10dp"
+                            android:textSize="20dp"
+
+                            android:textColor="@color/CinzaEscuro"
+                            android:id="@+id/text_view_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="Location"/>
+
+                    </LinearLayout>
 
 
                 </LinearLayout>
@@ -216,7 +271,6 @@
                     android:id="@+id/button_enviar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:layout_below="@+id/editTextCEP"
                     android:layout_marginTop="18dp"
                     android:text="Enviar"
@@ -224,13 +278,11 @@
                     android:textColor="@color/white"
                     />
 
-
             </LinearLayout>
 
         </ScrollView>
 
     </LinearLayout>
-
 
     <ProgressBar
         android:id="@+id/progressBarCreateTicket"
@@ -239,10 +291,6 @@
         android:layout_gravity="center"
         android:layout_marginBottom="2dp"
         android:visibility="gone" />
-
-
-
-
 
 </android.support.design.widget.CoordinatorLayout>
 

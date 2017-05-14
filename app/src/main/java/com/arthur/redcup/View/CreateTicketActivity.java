@@ -35,6 +35,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.arthur.redcup.Model.Category;
 import com.arthur.redcup.Model.SearchCEPTask;
 import com.arthur.redcup.Model.User;
 import com.arthur.redcup.R;
@@ -70,12 +71,14 @@ public class CreateTicketActivity extends AppCompatActivity {
     private static final int REQUEST_CAMERA = 0;
     private DatabaseReference mFirebaseDatabase;
     private FirebaseDatabase mFirebaseInstance;
-    private   ProgressBar progressBar;
+    private ProgressBar progressBar;
+    private Category category;
 
     private String ticketId;
 
     private LinearLayout dateTimeLayout;
     private LinearLayout cepLayout;
+    private LinearLayout categoryLayout;
 
     private EditText nameTicket;
     private EditText description;
@@ -86,6 +89,7 @@ public class CreateTicketActivity extends AppCompatActivity {
     private TextView expirationDateView;
     private TextView expirationTimeView;
     private TextView locationView;
+    private TextView categoryView;
 
 
 
@@ -119,6 +123,8 @@ public class CreateTicketActivity extends AppCompatActivity {
     public String neighborhood = "";
 
     public String codigoEnderecamentoPostal;
+
+    public String categoryName;
 
 
 
@@ -180,6 +186,7 @@ public class CreateTicketActivity extends AppCompatActivity {
 
         dateTimeLayout = (LinearLayout) findViewById(R.id.date_time_layout);
         cepLayout = (LinearLayout) findViewById(R.id.cep_layout);
+        categoryLayout = (LinearLayout) findViewById(R.id.category_layout);
 
         nameTicket = (EditText) findViewById(R.id.edit_text_title);
         description = (EditText)findViewById(R.id.edit_text_description);
@@ -197,6 +204,7 @@ public class CreateTicketActivity extends AppCompatActivity {
         expirationDateView = (TextView) findViewById(R.id.text_view_event_date);
         expirationTimeView = (TextView) findViewById(R.id.text_view_event_time);
         locationView = (TextView) findViewById(R.id.text_view_location);
+        categoryView = (TextView) findViewById(R.id.text_view_category);
 
 
         cepEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -419,10 +427,6 @@ public class CreateTicketActivity extends AppCompatActivity {
                 String dateCreation = dateFormat.format(data_atual);
                 String hora_atual = dateFormat_hora.format(data_atual);
 
-//                if(dateExpiration.equals(" "));{
-//                    dateExpiration = "";
-//                }
-
                 String yearStr = String.valueOf((year));
 
                 if (TextUtils.isEmpty(nameStr)) {
@@ -437,12 +441,17 @@ public class CreateTicketActivity extends AppCompatActivity {
                     description.setError(getString(R.string.description));
                     return;
                 }
-                if((dateExpiration.length() < 5)){
-                    buttonDate.setError("Seu ticket precisa ter uma data de validade");
-                    return;
-                }
                 if (TextUtils.isEmpty(userTelephone)) {
                     telephone.setError(getString(R.string.telephone));
+                    return;
+                }
+                if(TextUtils.isEmpty(categoryView.getText())){
+                    buttonCategory.setError("Seu Ticket precisa ter uma categoria!");
+                    return;
+
+                }
+                if((dateExpiration.length() < 5)){
+                    buttonDate.setError("Seu ticket precisa ter uma data de validade");
                     return;
                 }
                 if (userTelephone.length() < 11) {
@@ -494,7 +503,7 @@ public class CreateTicketActivity extends AppCompatActivity {
                 try {
                     if(createTicket(nameStr, descriptionStr, priceStr, codigoEnderecamentoPostal, userId,
                                         userEmail, userTelephone, dateCreation, dateExpiration,  uf,
-                                            location, neighborhood)){
+                                            location, neighborhood, category.getNome())){
 //                        Snackbar.make(v, "Ticket criado com sucesso", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
                         finish();
@@ -555,7 +564,8 @@ public class CreateTicketActivity extends AppCompatActivity {
         buttonCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(CreateTicketActivity.this, CategoryActivity.class));
+                Intent i = new Intent(getApplicationContext(), CategoryActivity.class);
+                startActivityForResult(i, 1);
             }
         });
 
@@ -595,7 +605,15 @@ public class CreateTicketActivity extends AppCompatActivity {
 
             }
         });
-
+        categoryLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buttonCategory.setVisibility(VISIBLE);
+                categoryLayout.setVisibility(GONE);
+                Intent i = new Intent(getApplicationContext(), CategoryActivity.class);
+                startActivityForResult(i, 1);
+            }
+        });
 
         mFirebaseInstance = FirebaseDatabase.getInstance();
         mFirebaseDatabase = mFirebaseInstance.getReference("tickets");
@@ -624,10 +642,27 @@ public class CreateTicketActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //Intent intent = getIntent();
 
-    public void SearchCEP(){
+//        if(intent.getSerializableExtra("Category") == null){
+//            //buttonCategory.setText(category.getNome());
+//        }else{
+//            category = (Category) intent.getSerializableExtra("Category");
+//            Toast.makeText(getApplication() ,category.getNome(),
+//                    Toast.LENGTH_SHORT).show();
+//            buttonCategory.setText(category.getNome());
+//
+//        }
+    }
 
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
     }
 
@@ -656,7 +691,7 @@ public class CreateTicketActivity extends AppCompatActivity {
     }
 
     private boolean createTicket(String title, String description, String price, String codigoEnderecamentoPostal, String userId, String userEmail,
-                                        String userTelephone,String dateCreation, String dateExpiration, String uf, String location, String neighborhood) throws JSONException {
+                                        String userTelephone,String dateCreation, String dateExpiration, String uf, String location, String neighborhood, String category) throws JSONException {
         // TODO
         // In real apps this userId should be fetched
         // by implementing firebase auth
@@ -664,7 +699,7 @@ public class CreateTicketActivity extends AppCompatActivity {
             ticketId = mFirebaseDatabase.push().getKey();
         }
 
-        Ticket user = new Ticket(title, description, price, codigoEnderecamentoPostal, userId, userEmail, userTelephone, dateCreation, dateExpiration, uf,  location, neighborhood);
+        Ticket user = new Ticket(title, description, price, codigoEnderecamentoPostal, userId, userEmail, userTelephone, dateCreation, dateExpiration, uf,  location, neighborhood, category);
 
         mFirebaseDatabase.child(ticketId).setValue(user);
         //mFirebaseDatabase.child(ticketId).child("address").setValue("teste", "teste2");
@@ -820,12 +855,25 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == SELECT_FILE)
-                onSelectFromGalleryResult(data);
-            else if (requestCode == REQUEST_CAMERA)
-                onCaptureImageResult(data);
-        }
+//        if (resultCode == Activity.RESULT_OK) {
+//            if (requestCode == SELECT_FILE)
+//                onSelectFromGalleryResult(data);
+//            else if (requestCode == REQUEST_CAMERA)
+//                onCaptureImageResult(data);
+//        }
+
+
+
+            if (resultCode == Activity.RESULT_OK) {
+                category = (Category) data.getSerializableExtra("Category");
+                buttonCategory.setVisibility(GONE);
+                categoryLayout.setVisibility(VISIBLE);
+                categoryView.setText(category.getNome());
+
+
+            }
+
+
     }
 
 
