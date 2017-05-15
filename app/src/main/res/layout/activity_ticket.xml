@@ -28,230 +28,291 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <ScrollView
+
+
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
+
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="190dp"
-                android:background="@color/CinzaRedCup"
-                />
 
-            <TextView
-                android:id="@+id/text_view_ticket_title"
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Title"
-                android:textSize="25dp"
+                android:orientation="vertical">
 
-                />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="bottom">
 
-            <TextView
-                android:id="@+id/text_view_ticket_price"
-                android:layout_marginLeft="220dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="R$"
-                android:textSize="20dp"
-                android:textColor="@color/colorPrimary"
+                    <Button
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="0dp"
+                        android:background="@color/colorPrimary"
+                        android:onClick="makePhoneCall"
+                        android:text="Call"
+                        android:textColor="@color/white" />
 
-                />
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="10dp" />
 
-            <TextView
-                android:id="@+id/text_view_ticket_date_created"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Criação:"
-                android:textSize="15dp"
-                />
+                    <Button
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="0dp"
+                        android:background="@color/colorPrimary"
+                        android:onClick="sendSMS"
+                        android:text="SMS"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="190dp"
+                    android:background="@color/CinzaRedCup"
+                    />
+
+                <TextView
+                    android:id="@+id/text_view_ticket_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Title"
+                    android:textSize="25dp"
+                    android:layout_marginLeft="10dp"
+
+                    />
+
+                <TextView
+                    android:id="@+id/text_view_ticket_price"
+                    android:layout_marginLeft="220dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="R$"
+                    android:textSize="20dp"
+                    android:textColor="@color/colorPrimary"
+
+                    />
+
+                <TextView
+                    android:id="@+id/text_view_ticket_date_created"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Criação:"
+                    android:textSize="15dp"
+                    android:layout_marginLeft="5dp"
+                    />
 
 
-            <TextView
+                <TextView
                     android:id="@+id/text_view_ticket_date_expiration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Vencimento:"
                     android:textSize="15dp"
-                    />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                >
-
-
-                <ImageView
-                    android:id="@+id/iconLocation"
-                    android:layout_marginTop="0dp"
-                    android:layout_width="25dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_location" />
-
-                <TextView
-                    android:id="@+id/ticketLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/name"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginTop="0dp"
-                    android:text="Location"
-                    android:textColor="@color/CinzaRedCup" />
-
-
-            </LinearLayout>
-
-
-
-            <!--Divider-->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/CinzaRedCup"
-                android:layout_marginTop="8dp"/>
-
-            <!--Categoria e Codigo ticket-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="5dp">
-
-
-                <TextView
-                    android:id="@+id/text_view_ticket_category"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Categoria:"
-                    android:textSize="15dp"
-
-                    />
-
-                <TextView
-                    android:id="@+id/text_view_ticket_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cód do Ticket:"
-                    android:textSize="15dp"
-                    android:layout_marginTop="10dp"
-                    />
-
-            </LinearLayout>
-
-            <!--Devider-->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/CinzaRedCup"
-                android:layout_marginTop="8dp"/>
-
-            <!--Description-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="5dp">
-
-                <TextView
-                    android:id="@+id/text_view_ticket_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Description Text comes here"
-                    android:textSize="15dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Description"
-                    android:textSize="20dp" />
-
-            </LinearLayout>
-
-            <!--Devider-->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/CinzaRedCup"
-                android:layout_marginTop="8dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="5dp">
-
-                <!--UserField-->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Anunciante"
-                    android:textSize="20dp" />
-
-                <TextView
-                    android:id="@+id/text_view_ticket_user_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Nome:"
-                    android:textSize="15dp"
-                    android:layout_marginTop="10dp"/>
-
-                <TextView
-                    android:id="@+id/text_view_ticket_user_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="E-mail:"
-                    android:textSize="15dp"
-                    android:layout_marginTop="10dp"/>
-
-                <TextView
-                    android:id="@+id/text_view_ticket_user_telephone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Telefone:"
-                    android:textSize="15dp"
-                    android:layout_marginTop="10dp"/>
-
-                <TextView
-                    android:id="@+id/text_view_ticket_user_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cód Anunciante:"
-                    android:textSize="15dp"
-                    android:layout_marginTop="10dp"
-                    />
-
-                <Button
-
-                    android:layout_marginTop="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/RedCup"
-                    android:text="Call"
-                    android:onClick="makePhoneCall"
-                    android:textColor="@color/white"
-                    />
-
-                <Button
-
-                    android:layout_marginTop="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/RedCup"
-                    android:text="SMS"
-                    android:onClick="sendSMS"
-                    android:textColor="@color/white"
                     />
 
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    >
 
+
+                    <ImageView
+                        android:id="@+id/iconLocation"
+                        android:layout_marginTop="0dp"
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_location" />
+
+                    <TextView
+                        android:id="@+id/ticketLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/name"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="0dp"
+                        android:text="Location"
+                        android:textColor="@color/CinzaRedCup" />
+
+
+                </LinearLayout>
+
+
+
+
+
+                <!--Divider-->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/CinzaRedCup"
+                    android:layout_marginTop="8dp"/>
+
+                <!--Categoria e Codigo ticket-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="5dp">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="5dp"
+                        >
+
+
+                        <ImageView
+                            android:id="@+id/iconCategory"
+                            android:layout_marginTop="0dp"
+                            android:layout_width="25dp"
+                            android:layout_height="wrap_content"
+
+                            app:srcCompat="@drawable/ic_category" />
+
+                        <TextView
+                            android:id="@+id/ticketCategory"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/name"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="0dp"
+                            android:text="Category"
+                            android:textColor="@color/CinzaRedCup" />
+
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/text_view_ticket_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cód do Ticket:"
+                        android:textSize="15dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="10dp"
+                        />
+
+                </LinearLayout>
+
+                <!--Devider-->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/CinzaRedCup"
+                    android:layout_marginTop="8dp"/>
+
+                <!--Description-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="5dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Description"
+                        android:textSize="20dp" />
+
+                    <TextView
+                        android:id="@+id/text_view_ticket_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="Description Text comes here"
+                        android:textSize="15dp" />
+
+
+
+                </LinearLayout>
+
+                <!--Devider-->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/CinzaRedCup"
+                    android:layout_marginTop="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="5dp">
+
+                    <!--UserField-->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Anunciante"
+                        android:textSize="20dp" />
+
+                    <TextView
+                        android:id="@+id/text_view_ticket_user_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nome:"
+                        android:textSize="15dp"
+                        android:layout_marginTop="10dp"/>
+
+                    <TextView
+                        android:id="@+id/text_view_ticket_user_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="E-mail:"
+                        android:textSize="15dp"
+                        android:layout_marginTop="10dp"/>
+
+                    <TextView
+                        android:id="@+id/text_view_ticket_user_telephone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Telefone:"
+                        android:textSize="15dp"
+                        android:layout_marginTop="10dp"/>
+
+                    <TextView
+                        android:id="@+id/text_view_ticket_user_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cód Anunciante:"
+                        android:textSize="15dp"
+                        android:layout_marginTop="10dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/text_view_report"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Denunciar"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_gravity="center"
+                        android:textSize="25dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"/>
+
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/button_delete_ticket"
@@ -265,8 +326,10 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+        </ScrollView>
 
-    </ScrollView>
+    </LinearLayout>
+
+
 
 </LinearLayout>

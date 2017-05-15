@@ -5,10 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,8 +23,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,22 +46,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.arthur.redcup.R.id.fab;
+
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
     private DatabaseReference mDatabase;
-    private ListView mListView;
     private User userLog;
     private FirebaseAuth.AuthStateListener authListener;
     private ProgressBar progressBar;
     private TextView navUserTextView;
-    private static CustomAdapter adapter;
-    public ViewGroup viewGroup;
+    private TicketAdapter adapter;
+    private ViewGroup viewGroup;
+    private FloatingActionButton createTicketFloatingButton;
+    private RecyclerView recyclerView;
+    private AppBarLayout appBarLayout;
+    final   ArrayList<Ticket> tickets = new ArrayList<Ticket>();
 
 
-    public ArrayList<Ticket> listTickets;
+    private  Toolbar toolbar;
+
+
+    public List<Ticket> listTickets;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,57 +105,15 @@ public class NavigationActivity extends AppCompatActivity
 
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        final FloatingActionButton createTicketFloatingButton = (FloatingActionButton) findViewById(R.id.fab);
-
-        createTicketFloatingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent goNavigation = new  Intent(getApplicationContext(), CreateTicketActivity.class);
-                startActivity(goNavigation);
-
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
-        View header=navigationView.getHeaderView(0);
-
-        navUserTextView = (TextView) header.findViewById(R.id.text_view_user_nav_name);
-        navUserTextView.setText(userLog.email);
-
-        navigationView.setNavigationItemSelectedListener(this);
+        initToolbar();
+        initAppBarLayout();
+        initFloatingButton();
+        initDrawerLayout();
+        initRecyclerView();
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("tickets");
+//      DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("tickets");
 
-//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("tickets");
-
-        final ArrayList<Ticket> friends = new ArrayList<Ticket>();
-        //friends.clear();
-
-        final ListView listView = (ListView) findViewById(R.id.list);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Intent goTicket = new  Intent(getApplicationContext(), TicketActivity.class);
-                Ticket userTicketCalled = (Ticket) listView.getItemAtPosition(position);
-                goTicket.putExtra("Ticket", userTicketCalled);
-
-                startActivity(goTicket);
-
-                //UserClass userClasses= userClasses.get(position);
-
-            }
-        });
         progressBar.setVisibility(View.VISIBLE);
         mDatabase.addValueEventListener(new ValueEventListener() {
 
@@ -150,42 +121,43 @@ public class NavigationActivity extends AppCompatActivity
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     progressBar.setVisibility(View.GONE);
-                    friends.clear();
+                    tickets.clear();
                     for (DataSnapshot player : dataSnapshot.getChildren()) {
                         //player.child("title").getValue();
                         //Log.i("player", player.getKey());
                         //friends.add(mDatabase.getKey());
                         Ticket ticket = new Ticket(player.child("title").getValue().toString(),
-                                                        player.child("description").getValue().toString(),
-                                                            player.child("price").getValue().toString(),
-                                                                player.child("CEP").getValue().toString(),
-                                                                   player.child("userId").getValue().toString(),
-                                                                        player.child("userEmail").getValue().toString(),
-                                                                            player.child("userTelephone").getValue().toString(),
-                                                                                player.child("dateCreation").getValue().toString(),
-                                                                                    player.child("dateExpiration").getValue().toString(),
-                                                                                        player.child("uf").getValue().toString(),
-                                                                                            player.child("location").getValue().toString(),
-                                                                                                player.child("neighborhood").getValue().toString());
+                                                    player.child("description").getValue().toString(),
+                                                    player.child("price").getValue().toString(),
+                                                    player.child("CEP").getValue().toString(),
+                                                    player.child("userId").getValue().toString(),
+                                                    player.child("userEmail").getValue().toString(),
+                                                    player.child("userTelephone").getValue().toString(),
+                                                    player.child("dateCreation").getValue().toString(),
+                                                    player.child("dateExpiration").getValue().toString(),
+                                                    player.child("uf").getValue().toString(),
+                                                    player.child("location").getValue().toString(),
+                                                    player.child("neighborhood").getValue().toString(),
+                                                    player.child("category").getValue().toString());
 
 
                         ticket.setTicketId(player.getKey());
-                        //friends.add(player.child("title").getValue().toString());
-                        friends.add(ticket);
+                        tickets.add(ticket);
 
                     }
-                    adapter = new CustomAdapter(friends,getApplicationContext());
-                    //ArrayAdapter arrayAdapter = new ArrayAdapter(NavigationActivity.this, android.R.layout.simple_list_item_1, friends);
-                    //listView.setAdapter(arrayAdapter);
-                    listView.setAdapter(adapter);
+                    adapter = new TicketAdapter(tickets ,getApplicationContext(), recyclerView);
+                    recyclerView.setAdapter(adapter);
+                    RecyclerView.LayoutManager layout = new LinearLayoutManager(getApplicationContext(),
+                            LinearLayoutManager.VERTICAL, false);
+                    recyclerView.setLayoutManager(layout);
                 }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                }
+            }
         });
-        //adapter.notifyDataSetChanged();
+
 
     }
 
@@ -199,12 +171,8 @@ public class NavigationActivity extends AppCompatActivity
         }
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-       // getMenuInflater().inflate(R.menu.menu_navigation, menu);
         getMenuInflater().inflate(R.menu.navigation, menu);
 
         MenuItem searchViewItem = menu.findItem(R.id.action_search);
@@ -238,10 +206,7 @@ public class NavigationActivity extends AppCompatActivity
 
         switch (item.getItemId()) {
             case R.id.action_search: // should I need to add intent ?
-
                 return true;
-
-
         }
         return super.onOptionsItemSelected(item);
     }
@@ -253,39 +218,28 @@ public class NavigationActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_create_ticket) {
-            Intent intent = new Intent(NavigationActivity.this, CreateTicketActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(NavigationActivity.this, CreateTicketActivity.class));
             // Handle the camera action
-        } else if (id == R.id.nav_tickets) {
+        }else if (id == R.id.nav_tickets) {
+            //Back to main tickets
 
-        } else if (id == R.id.nav_manage) {
+        }else if (id == R.id.nav_manage) {
             startActivity(new Intent(NavigationActivity.this, MainActivity.class));
-
 
         }else if (id == R.id.nav_talk) {
             Snackbar.make(viewGroup , "Em breve voce poderá estar entrando em contato conosco!"  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
-
         }else if(id == R.id.nav_frequently_questions){
             Snackbar.make(viewGroup , "Estamos trabalhando nessa funcionalidade..."  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
-
         }else if (id == R.id.nav_share) {
-            Snackbar.make(viewGroup , "Estamos trabalhando nessa funcionalidade..."  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
-//            try {
-//                Intent i = new Intent(Intent.ACTION_SEND);
-//                i.setType("text/plain");
-//                i.putExtra(Intent.EXTRA_SUBJECT, "RedCup");
-//                String sAux = "\nDeixa eu te recomendar este aplicatico\n\n";
-//                sAux = sAux + "https://play.google.com/store/apps/details?id=fga.mds.gpp&hl=en\n\n";
-//                i.putExtra(Intent.EXTRA_TEXT, sAux);
-//                startActivity(Intent.createChooser(i, "choose one"));
-//            } catch(Exception e) {
-//                //e.toString();
-//            }
+            actionShare();
 
-        } else if (id == R.id.nav_use_terms) {
-            //onClickWhatsApp(mListView);
+        }else if(id == R.id.nav_open_google_play){
+            actionOpenGooglePLay();
+
+        }else if (id == R.id.nav_use_terms) {
+
             Snackbar.make(viewGroup , "Estamos trabalhando em nossos Termos de Uso!"  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
         }
@@ -321,7 +275,7 @@ public class NavigationActivity extends AppCompatActivity
 
 
     private void collectPhoneNumbers(Map<String,Object> users) {
-        List<Ticket> tickets = new ArrayList  <Ticket>();
+        ArrayList<Ticket> tickets = new ArrayList  <Ticket>();
         //ArrayList<Ticket> tickets = new ArrayList<Ticket>();
 
         //iterate through each user, ignoring their UID
@@ -331,21 +285,113 @@ public class NavigationActivity extends AppCompatActivity
             Map singleUser = (Map) entry.getValue();
             //Get phone field and append to list
 
-            tickets.add(new Ticket(singleUser.get("title").toString(),
-                                        singleUser.get("price").toString(),
-                                            singleUser.get("description").toString(),
-                                                singleUser.get("CEP").toString(),
-                                                    singleUser.get("userId").toString(),
-                                                        singleUser.get("userEmail").toString(),
-                                                            singleUser.get("userTelephone").toString(),
-                                                                singleUser.get("dateCreation").toString(),
-                                                                    singleUser.get("dateExpiration").toString(),
-                                                                        singleUser.get("uf").toString(),
-                                                                            singleUser.get("location").toString(),
-                                                                                singleUser.get("neighborhood").toString()));
+            tickets.add(new Ticket( singleUser.get("title").toString(),
+                                    singleUser.get("price").toString(),
+                                    singleUser.get("description").toString(),
+                                    singleUser.get("CEP").toString(),
+                                    singleUser.get("userId").toString(),
+                                    singleUser.get("userEmail").toString(),
+                                    singleUser.get("userTelephone").toString(),
+                                    singleUser.get("dateCreation").toString(),
+                                    singleUser.get("dateExpiration").toString(),
+                                    singleUser.get("uf").toString(),
+                                    singleUser.get("location").toString(),
+                                    singleUser.get("neighborhood").toString(),
+                                    singleUser.get("category").toString()));
         }
 
 
+    }
+
+    private void initToolbar(){
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+    }
+
+    private void initFloatingButton(){
+        createTicketFloatingButton = (FloatingActionButton) findViewById(fab);
+
+        createTicketFloatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent goNavigation = new  Intent(getApplicationContext(), CreateTicketActivity.class);
+                startActivity(goNavigation);
+
+            }
+        });
+    }
+
+    private void initDrawerLayout(){
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        View header=navigationView.getHeaderView(0);
+
+        navUserTextView = (TextView) header.findViewById(R.id.text_view_user_nav_name);
+        navUserTextView.setText(userLog.email);
+
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void initAppBarLayout(){
+        appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+    }
+
+    private void initRecyclerView(){
+        recyclerView = (RecyclerView) findViewById(R.id.recycler);
+        recyclerView.setOnScrollListener(new HidingScrollListener() {
+            @Override
+            public void onHide() {
+                hideViews();
+            }
+            @Override
+            public void onShow() {
+                showViews();
+            }
+        });
+    }
+
+    public void actionOpenGooglePLay(){
+
+        final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
+
+    }
+
+    public void actionShare(){
+        try {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_SUBJECT, "RedCup");
+            String sAux = "\nDeixa eu te recomendar este aplicatico\n\n";
+            sAux = sAux + "https://play.google.com/store/apps/details?id=com.arthur.redcup \n\n";
+            i.putExtra(Intent.EXTRA_TEXT, sAux);
+            startActivity(Intent.createChooser(i, "choose one"));
+        } catch(Exception e) {
+
+        }
+    }
+
+    private void hideViews() {
+        appBarLayout.animate().translationY(-appBarLayout.getHeight()).setInterpolator(new AccelerateInterpolator(2));
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) createTicketFloatingButton.getLayoutParams();
+        int fabBottomMargin = lp.bottomMargin;
+        createTicketFloatingButton.animate().translationY(createTicketFloatingButton.getHeight()+fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
+    }
+
+    private void showViews() {
+        appBarLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
+        createTicketFloatingButton.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
     }
 
 

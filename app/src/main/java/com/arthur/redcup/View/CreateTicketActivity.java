@@ -24,14 +24,18 @@ import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.arthur.redcup.Model.Category;
 import com.arthur.redcup.Model.SearchCEPTask;
 import com.arthur.redcup.Model.User;
 import com.arthur.redcup.R;
@@ -46,6 +50,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -57,6 +62,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 public class CreateTicketActivity extends AppCompatActivity {
 
     private static final int SELECT_FILE = 1;
@@ -64,8 +72,13 @@ public class CreateTicketActivity extends AppCompatActivity {
     private DatabaseReference mFirebaseDatabase;
     private FirebaseDatabase mFirebaseInstance;
     private ProgressBar progressBar;
+    private Category category;
 
     private String ticketId;
+
+    private LinearLayout dateTimeLayout;
+    private LinearLayout cepLayout;
+    private LinearLayout categoryLayout;
 
     private EditText nameTicket;
     private EditText description;
@@ -75,6 +88,10 @@ public class CreateTicketActivity extends AppCompatActivity {
 
     private TextView expirationDateView;
     private TextView expirationTimeView;
+    private TextView locationView;
+    private TextView categoryView;
+
+
 
 
 
@@ -106,6 +123,8 @@ public class CreateTicketActivity extends AppCompatActivity {
     public String neighborhood = "";
 
     public String codigoEnderecamentoPostal;
+
+    public String categoryName;
 
 
 
@@ -165,6 +184,9 @@ public class CreateTicketActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.title));
 
+        dateTimeLayout = (LinearLayout) findViewById(R.id.date_time_layout);
+        cepLayout = (LinearLayout) findViewById(R.id.cep_layout);
+        categoryLayout = (LinearLayout) findViewById(R.id.category_layout);
 
         nameTicket = (EditText) findViewById(R.id.edit_text_title);
         description = (EditText)findViewById(R.id.edit_text_description);
@@ -177,10 +199,12 @@ public class CreateTicketActivity extends AppCompatActivity {
         buttonCategory = (Button) findViewById(R.id.button_category);
         buttonDate = (Button) findViewById(R.id.button_date);
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) findViewById(R.id.progressBarCreateTicket);
 
         expirationDateView = (TextView) findViewById(R.id.text_view_event_date);
         expirationTimeView = (TextView) findViewById(R.id.text_view_event_time);
+        locationView = (TextView) findViewById(R.id.text_view_location);
+        categoryView = (TextView) findViewById(R.id.text_view_category);
 
 
         cepEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -189,6 +213,56 @@ public class CreateTicketActivity extends AppCompatActivity {
 
 
             }
+        });
+
+
+        //Listener of CEP EditText
+        cepEditText.setOnKeyListener(new View.OnKeyListener() {
+
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+
+                    searchCEPTask = new SearchCEPTask();
+                    codigoEnderecamentoPostal = cepEditText.getText().toString().replace( "/" , "");
+                    try {
+                        String str_result = searchCEPTask.execute(codigoEnderecamentoPostal).get();
+                        JSONObject object = new JSONObject(str_result);
+
+                        uf = object.getString(getString(R.string.cep_uf));
+                        location = object.getString(getString(R.string.cep_location));
+                        neighborhood = object.getString(getString(R.string.cep_neighborhood));
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    //Verify if CEP is valid
+                    if (uf.isEmpty() || location.isEmpty() || neighborhood.isEmpty()) {
+
+                        cepEditText.requestFocus();
+                        cepEditText.setError("CEP nao encontrado, tente novamente!");
+
+                        return false;
+
+                    }else{
+                        cepLayout.setVisibility(VISIBLE);
+                        cepEditText.setVisibility(GONE);
+                        locationView.setText(location + " - " + uf + " - " + neighborhood);
+
+                    }
+
+
+                    return true;
+
+
+                }
+                return false;
+            }
+
         });
 
 
@@ -266,63 +340,63 @@ public class CreateTicketActivity extends AppCompatActivity {
         //************************************//
         //             FORMACTS CEP           //
         //************************************//
-//        CEP.addTextChangedListener(new PhoneNumberFormattingTextWatcher() {
-//            //we need to know if the user is erasing or inputing some new character
-//            private boolean backspacingFlag = false;
-//            //we need to block the :afterTextChanges method to be called again after we just replaced the EditText text
-//            private boolean editedFlag = false;
-//            //we need to mark the cursor position and restore it after the edition
-//            private int cursorComplement;
-//
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                //we store the cursor local relative to the end of the string in the EditText before the edition
-//                cursorComplement = s.length()-telephone.getSelectionStart();
-//                //we check if the user ir inputing or erasing a character
-//                if (count > after) {
-//                    backspacingFlag = true;
-//                } else {
-//                    backspacingFlag = false;
-//                }
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                // nothing to do here =D
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                String string = s.toString();
-//                //what matters are the phone digits beneath the mask, so we always work with a raw string with only digits
-//                String phone = string.replaceAll("[^\\d]", "");
-//
-//                //if the text was just edited, :afterTextChanged is called another time... so we need to verify the flag of edition
-//                //if the flag is false, this is a original user-typed entry. so we go on and do some magic
-//                if (!editedFlag) {
-//
-//                    //we start verifying the worst case, many characters mask need to be added
-//                    //example: 999999999 <- 6+ digits already typed
-//                    // masked: (999) 999-999
-//                    if (phone.length() >= 5 && !backspacingFlag) {
-//                        //we will edit. next call on this textWatcher will be ignored
-//                        editedFlag = true;
-//                        //here is the core. we substring the raw digits and add the mask as convenient
-//                        String ans =  phone.substring(0,5) + "-" + phone.substring(5);
-//                        CEP.setText(ans);
-//                        //we deliver the cursor to its original position relative to the end of the string
-//                        CEP.setSelection(CEP.getText().length());
-//
-//                        //we end at the most simple case, when just one character mask is needed
-//                        //example: 99999 <- 3+ digits already typed
-//                        // masked: (999) 99
-//                    }
-//                    // We just edited the field, ignoring this cicle of the watcher and getting ready for the next
-//                } else {
-//                    editedFlag = false;
-//                }
-//            }
-//        });
+        cepEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher() {
+            //we need to know if the user is erasing or inputing some new character
+            private boolean backspacingFlag = false;
+            //we need to block the :afterTextChanges method to be called again after we just replaced the EditText text
+            private boolean editedFlag = false;
+            //we need to mark the cursor position and restore it after the edition
+            private int cursorComplement;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //we store the cursor local relative to the end of the string in the EditText before the edition
+                cursorComplement = s.length()-telephone.getSelectionStart();
+                //we check if the user ir inputing or erasing a character
+                if (count > after) {
+                    backspacingFlag = true;
+                } else {
+                    backspacingFlag = false;
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // nothing to do here =D
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String string = s.toString();
+                //what matters are the phone digits beneath the mask, so we always work with a raw string with only digits
+                String phone = string.replaceAll("[^\\d]", "");
+
+                //if the text was just edited, :afterTextChanged is called another time... so we need to verify the flag of edition
+                //if the flag is false, this is a original user-typed entry. so we go on and do some magic
+                if (!editedFlag) {
+
+                    //we start verifying the worst case, many characters mask need to be added
+                    //example: 999999999 <- 6+ digits already typed
+                    // masked: (999) 999-999
+                    if (phone.length() >= 5 && !backspacingFlag) {
+                        //we will edit. next call on this textWatcher will be ignored
+                        editedFlag = true;
+                        //here is the core. we substring the raw digits and add the mask as convenient
+                        String ans =  phone.substring(0,5) + "-" + phone.substring(5);
+                        cepEditText.setText(ans);
+                        //we deliver the cursor to its original position relative to the end of the string
+                        cepEditText.setSelection(cepEditText.getText().length());
+
+                        //we end at the most simple case, when just one character mask is needed
+                        //example: 99999 <- 3+ digits already typed
+                        // masked: (999) 99
+                    }
+                    // We just edited the field, ignoring this cicle of the watcher and getting ready for the next
+                } else {
+                    editedFlag = false;
+                }
+            }
+        });
 
 
 
@@ -335,10 +409,23 @@ public class CreateTicketActivity extends AppCompatActivity {
                 String nameStr = nameTicket.getText().toString();
                 String descriptionStr = description.getText().toString();
                 String priceStr = price.getText().toString();
-                codigoEnderecamentoPostal = cepEditText.getText().toString();
+                codigoEnderecamentoPostal = cepEditText.getText().toString().replace( "/" , "");;
                 String userId = userLog.getId();
                 String userEmail = userLog.getEmail();
                 String userTelephone = telephone.getText().toString();
+                dateExpiration=(expirationDateView.getText().toString() + "  " + expirationTimeView.getText());
+
+
+                //Date Creates
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy  HH:mm");
+                SimpleDateFormat dateFormat_hora = new SimpleDateFormat("HH:mm:ss");
+                Date data = new Date();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(data);
+
+                Date data_atual = cal.getTime();
+                String dateCreation = dateFormat.format(data_atual);
+                String hora_atual = dateFormat_hora.format(data_atual);
 
                 String yearStr = String.valueOf((year));
 
@@ -358,6 +445,15 @@ public class CreateTicketActivity extends AppCompatActivity {
                     telephone.setError(getString(R.string.telephone));
                     return;
                 }
+                if(TextUtils.isEmpty(categoryView.getText())){
+                    buttonCategory.setError("Seu Ticket precisa ter uma categoria!");
+                    return;
+
+                }
+                if((dateExpiration.length() < 5)){
+                    buttonDate.setError("Seu ticket precisa ter uma data de validade");
+                    return;
+                }
                 if (userTelephone.length() < 11) {
                     telephone.setError(getString(R.string.telephone));
                     return;
@@ -370,27 +466,7 @@ public class CreateTicketActivity extends AppCompatActivity {
                     return;
                 }
 
-
-
-                dateExpiration=(expirationDateView.getText().toString() + "  " + expirationTimeView.getText());
-
-//              PhoneNumberUtils.formatNumber(telephone.getText().toString());
-
-                //Date Creates
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy  HH:mm");
-                SimpleDateFormat dateFormat_hora = new SimpleDateFormat("HH:mm:ss");
-                Date data = new Date();
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(data);
-
-                Date data_atual = cal.getTime();
-                String dateCreation = dateFormat.format(data_atual);
-                String hora_atual = dateFormat_hora.format(data_atual);
-
-
-
                 searchCEPTask = new SearchCEPTask();
-
 
                 try {
                     String str_result = searchCEPTask.execute(codigoEnderecamentoPostal).get();
@@ -427,7 +503,7 @@ public class CreateTicketActivity extends AppCompatActivity {
                 try {
                     if(createTicket(nameStr, descriptionStr, priceStr, codigoEnderecamentoPostal, userId,
                                         userEmail, userTelephone, dateCreation, dateExpiration,  uf,
-                                            location, neighborhood)){
+                                            location, neighborhood, category.getNome())){
 //                        Snackbar.make(v, "Ticket criado com sucesso", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
                         finish();
@@ -488,7 +564,8 @@ public class CreateTicketActivity extends AppCompatActivity {
         buttonCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(CreateTicketActivity.this, CategoryActivity.class));
+                Intent i = new Intent(getApplicationContext(), CategoryActivity.class);
+                startActivityForResult(i, 1);
             }
         });
 
@@ -504,6 +581,37 @@ public class CreateTicketActivity extends AppCompatActivity {
                 DialogFragment dateFragment = new DatePickerFragment();
                 dateFragment.show(getFragmentManager(),"DatePicker");
 
+
+                buttonDate.setVisibility(GONE);
+                dateTimeLayout.setVisibility(VISIBLE);
+
+            }
+        });
+
+        dateTimeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buttonDate.callOnClick();
+
+            }
+        });
+
+        cepLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cepLayout.setVisibility(GONE);
+                cepEditText.setVisibility(VISIBLE);
+                cepEditText.setText("");
+
+            }
+        });
+        categoryLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buttonCategory.setVisibility(VISIBLE);
+                categoryLayout.setVisibility(GONE);
+                Intent i = new Intent(getApplicationContext(), CategoryActivity.class);
+                startActivityForResult(i, 1);
             }
         });
 
@@ -534,10 +642,27 @@ public class CreateTicketActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //Intent intent = getIntent();
 
-    public void SearchCEP(){
+//        if(intent.getSerializableExtra("Category") == null){
+//            //buttonCategory.setText(category.getNome());
+//        }else{
+//            category = (Category) intent.getSerializableExtra("Category");
+//            Toast.makeText(getApplication() ,category.getNome(),
+//                    Toast.LENGTH_SHORT).show();
+//            buttonCategory.setText(category.getNome());
+//
+//        }
+    }
 
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
     }
 
@@ -566,7 +691,7 @@ public class CreateTicketActivity extends AppCompatActivity {
     }
 
     private boolean createTicket(String title, String description, String price, String codigoEnderecamentoPostal, String userId, String userEmail,
-                                        String userTelephone,String dateCreation, String dateExpiration, String uf, String location, String neighborhood) throws JSONException {
+                                        String userTelephone,String dateCreation, String dateExpiration, String uf, String location, String neighborhood, String category) throws JSONException {
         // TODO
         // In real apps this userId should be fetched
         // by implementing firebase auth
@@ -574,7 +699,7 @@ public class CreateTicketActivity extends AppCompatActivity {
             ticketId = mFirebaseDatabase.push().getKey();
         }
 
-        Ticket user = new Ticket(title, description, price, codigoEnderecamentoPostal, userId, userEmail, userTelephone, dateCreation, dateExpiration, uf,  location, neighborhood);
+        Ticket user = new Ticket(title, description, price, codigoEnderecamentoPostal, userId, userEmail, userTelephone, dateCreation, dateExpiration, uf,  location, neighborhood, category);
 
         mFirebaseDatabase.child(ticketId).setValue(user);
         //mFirebaseDatabase.child(ticketId).child("address").setValue("teste", "teste2");
@@ -730,12 +855,25 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == SELECT_FILE)
-                onSelectFromGalleryResult(data);
-            else if (requestCode == REQUEST_CAMERA)
-                onCaptureImageResult(data);
-        }
+//        if (resultCode == Activity.RESULT_OK) {
+//            if (requestCode == SELECT_FILE)
+//                onSelectFromGalleryResult(data);
+//            else if (requestCode == REQUEST_CAMERA)
+//                onCaptureImageResult(data);
+//        }
+
+
+
+            if (resultCode == Activity.RESULT_OK) {
+                category = (Category) data.getSerializableExtra("Category");
+                buttonCategory.setVisibility(GONE);
+                categoryLayout.setVisibility(VISIBLE);
+                categoryView.setText(category.getNome());
+
+
+            }
+
+
     }
 
 
@@ -786,6 +924,8 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
         intent.setAction(Intent.ACTION_GET_CONTENT);//
         startActivityForResult(Intent.createChooser(intent, "Select File"),SELECT_FILE);
     }
+
+
 
 
 }

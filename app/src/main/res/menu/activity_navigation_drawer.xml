@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
         <item
@@ -25,12 +26,15 @@
             <item
 
                 android:id="@+id/nav_frequently_questions"
-                android:icon="@drawable/ic_help"
+
                 android:title="Dúvidas Frequentes" />
             <item
                 android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
+
                 android:title="Compartilhe com Amigos" />
+            <item
+                android:id="@+id/nav_open_google_play"
+                android:title="Avaliar na Google Play" />
             <item
                 android:id="@+id/nav_use_terms"
                 android:title="Termos de Uso" />

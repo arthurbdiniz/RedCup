@@ -10,7 +10,7 @@ import android.app.Dialog;
 import java.util.Calendar;
 import android.widget.TimePicker;
 
-import com.example.arthur.redcup.R;
+import com.arthur.redcup.R;
 
 
 public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener{
