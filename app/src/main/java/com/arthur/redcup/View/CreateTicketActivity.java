@@ -79,6 +79,7 @@ public class CreateTicketActivity extends AppCompatActivity {
     private static final int REQUEST_CAMERA = 0;
     private static final int MY_REQUEST_CODE = 2;
     private static final int CAMERA_REQUEST = 1888;
+    private static final int CATEGORY_PICKER = 3;
     private DatabaseReference mFirebaseDatabase;
     private FirebaseDatabase mFirebaseInstance;
     private ProgressBar progressBar;
@@ -536,7 +537,7 @@ public class CreateTicketActivity extends AppCompatActivity {
 
 
 
-//               // } else {
+                   // } else {
                   //  updateUser(nameStr, descriptionStr, priceStr, CEP_Str);
                 //}
             }
@@ -546,57 +547,23 @@ public class CreateTicketActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
-
-
                 selectImage();
-//              Intent intent = new Intent(Intent.ACTION_PICK,
-//              android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-//              startActivityForResult(Intent.createChooser(intent, "Selecione uma imagem"), 123);
-
-                //boolean result=Utility.checkPermission(CreateTicketActivity.this);
-                //Snackbar.make(v, "Estamos trabalhando nessa funcionalidade..."  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
-//
-//
-//              Intent intent = new Intent();
-//              intent.setType("image/*");
-//              intent.setAction(Intent.ACTION_GET_CONTENT);//
-//              startActivityForResult(Intent.createChooser(intent, "Select File"),SELECT_FILE);
-
             }
 
 
-//            @Override
-//            protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//                if (resultCode == RESULT_OK) {
-//                    switch(requestCode){
-//                        case TAKE_PHOTO_CODE:
-//                            final File file = getTempFile(getApplicationContext());
-//                            try {
-//                                Bitmap captureBmp = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.fromFile(file) );
-//                                // do whatever you want with the bitmap (Resize, Rename, Add To Gallery, etc)
-//                            } catch (FileNotFoundException e) {
-//                                e.printStackTrace();
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                            break;
-//                    }
-//                }
-//            }
         });
 
         buttonCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), CategoryActivity.class);
-                startActivityForResult(i, 1);
+                startActivityForResult(i, CATEGORY_PICKER);
             }
         });
 
         buttonDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 //Date expires
                 DialogFragment timeFragment = new TimePickerFragment();
                 timeFragment.show(getFragmentManager(),"TimePicker");
@@ -605,10 +572,8 @@ public class CreateTicketActivity extends AppCompatActivity {
                 DialogFragment dateFragment = new DatePickerFragment();
                 dateFragment.show(getFragmentManager(),"DatePicker");
 
-
                 buttonDate.setVisibility(GONE);
                 dateTimeLayout.setVisibility(VISIBLE);
-
             }
         });
 
@@ -649,13 +614,7 @@ public class CreateTicketActivity extends AppCompatActivity {
                 goTicketImage.putExtra("TicketBitmap", imageBitmap);
                 goTicketImage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(goTicketImage);
-//
-//                ByteArrayOutputStream bs = new ByteArrayOutputStream();
-//                bm.compress(Bitmap.CompressFormat.PNG, 100, bs);
-//                byte[] byteArray = bs .toByteArray();
-//                String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-//                goTicketImage.putExtra("byteArray", encoded);
-                //startActivity(goTicketImage);
+
             }
         });
 
@@ -690,8 +649,6 @@ public class CreateTicketActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
     }
-
-
 
     @Override
     protected void onResume() {
@@ -755,7 +712,6 @@ public class CreateTicketActivity extends AppCompatActivity {
                     Log.e(TAG, getString(R.string.ticket_null));
                     return;
                 }
-
             }
 
             @Override
@@ -788,84 +744,35 @@ public class CreateTicketActivity extends AppCompatActivity {
 //
 //    }
 
-
-
+    
     //********************************//
     //               CAMERA           //
     //********************************//
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
 
+            case MY_REQUEST_CODE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Now user should be able to use camera
+                }
+                break;
 
-//    //Store the Galerry Image
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if(resultCode == Activity.RESULT_OK){
-//            if(requestCode == 123){
-//                Uri imagemSelecionada = data.getData();
-//                buttonCamera.setImageURI(imagemSelecionada);
-//
-//            }
-//        }
-//
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == Activity.RESULT_OK) {
-//            if (requestCode == SELECT_FILE)
-//                onSelectFromGalleryResult(data);
-//            else if (requestCode == REQUEST_CAMERA)
-//                onCaptureImageResult(data);
-//        }
-//
-//
-//    }
-
-
-    //
-//    private void takePhoto(){
-//        final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(this)) );
-//        startActivityForResult(intent, TAKE_PHOTO_CODE);
-//    }
-
-
-//    private File getTempFile(Context context){
-//        //it will return /sdcard/image.tmp
-//        final File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName() );
-//        if(!path.exists()){
-//            path.mkdir();
-//        }
-//        return new File(path, "image.tmp");
-//    }
-
-
-
-
-@Override
-public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-    switch (requestCode) {
-
-        case MY_REQUEST_CODE:
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Now user should be able to use camera
-            }
-            break;
-
-        case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if(userChoosenTask.equals(getString(R.string.take_photo)))
-                    cameraIntent();
-                else if(userChoosenTask.equals(getString(R.string.library)))
-                    galleryIntent();
-            } else {
-                //code for deny
-            }
-            break;
+            case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if(userChoosenTask.equals(getString(R.string.take_photo)))
+                        cameraIntent();
+                    else if(userChoosenTask.equals(getString(R.string.library)))
+                        galleryIntent();
+                } else {
+                    //code for deny
+                }
+                break;
+        }
     }
-}
-
-
-
 
     private void selectImage() {
-
 
         final CharSequence[] items = { getString(R.string.take_photo), getString(R.string.library),
                 getString(R.string.cancel) };
@@ -893,42 +800,33 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
         builder.show();
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-//        if (resultCode == Activity.RESULT_OK) {
-//            if (requestCode == SELECT_FILE)
-//                onSelectFromGalleryResult(data);
-//            else if (requestCode == REQUEST_CAMERA)
-//                onCaptureImageResult(data);
-//        }
-
-
-
-            if (resultCode == Activity.RESULT_OK) {
-
-                if (requestCode == SELECT_FILE){
-
+        switch(requestCode) {
+            case SELECT_FILE:
+                if(resultCode == RESULT_OK){
                     onSelectFromGalleryResult(data);
-                } else if (requestCode == CAMERA_REQUEST){
+                }
 
+                break;
+            case CAMERA_REQUEST:
+                if(resultCode == RESULT_OK){
                     onCaptureImageResult(data);
-                }else {
+                }
+                break;
+
+            case CATEGORY_PICKER:
+                if(resultCode == RESULT_OK){
                     category = (Category) data.getSerializableExtra("Category");
                     buttonCategory.setVisibility(GONE);
                     categoryLayout.setVisibility(VISIBLE);
                     categoryView.setText(category.getNome());
                 }
-
-
-
-            }
+        }
 
 
     }
-
 
     @SuppressWarnings("deprecation")
     private void onSelectFromGalleryResult(Intent data) {
@@ -940,13 +838,11 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
                 e.printStackTrace();
             }
         }
-        //buttonCamera.setImageBitmap(bm);
+
         buttonCamera.setVisibility(GONE);
         circleImageView.setVisibility(VISIBLE);
         circleImageView.setImageBitmap(bm);
-
         saveToInternalStorage(bm);
-
         imageBitmap = new ImageBitmap();
         imageBitmap.addPath(1, saveToInternalStorage(bm));
 
@@ -976,7 +872,6 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
         return directory.getAbsolutePath();
     }
 
-
     private void onCaptureImageResult(Intent data) {
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
 //        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -1002,25 +897,19 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
         circleImageView.setImageBitmap(thumbnail);
         imageBitmap = new ImageBitmap();
         imageBitmap.addPath(1, saveToInternalStorage(thumbnail));
+
     }
 
-    private void cameraIntent()
-    {
-//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        startActivityForResult(intent, REQUEST_CAMERA);
+    private void cameraIntent() {
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(cameraIntent, CAMERA_REQUEST);
     }
 
-    private void galleryIntent()
-    {
+    private void galleryIntent() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);//
         startActivityForResult(Intent.createChooser(intent, "Select File"),SELECT_FILE);
     }
-
-
-
 
 }
