@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.widget.ImageView;
 
@@ -27,11 +28,30 @@ public class TicketImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ticket_image);
         imageViewTicket = (ImageView) findViewById(R.id.image);
 
+        initToolbar();
+        initRecover();
+        loadImageFromStorage(imageBitmap.getPath(1));
+    }
+
+    public void initToolbar(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_image);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //getSupportActionBar().setTitle(getString(""));
+    }
+
+    public void initRecover(){
         Intent intent = getIntent();
         imageBitmap = (ImageBitmap) intent.getSerializableExtra("TicketBitmap");
+    }
 
-        loadImageFromStorage(imageBitmap.getPath(1));
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private void loadImageFromStorage(String path) {
@@ -43,6 +63,5 @@ public class TicketImageActivity extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
     }
 }

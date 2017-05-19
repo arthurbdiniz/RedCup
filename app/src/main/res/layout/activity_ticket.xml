@@ -9,7 +9,6 @@
     android:background="@drawable/background_create_class"
     android:orientation="vertical">
 
-    
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,28 +27,21 @@
 
     </android.support.design.widget.AppBarLayout>
 
-
-
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <!--Contact TicketOwner-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -83,8 +75,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="190dp"
-                    android:background="@color/CinzaRedCup"
-                    />
+                    android:background="@color/CinzaRedCup" />
 
                 <TextView
                     android:id="@+id/text_view_ticket_title"
@@ -92,9 +83,7 @@
                     android:layout_height="wrap_content"
                     android:text="Title"
                     android:textSize="25dp"
-                    android:layout_marginLeft="10dp"
-
-                    />
+                    android:layout_marginLeft="10dp" />
 
                 <TextView
                     android:id="@+id/text_view_ticket_price"
@@ -103,9 +92,7 @@
                     android:layout_height="wrap_content"
                     android:text="R$"
                     android:textSize="20dp"
-                    android:textColor="@color/colorPrimary"
-
-                    />
+                    android:textColor="@color/colorPrimary" />
 
                 <TextView
                     android:id="@+id/text_view_ticket_date_created"
@@ -113,9 +100,7 @@
                     android:layout_height="wrap_content"
                     android:text="Criação:"
                     android:textSize="15dp"
-                    android:layout_marginLeft="5dp"
-                    />
-
+                    android:layout_marginLeft="5dp" />
 
                 <TextView
                     android:id="@+id/text_view_ticket_date_expiration"
@@ -124,16 +109,12 @@
                     android:text="Vencimento:"
                     android:textSize="15dp"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp"
-                    />
-
+                    android:layout_marginTop="5dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="5dp"
-                    >
-
+                    android:layout_marginTop="5dp">
 
                     <ImageView
                         android:id="@+id/iconLocation"
@@ -152,12 +133,7 @@
                         android:text="Location"
                         android:textColor="@color/CinzaRedCup" />
 
-
                 </LinearLayout>
-
-
-
-
 
                 <!--Divider-->
                 <View
@@ -173,20 +149,16 @@
                     android:orientation="vertical"
                     android:layout_marginTop="5dp">
 
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="5dp"
-                        >
-
+                        android:layout_marginTop="5dp">
 
                         <ImageView
                             android:id="@+id/iconCategory"
                             android:layout_marginTop="0dp"
                             android:layout_width="25dp"
                             android:layout_height="wrap_content"
-
                             app:srcCompat="@drawable/ic_category" />
 
                         <TextView
@@ -199,7 +171,6 @@
                             android:text="Category"
                             android:textColor="@color/CinzaRedCup" />
 
-
                     </LinearLayout>
 
                     <TextView
@@ -209,8 +180,7 @@
                         android:text="Cód do Ticket:"
                         android:textSize="15dp"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginTop="10dp"
-                        />
+                        android:layout_marginTop="10dp" />
 
                 </LinearLayout>
 
@@ -242,8 +212,6 @@
                         android:layout_marginTop="5dp"
                         android:text="Description Text comes here"
                         android:textSize="15dp" />
-
-
 
                 </LinearLayout>
 
@@ -298,8 +266,7 @@
                         android:layout_height="wrap_content"
                         android:text="Cód Anunciante:"
                         android:textSize="15dp"
-                        android:layout_marginTop="10dp"
-                        />
+                        android:layout_marginTop="10dp" />
 
                     <TextView
                         android:id="@+id/text_view_report"
@@ -321,15 +288,12 @@
                     android:layout_height="wrap_content"
                     android:background="@color/RedCup"
                     android:text="Delete Ticket"
-                    android:textColor="@color/white"
-                    />
+                    android:textColor="@color/white" />
 
             </LinearLayout>
 
         </ScrollView>
 
     </LinearLayout>
-
-
 
 </LinearLayout>

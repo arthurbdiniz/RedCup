@@ -30,9 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class CategoryActivity extends AppCompatActivity implements View.OnClickListener{
-
 
     private ArrayList<Category> categoryList;
 
@@ -40,7 +38,6 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
-
 
         categoryList = new ArrayList<Category>();
         categoryList.add(new Category("Boate/Bar", R.drawable.ic_boate));
@@ -58,12 +55,9 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_category);
         setSupportActionBar(toolbar);
 
-
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Categoria");
-
 
     }
 
@@ -74,10 +68,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void onClick(View v) {
-
-    }
-
+    public void onClick(View v) {}
 
     private class Adapter extends RecyclerView.Adapter implements View.OnClickListener {
 
@@ -114,7 +105,6 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
         @Override
         public int getItemCount() {
-
             return category.size();
         }
 
@@ -128,13 +118,6 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
             intent.putExtra("Category", category);
             setResult(RESULT_OK, intent);
             finish();
-
-//            switch (v.getId()){
-//                case R.id.ticketPhoto:
-//                    Snackbar.make(v, "Estamos trabalhando nisso, em breve estará disponivel!", Snackbar.LENGTH_LONG)
-//                            .setAction("No action", null).show();
-//                    break;
-//            }
         }
     }
 
@@ -142,7 +125,6 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
         final TextView nome;
         final ImageView photo;
-
 
         public ViewHolder(View view) {
             super(view);
