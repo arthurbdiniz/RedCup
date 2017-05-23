@@ -16,7 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class ResetPasswordActivity extends AppCompatActivity {
+public class ResetPasswordActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText inputEmail;
     private Button btnReset, btnBack;
@@ -28,59 +28,74 @@ public class ResetPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
+        auth = FirebaseAuth.getInstance(); /** Inits Firebase Instance **/
 
+        initToolbar();
+        initView();
+        setClickListeners();
+    }
+
+    public void initToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_reset_pass);
         setSupportActionBar(toolbar);
-
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
 
+    public void initView(){
         inputEmail = (EditText) findViewById(R.id.email);
         btnReset = (Button) findViewById(R.id.btn_reset_password);
         btnBack = (Button) findViewById(R.id.btn_back);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+    }
 
-        auth = FirebaseAuth.getInstance();
+    public void setClickListeners(){
+        btnBack.setOnClickListener(this);
+        btnReset.setOnClickListener(this);
+    }
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+    public void reset(){
+        String email = inputEmail.getText().toString().trim();
 
-        btnReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if (TextUtils.isEmpty(email)) {
+            inputEmail.setError(getString(R.string.registered_email));
+            return;
+        }
 
-                String email = inputEmail.getText().toString().trim();
+        progressBar.setVisibility(View.VISIBLE);
+        auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(ResetPasswordActivity.this, getString(R.string.send_instructions), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(ResetPasswordActivity.this, getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
+                        }
 
-                if (TextUtils.isEmpty(email)) {
-                    inputEmail.setError(getString(R.string.registered_email));
-                    return;
-                }
-
-                progressBar.setVisibility(View.VISIBLE);
-                auth.sendPasswordResetEmail(email)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(ResetPasswordActivity.this, getString(R.string.send_instructions), Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(ResetPasswordActivity.this, getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
-                                }
-
-                                progressBar.setVisibility(View.GONE);
-                            }
-                        });
-            }
-        });
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
     }
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
     }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()){
+            case R.id.btn_back:
+                finish();
+                break;
+
+            case R.id.btn_reset_password:
+                reset();
+                break;
+
+        }
+    }
+    
 }
