@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".View.MainActivity"
+            android:name=".View.ProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -47,7 +47,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"></activity>
         <activity
-            android:name=".View.NavigationActivity"
+            android:name=".View.MainActivity"
             android:label="@string/title_activity_navigation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
