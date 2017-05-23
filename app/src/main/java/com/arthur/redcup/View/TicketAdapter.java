@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import com.arthur.redcup.R;
 
 
-
 public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickListener ,Filterable {
 
     private ArrayList<Ticket> tickets;
@@ -22,9 +21,7 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
     private ArrayList<Ticket> tempList;
     private FriendFilter friendFilter;
     private RecyclerView recyclerView;
-
     private Context context;
-
 
     public TicketAdapter(ArrayList<Ticket> tickets, Context context, RecyclerView recyclerView) {
         this.tickets = tickets;
@@ -35,25 +32,18 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
         getFilter();
     }
 
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.ticket_item, parent, false);
 
-
         TicketViewHolder ticketViewHolder = new TicketViewHolder(view);
         view.setOnClickListener(this);
-
-
         return ticketViewHolder;
     }
 
-
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
         TicketViewHolder ticketViewHolder = (TicketViewHolder) holder;
 
         final Ticket ticket  = filteredTickets.get(position) ;
@@ -68,20 +58,15 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
         return super.getItemId(position);
     }
 
-
-
     @Override
     public int getItemCount() {
         return filteredTickets.size();
     }
 
-
     @Override
     public void onClick(View v) {
-
         int itemPosition = recyclerView.getChildLayoutPosition(v);
         Ticket ticket = tickets.get(itemPosition);
-
 
         Intent goTicket = new  Intent(context, TicketActivity.class);
         goTicket.putExtra("Ticket", ticket);
@@ -95,7 +80,6 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
                 break;
         }
     }
-
 
     @Override
     public Filter getFilter() {
@@ -119,17 +103,14 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
                         tempList.add(ticket);
                     }
                 }
-
                 filterResults.count = tempList.size();
                 filterResults.values = tempList;
             } else {
                 filterResults.count = tickets.size();
                 filterResults.values = tickets;
             }
-
             return filterResults;
         }
-
 
         @SuppressWarnings("unchecked")
         @Override

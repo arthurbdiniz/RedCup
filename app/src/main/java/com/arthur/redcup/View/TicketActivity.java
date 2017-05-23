@@ -29,7 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class TicketActivity extends AppCompatActivity {
+public class TicketActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Ticket userTicket;
     private TextView textViewTitle, textViewDescription, textViewPrice, textViewUserEmail, textViewTelephone,
@@ -43,7 +43,7 @@ public class TicketActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener authListener;
     private User userLog;
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 1;
-
+    private FirebaseUser user;
 
     private ShareActionProvider mShareActionProvider;
 
@@ -52,8 +52,48 @@ public class TicketActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ticket);
 
+        initFirebase();
+        initToolbar();
+        initRecover();
+        initView();
+        setView();
+        setClickListeners();
+    }
+
+    public void initToolbar(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_ticket);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Ticket");
+    }
+
+    public void initRecover(){
+        //Recover Information of ticket from List View
+        Intent intent = getIntent();
+        userTicket = (Ticket) intent.getSerializableExtra("Ticket");
+    }
+
+    public void initView(){
+        textViewTitle = (TextView) findViewById(R.id.text_view_ticket_title);
+        textViewDescription = (TextView) findViewById(R.id.text_view_ticket_description);
+        textViewPrice = (TextView) findViewById(R.id.text_view_ticket_price);
+        textViewUserEmail = (TextView) findViewById(R.id.text_view_ticket_user_email);
+        textViewTelephone = (TextView) findViewById(R.id.text_view_ticket_user_telephone);
+        textViewCategory = (TextView) findViewById(R.id.ticketCategory);
+        textViewTicketId = (TextView) findViewById(R.id.text_view_ticket_id);
+        textViewUserId = (TextView) findViewById(R.id.text_view_ticket_user_id);
+        textViewDateCreation = (TextView) findViewById(R.id.text_view_ticket_date_created);
+        textViewDateExpiration = (TextView) findViewById(R.id.text_view_ticket_date_expiration);
+        textViewTelephone = (TextView) findViewById(R.id.text_view_ticket_user_telephone);
+        textViewLocation = (TextView) findViewById(R.id.ticketLocation);
+        textViewReport = (TextView) findViewById(R.id.text_view_report);
+        deleteTicketButton = (Button) findViewById(R.id.button_delete_ticket);
+    }
+
+    public void initFirebase(){
         //get current user
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -78,35 +118,9 @@ public class TicketActivity extends AppCompatActivity {
             userLog = new User(uid, email);
 
         }
+    }
 
-        //Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_ticket);
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Ticket");
-
-        //Recover Information of ticket from List View
-        Intent intent = getIntent();
-        userTicket = (Ticket) intent.getSerializableExtra("Ticket");
-
-        textViewTitle = (TextView) findViewById(R.id.text_view_ticket_title);
-        textViewDescription = (TextView) findViewById(R.id.text_view_ticket_description);
-        textViewPrice = (TextView) findViewById(R.id.text_view_ticket_price);
-        textViewUserEmail = (TextView) findViewById(R.id.text_view_ticket_user_email);
-        textViewTelephone = (TextView) findViewById(R.id.text_view_ticket_user_telephone);
-        textViewCategory = (TextView) findViewById(R.id.ticketCategory);
-        textViewTicketId = (TextView) findViewById(R.id.text_view_ticket_id);
-        textViewUserId = (TextView) findViewById(R.id.text_view_ticket_user_id);
-        textViewDateCreation = (TextView) findViewById(R.id.text_view_ticket_date_created);
-        textViewDateExpiration = (TextView) findViewById(R.id.text_view_ticket_date_expiration);
-        textViewTelephone = (TextView) findViewById(R.id.text_view_ticket_user_telephone);
-        textViewLocation = (TextView) findViewById(R.id.ticketLocation);
-        textViewReport = (TextView) findViewById(R.id.text_view_report);
-
-        deleteTicketButton = (Button) findViewById(R.id.button_delete_ticket);
-
+    public void setView(){
         textViewTitle.setText(userTicket.title);
         textViewDescription.setText(userTicket.description);
         textViewPrice.append(userTicket.price);
@@ -125,41 +139,72 @@ public class TicketActivity extends AppCompatActivity {
         } else {
             deleteTicketButton.setVisibility(View.GONE);
         }
-
-        deleteTicketButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteTicket();
-                //Snackbar.make(v, "Your ticket was successfully deleted!", Snackbar.LENGTH_LONG).setAction("No action", null).show();
-                finish();
-            }
-        });
-
-        textViewReport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent send = new Intent(Intent.ACTION_SENDTO);
-                String uriText = "mailto:" + Uri.encode("arthurbdiniz@gmail.com") +
-                        "?subject=" + Uri.encode("Denuncia ticket:  " + userTicket.ticketId) +
-                        "&body=" + Uri.encode("ID usuario denunciado: " + userTicket.userId + "\nMotivo: ");
-                Uri uri = Uri.parse(uriText);
-
-                send.setData(uri);
-                startActivity(Intent.createChooser(send, "Send mail..."));
-
-            }
-        });
-
-
-
-
-
-
-
-
     }
 
+    public void setClickListeners(){
+        deleteTicketButton.setOnClickListener(this);
+        textViewReport.setOnClickListener(this);
+    }
+
+    public void reportUser(){
+        Intent send = new Intent(Intent.ACTION_SENDTO);
+        String uriText = "mailto:" + Uri.encode("arthurbdiniz@gmail.com") +
+                "?subject=" + Uri.encode("Denuncia ticket:  " + userTicket.ticketId) +
+                "&body=" + Uri.encode("ID usuario denunciado: " + userTicket.userId + "\nMotivo: ");
+        Uri uri = Uri.parse(uriText);
+
+        send.setData(uri);
+        startActivity(Intent.createChooser(send, "Send mail..."));
+    }
+
+    public void deleteTicket(){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("tickets");
+        ref.child(userTicket.ticketId).removeValue();
+    }
+
+    public String refactorTelephoneNumber(TextView phoneView){
+        String phoneFormact;
+
+        phoneFormact = phoneView.getText().toString().replace("(", "");
+        return phoneFormact = phoneFormact.replace(")", "");
+    }
+
+    private void callPhone() {
+        Intent intent = new Intent(Intent.ACTION_CALL);
+        intent.setData(Uri.parse("tel:" + refactorTelephoneNumber(textViewTelephone)));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            startActivity(intent);
+        }
+    }
+
+    public void makePhoneCall(View view) {
+
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, MY_PERMISSIONS_REQUEST_CALL_PHONE);
+        } else {
+            callPhone();
+        }
+    }
+
+    public void sendSMS(View view){
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", refactorTelephoneNumber(textViewTelephone), null)));
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()){
+            case R.id.button_delete_ticket:
+                deleteTicket();
+                finish();
+                break;
+
+            case R.id.text_view_report:
+                reportUser();
+                break;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -185,11 +230,9 @@ public class TicketActivity extends AppCompatActivity {
                 return false;
             }
         });
-
         // Return true to display menu
         return true;
     }
-
 
     private Intent getShareIntent() {
         shareIntent = new Intent(Intent.ACTION_SEND);
@@ -203,24 +246,12 @@ public class TicketActivity extends AppCompatActivity {
 
         return shareIntent;
     }
-    // Call to update the share intent
-    private void setShareIntent(Intent shareIntent) {
-
-        if (mShareActionProvider != null) {
-            mShareActionProvider.setShareIntent(shareIntent);
-        }
-    }
-
-
-
-    //Snackbar.make(, "Your ticket was successfully deleted!", Snackbar.LENGTH_LONG).setAction("No action", null).show();
 
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -241,43 +272,6 @@ public class TicketActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-
-
-
-    }
-
-    public void deleteTicket(){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("tickets");
-        ref.child(userTicket.ticketId).removeValue();
-    }
-
-    public String refactorTelephoneNumber(TextView phoneView){
-        String phoneFormact;
-
-        phoneFormact = phoneView.getText().toString().replace("(", "");
-        return phoneFormact = phoneFormact.replace(")", "");
-    }
-
-    //******************************//
-    //             PHONE            //
-    //******************************//
-    private void callPhone() {
-        Intent intent = new Intent(Intent.ACTION_CALL);
-        intent.setData(Uri.parse("tel:" + refactorTelephoneNumber(textViewTelephone)));
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-            startActivity(intent);
-        }
-    }
-
-    public void makePhoneCall(View view) {
-
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, MY_PERMISSIONS_REQUEST_CALL_PHONE);
-        } else {
-            callPhone();
-        }
-
     }
 
     @Override
@@ -290,11 +284,6 @@ public class TicketActivity extends AppCompatActivity {
             }
         }
     }
-
-    public void sendSMS(View view){
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", refactorTelephoneNumber(textViewTelephone), null)));
-    }
-
 
 
 }

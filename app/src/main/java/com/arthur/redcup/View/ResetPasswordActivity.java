@@ -97,5 +97,5 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
 
         }
     }
-    
+
 }

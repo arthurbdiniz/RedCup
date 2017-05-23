@@ -33,6 +33,12 @@ public class TicketImageActivity extends AppCompatActivity {
         loadImageFromStorage(imageBitmap.getPath(1));
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
     public void initToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_image);
         setSupportActionBar(toolbar);
@@ -47,13 +53,6 @@ public class TicketImageActivity extends AppCompatActivity {
         imageBitmap = (ImageBitmap) intent.getSerializableExtra("TicketBitmap");
     }
 
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
-
     private void loadImageFromStorage(String path) {
         try {
             File f=new File(path, "profile.jpg");
@@ -64,4 +63,6 @@ public class TicketImageActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+
 }
