@@ -36,6 +36,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arthur.redcup.Model.Category;
 import com.arthur.redcup.Model.ImageBitmap;
@@ -387,6 +388,7 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
                 cepLayout.setVisibility(GONE);
                 cepEditText.setVisibility(VISIBLE);
                 cepEditText.setText("");
+                cepEditText.requestFocus();
                 break;
 
             case R.id.category_layout:
@@ -624,6 +626,12 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
 
         String yearStr = String.valueOf((year));
 
+        if(bm == null){
+            Toast.makeText(CreateTicketActivity.this, "Seu ticket deve conter uma imagem...",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (TextUtils.isEmpty(nameStr)) {
             nameTicket.setError(getString(R.string.name_ticket));
             return;
@@ -666,15 +674,15 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
             return;
         }
 
-        searchCEPTask = new SearchCEPTask();
+        //searchCEPTask = new SearchCEPTask();
 
 
-            String str_result = searchCEPTask.run(codigoEnderecamentoPostal);
-            JSONObject object = new JSONObject(str_result);
+          //  String str_result = searchCEPTask.run(codigoEnderecamentoPostal);
+            //JSONObject object = new JSONObject(str_result);
 
-            uf = object.getString(getString(R.string.cep_uf));
-            location = object.getString(getString(R.string.cep_location));
-            neighborhood = object.getString(getString(R.string.cep_neighborhood));
+            //uf = object.getString(getString(R.string.cep_uf));
+            //location = object.getString(getString(R.string.cep_location));
+            //neighborhood = object.getString(getString(R.string.cep_neighborhood));
 
 
         //Verify if CEP is valid
