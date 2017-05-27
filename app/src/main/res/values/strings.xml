@@ -93,6 +93,7 @@
     <string name="cep_uf">uf</string>
     <string name="cep_numbers">O CEP deve ser Válido!</string>
     <string name="cep_incorrect">CEP Incorreto, verifique os campos e tente novamente!</string>
+    <string name="cep_not_find">CEP não encontrado, tente novamente!</string>
     <string name="add_photo">Adicionar Foto!</string>
     <string name="take_photo">Tirar Foto</string>
     <string name="library">Escolher da Galeria</string>
@@ -104,6 +105,8 @@
     <string name="description">O anúncio deve conter uma descrição do ticket</string>
     <string name="price">O anúncio deve conter o valor do ticket</string>
     <string name="name_ticket">O anúncio deve conter o nome do ticket</string>
+    <string name="category">Seu Ticket precisa ter uma categoria!</string>
+    <string name="date">Seu ticket precisa ter uma data de validade!</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

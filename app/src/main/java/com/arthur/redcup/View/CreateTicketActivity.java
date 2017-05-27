@@ -63,11 +63,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -218,6 +221,49 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
                 }
             }
         });
+
+        /** Formarcts Price **/
+        price.addTextChangedListener(new PhoneNumberFormattingTextWatcher() {
+            private boolean isUpdating;
+            private EditText mEditText;
+            private NumberFormat mNF = NumberFormat.getCurrencyInstance();
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isUpdating) {
+                    isUpdating = false;
+                    return;
+                }
+                isUpdating = true;
+                String str = s.toString();
+                boolean hasMask = (str.indexOf("R$") >= 0 && str.indexOf(".") >= 0 && str.indexOf(",") >= 0) ||
+                        (str.indexOf("R$") >= 0 && str.indexOf(",") >= 0);
+
+                if (hasMask) {
+                    str = str.replaceAll("[R$]", "").replaceAll("[.]", "").replaceAll("[,]", "");
+                }
+
+                    try {
+                        double value = (Double.parseDouble(str) / 100);
+                        str = mNF.format(value);
+                        price.setText(str);
+                        price.setSelection(str.length());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        s = "";
+                    }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
 
         /** Formarcts CEP **/
         cepEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher() {
@@ -416,7 +462,11 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
             if (uf.isEmpty() || location.isEmpty() || neighborhood.isEmpty()) {
 
                 cepEditText.requestFocus();
-                cepEditText.setError("CEP nao encontrado, tente novamente!");
+
+                cepEditText.setError(getString(R.string.cep_not_find));
+                
+
+
             }else{
 
                 cepLayout.setVisibility(VISIBLE);
@@ -582,6 +632,11 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
             price.setError(getString(R.string.price));
             return;
         }
+        /*Double priceD = (double) Double.parseDouble(String.valueOf(price));
+        if ( priceD >= 5000.00) {
+            price.setError("deu ruim");
+            return;
+        }*/
         if (TextUtils.isEmpty(descriptionStr)) {
             description.setError(getString(R.string.description));
             return;
@@ -591,12 +646,12 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
             return;
         }
         if(TextUtils.isEmpty(categoryView.getText())){
-            buttonCategory.setError("Seu Ticket precisa ter uma categoria!");
+            buttonCategory.setError(getString(R.string.category));
             return;
 
         }
         if((dateExpiration.length() < 5)){
-            buttonDate.setError("Seu ticket precisa ter uma data de validade");
+            buttonDate.setError(getString(R.string.date));
             return;
         }
         if (userTelephone.length() < 11) {
@@ -626,7 +681,7 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
         if (uf.isEmpty() || location.isEmpty() || neighborhood.isEmpty()) {
 
             cepEditText.requestFocus();
-            cepEditText.setError("CEP nao encontrado, tente novamente!");
+            cepEditText.setError(getString(R.string.cep_not_find));
 
             return;
 
