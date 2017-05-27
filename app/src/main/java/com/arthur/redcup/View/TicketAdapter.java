@@ -2,19 +2,48 @@ package com.arthur.redcup.View;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+
 import com.arthur.redcup.Model.Ticket;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
+
 import com.arthur.redcup.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 
 public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickListener ,Filterable {
+
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private ArrayList<Ticket> tickets;
     private ArrayList<Ticket> filteredTickets;
@@ -22,6 +51,8 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
     private FriendFilter friendFilter;
     private RecyclerView recyclerView;
     private Context context;
+    private  TicketViewHolder ticketViewHolder;
+    private boolean imageTask = false;
 
     public TicketAdapter(ArrayList<Ticket> tickets, Context context, RecyclerView recyclerView) {
         this.tickets = tickets;
@@ -39,18 +70,29 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
 
         TicketViewHolder ticketViewHolder = new TicketViewHolder(view);
         view.setOnClickListener(this);
+
+
         return ticketViewHolder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        TicketViewHolder ticketViewHolder = (TicketViewHolder) holder;
+        ticketViewHolder = (TicketViewHolder) holder;
 
         final Ticket ticket  = filteredTickets.get(position) ;
 
         ticketViewHolder.nome.setText(ticket.getTitle());
         ticketViewHolder.preco.setText(ticket.getPrice());
         ticketViewHolder.location.setText(ticket.getLocation() + " - " + ticket.getUf() + " - " + ticket.getNeighborhood());
+
+        byte[] imageAsBytes = Base64.decode(ticket.getPathImage() .getBytes(), Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+        scaleImage(bitmap);
+        //ticketViewHolder.photo.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)
+
+        //ticketViewHolder.photo.setImageBitmap();
+        //previewStoredFirebaseImage(ticket.getPathImage());
+
     }
 
     @Override
@@ -118,6 +160,90 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
             filteredTickets = (ArrayList<Ticket>) results.values;
             notifyDataSetChanged();
         }
+    }
+
+    public void previewStoredFirebaseImage(String imagePath) {
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://red-cup.appspot.com").child(imagePath);
+
+        try {
+            final File localFile = File.createTempFile("images", "jpg");
+            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    ticketViewHolder.photo.setImageBitmap(bitmap);
+                    //mImageView.setImageBitmap(bitmap);
+                    imageTask = true;
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    imageTask = true;
+                }
+            });
+        } catch (IOException e ) {}
+    }
+
+
+
+
+    private void scaleImage(Bitmap bitmap) throws NoSuchElementException {
+        // Get bitmap from the the ImageView.
+        Bitmap m_bitmap = null;
+        m_bitmap = bitmap;
+
+
+
+
+        // Get current dimensions AND the desired bounding box
+        int width = 0;
+
+        try {
+            width = m_bitmap.getWidth();
+        } catch (NullPointerException e) {
+            throw new NoSuchElementException("Can't find bitmap on given view/drawable");
+        }
+
+        int height = bitmap.getHeight();
+        int bounding = dpToPx(250);
+
+
+        // Determine how much to scale: the dimension requiring less scaling is
+        // closer to the its side. This way the image always stays inside your
+        // bounding box AND either x/y axis touches it.
+        float xScale = ((float) bounding) / width;
+        float yScale = ((float) bounding) / height;
+        float scale = (xScale <= yScale) ? xScale : yScale;
+
+        // Create a matrix for the scaling and add the scaling data
+        Matrix matrix = new Matrix();
+        matrix.postScale(scale, scale);
+
+        // Create a new bitmap and convert it to a format understood by the ImageView
+        Bitmap scaledBitmap = Bitmap.createBitmap(m_bitmap, 0, 0, width, height, matrix, true);
+        width = scaledBitmap.getWidth(); // re-use
+        height = scaledBitmap.getHeight(); // re-use
+        //BitmapDrawable result = new BitmapDrawable(scaledBitmap);
+
+
+        // Apply the scaled bitmap
+        //view.setImageDrawable(result);
+
+        ticketViewHolder.photo.setImageBitmap(scaledBitmap);
+//ticketViewHolder.photo.setImageBitmap();
+        // Now change ImageView's dimensions to match the scaled image
+//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
+//        params.width = width;
+//        params.height = height;
+//        view.setLayoutParams(params);
+//
+//        Log.i("Test", "done");
+    }
+
+    private int dpToPx(int dp) {
+        float density = context.getResources().getDisplayMetrics().density;
+        return Math.round((float)dp * density);
     }
 }
 

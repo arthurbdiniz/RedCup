@@ -25,6 +25,9 @@ public class Ticket implements Serializable {
     public String location;
     public String neighborhood;
 
+    public String pathImage;
+
+
     // Default constructor required for calls to
     // DataSnapshot.getValue(Ticket.class)
     public Ticket() {
@@ -32,7 +35,7 @@ public class Ticket implements Serializable {
 
     public Ticket(String title, String description, String price, String CEP,
                   String userId, String userEmail, String userTelephone, String dateCreation,
-                  String dateExpiration, String uf, String location, String neighborhood, String category) {
+                  String dateExpiration, String uf, String location, String neighborhood, String category, String pathImage) {
 
         this.title = title;
         this.description = description;
@@ -48,6 +51,7 @@ public class Ticket implements Serializable {
         this.location = location;
         this.neighborhood = neighborhood;
         this.category = category;
+        this.pathImage = pathImage;
 
 
     }
@@ -60,6 +64,10 @@ public class Ticket implements Serializable {
 
     public void setTicketId(String ticketId){
         this.ticketId = ticketId;
+    }
+
+    public void setPathImage(String pathImage){
+        this.pathImage = pathImage;
     }
 
     public String getTitle(){
@@ -87,6 +95,9 @@ public class Ticket implements Serializable {
     }
 
 
+    public String getPathImage(){
+        return pathImage;
+    }
 
 
 }

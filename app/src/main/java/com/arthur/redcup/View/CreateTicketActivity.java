@@ -4,12 +4,15 @@ import android.Manifest;
 import android.app.DialogFragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -22,6 +25,7 @@ import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -39,6 +43,7 @@ import com.arthur.redcup.Model.SearchCEPTask;
 import com.arthur.redcup.Model.User;
 import com.arthur.redcup.R;
 import com.arthur.redcup.Model.Ticket;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -46,22 +51,29 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static com.arthur.redcup.R.id.imageView;
 
 public class CreateTicketActivity extends AppCompatActivity implements View.OnClickListener , View.OnKeyListener{
 
@@ -72,6 +84,7 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
     private static final int CATEGORY_PICKER = 3;
     private DatabaseReference mFirebaseDatabase;
     private FirebaseDatabase mFirebaseInstance;
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
     private ProgressBar progressBar;
     private Category category;
 
@@ -85,7 +98,7 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
     private EditText description;
     private EditText price;
     private EditText telephone;
-    private EditText cepEditText;
+    public EditText cepEditText;
 
     private TextView expirationDateView;
     private TextView expirationTimeView;
@@ -291,7 +304,11 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
         switch(v.getId()){
 
             case R.id.button_enviar:
-                sendTicket();
+                try {
+                    sendTicket();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 break;
 
             case R.id.button_category:
@@ -316,6 +333,11 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case R.id.cep_layout:
+                uf = "";
+                location = "";
+                neighborhood = "";
+                locationView.setText("");
+
                 cepLayout.setVisibility(GONE);
                 cepEditText.setVisibility(VISIBLE);
                 cepEditText.setText("");
@@ -341,42 +363,83 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
     public boolean onKey(View v, int keyCode, KeyEvent event) {
 
         if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-
-            searchCEPTask = new SearchCEPTask();
             codigoEnderecamentoPostal = cepEditText.getText().toString().replace( "/" , "");
-            try {
-                String str_result = searchCEPTask.execute(codigoEnderecamentoPostal).get();
-                JSONObject object = new JSONObject(str_result);
 
+            if(codigoEnderecamentoPostal.length() < 9){
+                cepEditText.requestFocus();
+                cepEditText.setError("CEP muito pequeno, tente novamente!");
+                return false;
+            }
+
+            Log.d("DE", codigoEnderecamentoPostal);
+            AsyncTaskRunner runner = new AsyncTaskRunner();
+            runner.execute();
+
+            return true;
+        }
+        return false;
+    }
+
+
+    private class AsyncTaskRunner extends AsyncTask<String, String, String> {
+
+
+        ProgressDialog progressDialog;
+
+        @Override
+        protected String doInBackground(String... params) {
+            publishProgress("Sleeping..."); // Calls onProgressUpdate()
+            searchCEPTask = new SearchCEPTask();
+            String str_result = searchCEPTask.run(codigoEnderecamentoPostal);
+            
+            try {
+                JSONObject object = new JSONObject(str_result);
                 uf = object.getString(getString(R.string.cep_uf));
                 location = object.getString(getString(R.string.cep_location));
                 neighborhood = object.getString(getString(R.string.cep_neighborhood));
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+
+
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            // execution of result of Long time consuming operation
+            progressDialog.dismiss();
 
             //Verify if CEP is valid
             if (uf.isEmpty() || location.isEmpty() || neighborhood.isEmpty()) {
 
                 cepEditText.requestFocus();
                 cepEditText.setError("CEP nao encontrado, tente novamente!");
-
-                return false;
-
             }else{
 
                 cepLayout.setVisibility(VISIBLE);
                 cepEditText.setVisibility(GONE);
                 locationView.setText(location + " - " + uf + " - " + neighborhood);
             }
-            return true;
+            //finalResult.setText(result);
         }
-        return false;
+
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = ProgressDialog.show(CreateTicketActivity.this,
+                    "Pesquisando",
+                    "Espere um momento, estamos localizando seu CEP... ");
+        }
+
+
+        @Override
+        protected void onProgressUpdate(String... text) {
+            //finalResult.setText(text[0]);
+
+        }
     }
 
     public void initFirebase(){
@@ -487,7 +550,7 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
         circleImageView = (CircleImageView) findViewById(R.id.profile_image);
     }
 
-    public void sendTicket(){
+    public void sendTicket() throws JSONException {
         String nameStr = nameTicket.getText().toString();
         String descriptionStr = description.getText().toString();
         String priceStr = price.getText().toString();
@@ -550,21 +613,14 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
 
         searchCEPTask = new SearchCEPTask();
 
-        try {
-            String str_result = searchCEPTask.execute(codigoEnderecamentoPostal).get();
+
+            String str_result = searchCEPTask.run(codigoEnderecamentoPostal);
             JSONObject object = new JSONObject(str_result);
 
             uf = object.getString(getString(R.string.cep_uf));
             location = object.getString(getString(R.string.cep_location));
             neighborhood = object.getString(getString(R.string.cep_neighborhood));
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         //Verify if CEP is valid
         if (uf.isEmpty() || location.isEmpty() || neighborhood.isEmpty()) {
@@ -578,16 +634,71 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
 
         //addNotification("Ticket para Expirar", "Seu ticket esta para expirar, reanuncie ou pague para vende mais rapido");
 
+
+
+        //Send image to DB
+//        circleImageView.setDrawingCacheEnabled(true);
+//        circleImageView.buildDrawingCache();
+//        Bitmap bitmap = circleImageView.getDrawingCache();
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//        circleImageView.setDrawingCacheEnabled(false);
+//        byte[] dt = baos.toByteArray();
+//
+//        String pathImage = "tickets/" + UUID.randomUUID() + ".png";
+//        StorageReference firememeRef = storage.getReference(pathImage);
+//
+//        StorageMetadata metadata = new StorageMetadata.Builder()
+//            .setCustomMetadata("text", "teste")
+//            .build();
+//
+//        progressBar.setVisibility(VISIBLE);
+//        UploadTask uploadTask = firememeRef.putBytes(dt, metadata);
+//
+//        uploadTask.addOnSuccessListener(CreateTicketActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                progressBar.setVisibility(GONE);
+//
+//            }
+//        });
+
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 8; // shrink it down otherwise we will use stupid amounts of memory
+
+            circleImageView.setDrawingCacheEnabled(true);
+            circleImageView.buildDrawingCache();
+            //Bitmap bitmap = BitmapFactory.decodeFile(String.valueOf(circleImageView.getDrawingCache()), options);
+            //Bitmap bitmap = circleImageView.getDrawingCache();
+
+            //Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoUri.getPath(), options);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] bytes = baos.toByteArray();
+            String base64Image = Base64.encodeToString(bytes, Base64.DEFAULT);
+
+            // we finally have our base64 string version of the image, save it.
+
+           // System.out.println("Stored image with length: " + bytes.length);
+
+
+
+
+        //Send ticket do DB
         try {
             if(createTicket(nameStr, descriptionStr, priceStr, codigoEnderecamentoPostal, userId,
                     userEmail, userTelephone, dateCreation, dateExpiration,  uf,
-                    location, neighborhood, category.getNome())){
+                    location, neighborhood, category.getNome(), base64Image)){
                 finish();
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
+
+
 
     @Override
     protected void onStart() {
@@ -624,7 +735,7 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
     }
 
     private boolean createTicket(String title, String description, String price, String codigoEnderecamentoPostal, String userId, String userEmail,
-                                        String userTelephone,String dateCreation, String dateExpiration, String uf, String location, String neighborhood, String category) throws JSONException {
+                                        String userTelephone,String dateCreation, String dateExpiration, String uf, String location, String neighborhood, String category, String pathImage) throws JSONException {
         // TODO
         // In real apps this userId should be fetched
         // by implementing firebase auth
@@ -632,7 +743,7 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
             ticketId = mFirebaseDatabase.push().getKey();
         }
 
-        Ticket user = new Ticket(title, description, price, codigoEnderecamentoPostal, userId, userEmail, userTelephone, dateCreation, dateExpiration, uf,  location, neighborhood, category);
+        Ticket user = new Ticket(title, description, price, codigoEnderecamentoPostal, userId, userEmail, userTelephone, dateCreation, dateExpiration, uf,  location, neighborhood, category, pathImage);
 
         mFirebaseDatabase.child(ticketId).setValue(user);
         //mFirebaseDatabase.child(ticketId).child("address").setValue("teste", "teste2");

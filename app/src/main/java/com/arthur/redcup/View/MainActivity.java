@@ -138,7 +138,8 @@ public class MainActivity extends AppCompatActivity
                                                     player.child("uf").getValue().toString(),
                                                     player.child("location").getValue().toString(),
                                                     player.child("neighborhood").getValue().toString(),
-                                                    player.child("category").getValue().toString());
+                                                    player.child("category").getValue().toString(),
+                                                    player.child("pathImage").getValue().toString());
 
 
                         ticket.setTicketId(player.getKey());
@@ -297,7 +298,8 @@ public class MainActivity extends AppCompatActivity
                                     singleUser.get("uf").toString(),
                                     singleUser.get("location").toString(),
                                     singleUser.get("neighborhood").toString(),
-                                    singleUser.get("category").toString()));
+                                    singleUser.get("category").toString(),
+                                    singleUser.get("image").toString()));
         }
 
 
