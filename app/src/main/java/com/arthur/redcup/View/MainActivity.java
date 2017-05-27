@@ -227,6 +227,12 @@ public class MainActivity extends AppCompatActivity
         }else if (id == R.id.nav_manage) {
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
 
+        }else if(id == R.id.nav_my_tickets){
+            startActivity(new Intent(MainActivity.this, MyTicketsActivity.class));
+
+        }else if(id == R.id.nav_saved_tickets){
+            startActivity(new Intent(MainActivity.this, SavedTicketsActivity.class));
+
         }else if (id == R.id.nav_talk) {
             Snackbar.make(viewGroup , "Em breve voce poderá estar entrando em contato conosco!"  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
 

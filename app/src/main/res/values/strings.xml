@@ -108,6 +108,11 @@
     <string name="category">Seu Ticket precisa ter uma categoria!</string>
     <string name="date">Seu ticket precisa ter uma data de validade!</string>
 
+    <!--MyTickets-->
+    <string name="title_my_tickets">Meus Tickets</string>
+
+    <!--SavedTickets-->
+    <string name="title_saved_tickets">Tickets Salvos</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
