@@ -22,15 +22,11 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_gravity="center_horizontal"
-            app:srcCompat="@drawable/name"
-            />
-
-
+            app:srcCompat="@drawable/name" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
 
             <EditText
                 android:id="@+id/email"
@@ -58,11 +54,8 @@
                 android:textColor="@color/white"
                 android:textColorHint="@android:color/white"
                 android:background="@color/whiteaAlpha"/>
+
         </android.support.design.widget.TextInputLayout>
-
-
-
-
 
         <Button
             android:id="@+id/btn_login"
@@ -88,21 +81,17 @@
             android:background="@null"
             android:text="@string/btn_forgot_password"
             android:textAllCaps="false"
-            android:textColor="@color/colorAccent"
-            />
-
+            android:textColor="@color/colorAccent" />
 
         <Button
             android:id="@+id/btn_signup"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-
             android:background="@null"
             android:text="@string/btn_link_to_register"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="15dp" />
-
 
     </LinearLayout>
 
@@ -113,6 +102,5 @@
         android:layout_gravity="center|bottom"
         android:layout_marginBottom="325dp"
         android:visibility="gone" />
-
 
 </android.support.design.widget.CoordinatorLayout>

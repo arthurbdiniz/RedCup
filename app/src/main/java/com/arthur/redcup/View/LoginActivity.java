@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity implements
                     // User is signed in
                     //Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     if(user.getDisplayName() != null){
-                        //Intent goNavigation = new  Intent(getApplicationContext(), NavigationActivity.class);
+                        //Intent goNavigation = new  Intent(getApplicationContext(), MainActivity.class);
                         //goNavigation.putExtra("User", userLog);
                         //startActivity(goNavigation);
 
@@ -138,7 +138,7 @@ public class LoginActivity extends AppCompatActivity implements
         auth = FirebaseAuth.getInstance();
 
         if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(LoginActivity.this, NavigationActivity.class));
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
 
@@ -216,7 +216,7 @@ public class LoginActivity extends AppCompatActivity implements
 
                                     }
 
-                                    Intent goNavigation = new  Intent(getApplicationContext(), NavigationActivity.class);
+                                    Intent goNavigation = new  Intent(getApplicationContext(), MainActivity.class);
                                     goNavigation.putExtra("User", userLog);
                                     startActivity(goNavigation);
 

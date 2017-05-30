@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".View.MainActivity">
+    tools:context=".View.ProfileActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -23,7 +23,6 @@
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
-
         android:layout_width="368dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -35,8 +34,6 @@
         tools:layout_editor_absoluteY="0dp"
         tools:layout_editor_absoluteX="8dp"
         android:layout_marginTop="50dp">
-
-
 
         <EditText
             android:id="@+id/old_email"

@@ -7,11 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".View.CreateTicketActivity"
-
     android:background="@drawable/background_create_class"
-
     android:orientation="vertical">
-
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -40,21 +37,33 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <ImageButton
-                    android:id="@+id/camera_btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:background="@color/CinzaEscuro"
-                    android:layout_below="@+id/appBarLayout"
-                    app:srcCompat="@android:drawable/ic_menu_camera"
-                    />
+                    <ImageButton
+                        android:id="@+id/camera_btn"
+                        android:layout_width="125dp"
+                        android:layout_height="125dp"
+                        android:layout_gravity="center_horizontal"
 
+                        android:layout_below="@+id/appBarLayout"
+                        android:src="@drawable/ic_camera"
+                        android:adjustViewBounds="true"
+                        android:padding="2dp"
+                        android:scaleType="fitCenter" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/profile_image"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:visibility="gone"
+                    app:civ_border_width="2dp"
+                    app:civ_border_color="#FF000000"/>
 
                 <EditText
                     android:id="@+id/edit_text_title"
@@ -62,18 +71,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:hint="Titulo"
-                    android:inputType="text"
-
-                    />
+                    android:inputType="text" />
 
                 <EditText
-
                     android:id="@+id/editTextPrice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/edit_text_description"
                     android:layout_marginTop="10dp"
                     android:hint="Preco (R$)"
+                    android:maxLength="10"
                     android:inputType="numberDecimal" />
 
                 <EditText
@@ -87,19 +94,15 @@
                     />
 
                 <EditText
-
                     android:id="@+id/editTextTelephone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Telefone"
                     android:layout_below="@+id/button_category"
-
                     android:inputType="phone"
                     android:lines="1"
                     android:maxLength="15"
-
-                    android:layout_marginTop="10dp"
-                    />
+                    android:layout_marginTop="10dp" />
 
                 <Button
                     android:id="@+id/button_category"
@@ -120,11 +123,11 @@
                     android:layout_marginTop="10dp"
                     android:background="#c9c9c9"
                     android:visibility="gone">
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical">
-
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -137,13 +140,11 @@
 
                             android:layout_marginLeft="20dp"
                             android:textSize="20dp"
-
                             android:textColor="@color/CinzaEscuro"
                             android:id="@+id/text_view_category"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical|center_horizontal"
-                            />
+                            android:layout_gravity="center_vertical|center_horizontal"/>
 
                     </LinearLayout>
 
@@ -156,8 +157,7 @@
                     android:layout_marginTop="10dp"
                     android:text="Data Evento"
                     android:background="@color/CinzaEscuro"
-                    android:textColor="@color/white"
-                    />
+                    android:textColor="@color/white" />
 
                 <!--Date-->
                 <LinearLayout
@@ -170,7 +170,6 @@
                     android:visibility="gone"
                     android:onClick="clickDateTime"
                     android:background="#c9c9c9">
-
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -185,14 +184,13 @@
                             app:srcCompat="@drawable/ic_date"/>
 
                         <TextView
-
                             android:layout_marginLeft="20dp"
                             android:layout_gravity="center_vertical"
-
                             android:id="@+id/text_view_event_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text=""/>
+
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -201,7 +199,6 @@
                             app:srcCompat="@drawable/ic__time"/>
 
                         <TextView
-
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="20dp"
                             android:id="@+id/text_view_event_time"
@@ -212,7 +209,6 @@
                     </LinearLayout>
 
                 </LinearLayout>
-
 
                 <EditText
                     android:id="@+id/editTextCep"
@@ -234,14 +230,12 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:background="#c9c9c9"
-                    android:visibility="gone"
-                    >
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical">
-
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -251,10 +245,8 @@
                             app:srcCompat="@drawable/ic_location"/>
 
                         <TextView
-
                             android:layout_marginLeft="10dp"
                             android:textSize="20dp"
-
                             android:textColor="@color/CinzaEscuro"
                             android:id="@+id/text_view_location"
                             android:layout_width="wrap_content"
@@ -263,7 +255,6 @@
                             android:text="Location"/>
 
                     </LinearLayout>
-
 
                 </LinearLayout>
 
@@ -275,8 +266,7 @@
                     android:layout_marginTop="18dp"
                     android:text="Enviar"
                     android:background="@color/RedCup"
-                    android:textColor="@color/white"
-                    />
+                    android:textColor="@color/white" />
 
             </LinearLayout>
 
