@@ -1,11 +1,8 @@
 package com.arthur.redcup.Model;
 
-
 import java.io.Serializable;
 
 public class Ticket implements Serializable {
-
-
 
     public String ticketId;
     public String userId;
@@ -18,15 +15,10 @@ public class Ticket implements Serializable {
     public String dateCreation;
     public String dateExpiration;
     public String category;
-
-
-
     public String uf;
     public String location;
     public String neighborhood;
-
     public String pathImage;
-
 
     // Default constructor required for calls to
     // DataSnapshot.getValue(Ticket.class)
@@ -46,58 +38,135 @@ public class Ticket implements Serializable {
         this.dateExpiration = dateExpiration;
         this.userId = userId;
         this.userEmail = userEmail;
-
         this.uf = uf;
         this.location = location;
         this.neighborhood = neighborhood;
         this.category = category;
         this.pathImage = pathImage;
-
-
     }
-
 
     @Override
     public String toString() {
         return "\n"+"Title: " + title +"\n" + "Price: " + price +"\n" + "Email: " + userEmail+"\n";
     }
 
-    public void setTicketId(String ticketId){
-        this.ticketId = ticketId;
+    public String getCategory(){
+        return category;
+    }
+
+    public void setCategory(String category){
+        this.category = category;
+    }
+
+    public String getPathImage(){
+        return pathImage;
     }
 
     public void setPathImage(String pathImage){
         this.pathImage = pathImage;
     }
 
+    public String getTicketId(){
+        return ticketId;
+    }
+
+    public void setTicketId(String ticketId){
+        this.ticketId = ticketId;
+    }
+
+    public String getUserId(){
+        return userId;
+    }
+
+    public void setUserId(String userId){
+        this.userId = userId;
+    }
+
     public String getTitle(){
         return title;
+    }
+
+    public void setTitle(String title){
+        this.title = title;
+    }
+
+    public String getDescription(){
+        return description;
+    }
+
+    public void setDescription(String description){
+        this.description = description;
     }
 
     public String getPrice(){
         return price;
     }
 
+    public void setPrice(String price){
+        this.price = price;
+    }
+
+    public String getCEP(){
+        return CEP;
+    }
+
+    public void setCEP(String CEP){
+        this.CEP = CEP;
+    }
+
+    public String getUserTelephone(){
+        return userTelephone;
+    }
+
+    public void setUserTelephone(String userTelephone){
+        this.userTelephone = userTelephone;
+    }
+
+    public String getUserEmail(){
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail){
+        this.userEmail = userEmail;
+    }
+
+    public String getDateCreation(){
+        return dateCreation;
+    }
+
+    public void setDateCreation(String dateCreation){
+        this.dateCreation = dateCreation;
+    }
+
+    public String getDateExpiration(){
+        return dateExpiration;
+    }
+
+    public void setDateExpiration(String dateExpiration){
+        this.dateExpiration = dateExpiration;
+    }
+
     public String getUf() {
         return uf;
+    }
+
+    public void setUf(String uf){
+        this.uf = uf;
     }
 
     public String getLocation() {
         return location;
     }
 
+    public void setLocation(String location){
+        this.location = location;
+    }
+
     public String getNeighborhood() {
         return neighborhood;
     }
 
-    public String getCategory(){
-        return category;
+    public void setNeighborhood(String neighborhood){
+        this.neighborhood = neighborhood;
     }
-
-
-    public String getPathImage(){
-        return pathImage;
-    }
-
-
 }
