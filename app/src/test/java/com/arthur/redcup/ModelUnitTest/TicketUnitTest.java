@@ -114,5 +114,5 @@ public class TicketUnitTest {
         ticket.setPathImage("pathImage");
         assertEquals("pathImage", ticket.getPathImage());
     }
-    
+
 }
