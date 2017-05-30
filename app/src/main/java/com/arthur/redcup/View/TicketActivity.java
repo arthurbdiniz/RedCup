@@ -3,6 +3,8 @@ package com.arthur.redcup.View;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -18,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +41,7 @@ public class TicketActivity extends AppCompatActivity implements View.OnClickLis
     private Button deleteTicketButton;
 
     private  Intent shareIntent;
+    private ImageView ticketPhoto;
 
 
     private FirebaseAuth.AuthStateListener authListener;
@@ -72,6 +76,18 @@ public class TicketActivity extends AppCompatActivity implements View.OnClickLis
         //Recover Information of ticket from List View
         Intent intent = getIntent();
         userTicket = (Ticket) intent.getSerializableExtra("Ticket");
+
+        Bundle extras = getIntent().getExtras();
+        byte[] byteArray = extras.getByteArray("picture");
+
+        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        //ImageView image = (ImageView) findViewById(R.id.imageView1);
+        ticketPhoto = (ImageView) findViewById(R.id.image_view_photo);
+        ticketPhoto.setImageBitmap(bmp);
+
+        //Bitmap bitmap = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+
+        //ticketPhoto.setImageBitmap(Bitmap.createScaledBitmap(bmp, 0, 0, false));
     }
 
     public void initView(){
@@ -89,6 +105,7 @@ public class TicketActivity extends AppCompatActivity implements View.OnClickLis
         textViewLocation = (TextView) findViewById(R.id.ticketLocation);
         textViewReport = (TextView) findViewById(R.id.text_view_report);
         deleteTicketButton = (Button) findViewById(R.id.button_delete_ticket);
+
     }
 
     public void initFirebase(){
@@ -204,6 +221,11 @@ public class TicketActivity extends AppCompatActivity implements View.OnClickLis
                 reportUser();
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @Override

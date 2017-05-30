@@ -73,6 +73,7 @@
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/image_view_photo"
                     android:layout_width="match_parent"
                     android:layout_height="190dp"
                     android:background="@color/CinzaRedCup" />

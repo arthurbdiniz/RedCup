@@ -737,7 +737,7 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
 
             //Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoUri.getPath(), options);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            bm.compress(Bitmap.CompressFormat.JPEG, 50, baos);
             byte[] bytes = baos.toByteArray();
             String base64Image = Base64.encodeToString(bytes, Base64.DEFAULT);
 
@@ -990,7 +990,7 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void onCaptureImageResult(Intent data) {
-        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        bm = (Bitmap) data.getExtras().get("data");
 //        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 //        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
 //        File destination = new File(Environment.getExternalStorageDirectory(),
@@ -1011,9 +1011,9 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
         //buttonCamera.setImageBitmap(Bitmap.createScaledBitmap(thumbnail, 300, 300, false));
         buttonCamera.setVisibility(GONE);
         circleImageView.setVisibility(VISIBLE);
-        circleImageView.setImageBitmap(thumbnail);
+        circleImageView.setImageBitmap(bm);
         imageBitmap = new ImageBitmap();
-        imageBitmap.addPath(1, saveToInternalStorage(thumbnail));
+        imageBitmap.addPath(1, saveToInternalStorage(bm));
 
     }
 

@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -87,7 +88,7 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
 
         byte[] imageAsBytes = Base64.decode(ticket.getPathImage() .getBytes(), Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
-        scaleImage(bitmap);
+        ticketViewHolder.photo.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 330, 330, false));
         //ticketViewHolder.photo.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)
 
         //ticketViewHolder.photo.setImageBitmap();
@@ -109,11 +110,20 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
     public void onClick(View v) {
         int itemPosition = recyclerView.getChildLayoutPosition(v);
         Ticket ticket = tickets.get(itemPosition);
-
+        byte[] imageAsBytes = Base64.decode(ticket.getPathImage() .getBytes(), Base64.DEFAULT);
+        //Bitmap bitmap = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
         Intent goTicket = new  Intent(context, TicketActivity.class);
+        goTicket.putExtra("picture", imageAsBytes);
         goTicket.putExtra("Ticket", ticket);
         goTicket.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(goTicket);
+
+
+
+
+//        Bundle extras = getIntent().getExtras();
+//        Bitmap bmp = (Bitmap) extras.getParcelable("imagebitmap");
+
 
         switch (v.getId()){
             case R.id.ticketPhoto:
@@ -186,64 +196,5 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
     }
 
 
-
-
-    private void scaleImage(Bitmap bitmap) throws NoSuchElementException {
-        // Get bitmap from the the ImageView.
-        Bitmap m_bitmap = null;
-        m_bitmap = bitmap;
-
-
-
-
-        // Get current dimensions AND the desired bounding box
-        int width = 0;
-
-        try {
-            width = m_bitmap.getWidth();
-        } catch (NullPointerException e) {
-            throw new NoSuchElementException("Can't find bitmap on given view/drawable");
-        }
-
-        int height = bitmap.getHeight();
-        int bounding = dpToPx(250);
-
-
-        // Determine how much to scale: the dimension requiring less scaling is
-        // closer to the its side. This way the image always stays inside your
-        // bounding box AND either x/y axis touches it.
-        float xScale = ((float) bounding) / width;
-        float yScale = ((float) bounding) / height;
-        float scale = (xScale <= yScale) ? xScale : yScale;
-
-        // Create a matrix for the scaling and add the scaling data
-        Matrix matrix = new Matrix();
-        matrix.postScale(scale, scale);
-
-        // Create a new bitmap and convert it to a format understood by the ImageView
-        Bitmap scaledBitmap = Bitmap.createBitmap(m_bitmap, 0, 0, width, height, matrix, true);
-        width = scaledBitmap.getWidth(); // re-use
-        height = scaledBitmap.getHeight(); // re-use
-        //BitmapDrawable result = new BitmapDrawable(scaledBitmap);
-
-
-        // Apply the scaled bitmap
-        //view.setImageDrawable(result);
-
-        ticketViewHolder.photo.setImageBitmap(scaledBitmap);
-//ticketViewHolder.photo.setImageBitmap();
-        // Now change ImageView's dimensions to match the scaled image
-//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
-//        params.width = width;
-//        params.height = height;
-//        view.setLayoutParams(params);
-//
-//        Log.i("Test", "done");
-    }
-
-    private int dpToPx(int dp) {
-        float density = context.getResources().getDisplayMetrics().density;
-        return Math.round((float)dp * density);
-    }
 }
 

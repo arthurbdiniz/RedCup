@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(MainActivity.this, SavedTicketsActivity.class));
 
         }else if (id == R.id.nav_talk) {
-            Snackbar.make(viewGroup , "Em breve voce poderá estar entrando em contato conosco!"  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            talkWithUs();
 
         }else if(id == R.id.nav_frequently_questions){
             Snackbar.make(viewGroup , "Estamos trabalhando nessa funcionalidade..."  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -315,6 +315,17 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+    }
+
+    public void talkWithUs(){
+        Intent send = new Intent(Intent.ACTION_SENDTO);
+        String uriText = "mailto:" + Uri.encode("arthurbdiniz@gmail.com") +
+                "?subject=" +
+                "&body=";
+        Uri uri = Uri.parse(uriText);
+
+        send.setData(uri);
+        startActivity(Intent.createChooser(send, "Send mail..."));
     }
 
     private void initFloatingButton(){
