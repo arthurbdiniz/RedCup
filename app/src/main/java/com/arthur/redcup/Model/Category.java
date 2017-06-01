@@ -8,10 +8,8 @@ import java.io.Serializable;
 
 public class Category implements Serializable {
 
-    private final String nome;
-    public final int photo;
-
-
+    private String nome;
+    public int photo;
 
     public Category(String nome, int photo) {
 
@@ -20,11 +18,23 @@ public class Category implements Serializable {
 
     }
 
+    public Category() {
+
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     public String getNome() {
         return nome;
     }
 
-    public int getPhoto() {return  photo;}
+    public void setPhoto(int photo) {
+        this.photo = photo;
+    }
 
+    public int getPhoto() {
+        return  photo;
+    }
 }
-
