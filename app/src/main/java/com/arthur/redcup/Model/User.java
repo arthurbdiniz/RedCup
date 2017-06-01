@@ -1,22 +1,18 @@
 package com.arthur.redcup.Model;
 
-
 import java.io.Serializable;
 
 public class User implements Serializable{
-
 
     public String email;
     public String idUser;
 
         public User() {
-
         }
 
         public User( String idUser, String email) {
             this.idUser = idUser;
             this.email = email;
-
         }
 
         public void setEmail(String email){
@@ -27,13 +23,11 @@ public class User implements Serializable{
             return email;
         }
 
-        public void setId(String idUser){
+        public void setId(String idUser) {
             this.idUser = idUser;
         }
 
-        public String getId(){
+        public String getId() {
             return idUser;
         }
-
-
 }

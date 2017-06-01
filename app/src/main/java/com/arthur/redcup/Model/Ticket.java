@@ -18,7 +18,6 @@ public class Ticket implements Serializable {
     public String uf;
     public String location;
     public String neighborhood;
-
     public String pathImage;
 
     // Default constructor required for calls to
@@ -39,7 +38,6 @@ public class Ticket implements Serializable {
         this.dateExpiration = dateExpiration;
         this.userId = userId;
         this.userEmail = userEmail;
-
         this.uf = uf;
         this.location = location;
         this.neighborhood = neighborhood;
@@ -52,47 +50,43 @@ public class Ticket implements Serializable {
         return "\n"+"Title: " + title +"\n" + "Price: " + price +"\n" + "Email: " + userEmail+"\n";
     }
 
-    public void setTicketId(String ticketId){
-        this.ticketId = ticketId;
-    }
-
-    public String getTicketId(){
+    public String getTicketId() {
         return ticketId;
     }
 
-    public void setUserId(String userId){
+    public void setTicketId(String ticketId) {
+        this.ticketId = ticketId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public String getUserId(){
-        return userId;
+    public String getTitle() {
+        return title;
     }
 
     public void setTitle(String title){
         this.title = title;
     }
 
-    public String getTitle(){
-        return title;
+    public String getDescription(){
+        return description;
     }
 
     public void setDescription(String description){
         this.description = description;
     }
 
-    public String getDescription(){
-        return description;
-    }
-
-    public void setPrice(String price){
-        this.price = price;
-    }
-
     public String getPrice(){
         return price;
     }
 
-    public void setCEP(String CEP){
+    public void setCEP(String CEP) {
         this.CEP = CEP;
     }
 
@@ -100,7 +94,11 @@ public class Ticket implements Serializable {
         return CEP;
     }
 
-    public void setUserTelephone(String userTelephone){
+    public void setPrice(String price){
+        this.price = price;
+    }
+
+    public void setUserTelephone(String userTelephone) {
         this.userTelephone = userTelephone;
     }
 
@@ -108,7 +106,7 @@ public class Ticket implements Serializable {
         return userTelephone;
     }
 
-    public void setUserEmail(String userEmail){
+    public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
     }
 
@@ -116,7 +114,7 @@ public class Ticket implements Serializable {
         return userEmail;
     }
 
-    public void setDateCreation(String dateCreation){
+    public void setDateCreation(String dateCreation) {
         this.dateCreation = dateCreation;
     }
 
@@ -124,7 +122,7 @@ public class Ticket implements Serializable {
         return dateCreation;
     }
 
-    public void setDateExpiration(String dateExpiration){
+    public void setDateExpiration(String dateExpiration) {
         this.dateExpiration = dateExpiration;
     }
 
@@ -140,7 +138,7 @@ public class Ticket implements Serializable {
         return category;
     }
 
-    public void setUf(String uf){
+    public void setUf(String uf) {
         this.uf = uf;
     }
 
@@ -148,7 +146,7 @@ public class Ticket implements Serializable {
         return uf;
     }
 
-    public void setLocation(String location){
+    public void setLocation(String location) {
         this.location = location;
     }
 
@@ -171,5 +169,4 @@ public class Ticket implements Serializable {
     public String getPathImage(){
         return pathImage;
     }
-
 }
