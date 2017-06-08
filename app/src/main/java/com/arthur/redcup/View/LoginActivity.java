@@ -36,7 +36,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener{
 
-
     private static final int RC_SIGN_IN = 9001 ;
 
 
