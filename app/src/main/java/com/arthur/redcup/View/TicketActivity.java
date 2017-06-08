@@ -27,10 +27,13 @@ import android.widget.Toast;
 import com.arthur.redcup.Model.Ticket;
 import com.arthur.redcup.Model.User;
 import com.arthur.redcup.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 
 public class TicketActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -42,6 +45,8 @@ public class TicketActivity extends AppCompatActivity implements View.OnClickLis
 
     private  Intent shareIntent;
     private ImageView ticketPhoto;
+    private AdView mAdView;
+
 
 
     private FirebaseAuth.AuthStateListener authListener;
@@ -59,9 +64,25 @@ public class TicketActivity extends AppCompatActivity implements View.OnClickLis
         initFirebase();
         initToolbar();
         initRecover();
+
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+//        AdRequest adRequest = new AdRequest.Builder()
+//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+//                // Check the LogCat to get your test device ID
+//                .addTestDevice("SomeString")
+//                .build();
+        mAdView.loadAd(adRequest);
+
+
+
+
         initView();
         setView();
         setClickListeners();
+
+
     }
 
     public void initToolbar(){
@@ -206,6 +227,30 @@ public class TicketActivity extends AppCompatActivity implements View.OnClickLis
 
     public void sendSMS(View view){
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", refactorTelephoneNumber(textViewTelephone), null)));
+    }
+
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 
     @Override

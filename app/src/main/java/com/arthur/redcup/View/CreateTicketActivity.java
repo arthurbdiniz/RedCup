@@ -889,8 +889,9 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void selectImage() {
-
+        checkPermition(true);
         final CharSequence[] items = { getString(R.string.take_photo), getString(R.string.library),
                 getString(R.string.cancel) };
         AlertDialog.Builder builder = new AlertDialog.Builder(CreateTicketActivity.this);
