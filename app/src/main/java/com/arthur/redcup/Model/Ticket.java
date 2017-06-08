@@ -86,14 +86,6 @@ public class Ticket implements Serializable {
         return price;
     }
 
-    public void setCEP(String CEP) {
-        this.CEP = CEP;
-    }
-
-    public String getCEP(){
-        return CEP;
-    }
-
     public void setPrice(String price){
         this.price = price;
     }
