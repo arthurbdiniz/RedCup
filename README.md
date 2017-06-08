@@ -9,6 +9,8 @@
 
 [![codebeat badge](https://codebeat.co/badges/d7ec4476-30e4-4c9a-ac91-415a8383006a)](https://codebeat.co/projects/github-com-arthurbdiniz-redcup-master)
 
+[![codecov](https://codecov.io/gh/arthurbdiniz/RedCup/branch/master/graph/badge.svg)](https://codecov.io/gh/arthurbdiniz/RedCup)
+
 [Política de Privacidade](https://github.com/arthurbdiniz/RedCup/wiki/PoliticadePrivacidade)
 
 [![Code Climate](https://codeclimate.com/github/arthurbdiniz/RedCup/badges/gpa.svg)](https://codeclimate.com/github/arthurbdiniz/RedCup)
