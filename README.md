@@ -7,7 +7,7 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d7678fab9cbd427bac45feeb259d84a5)](https://www.codacy.com/app/arthurbdiniz/RedCuputm_source=github.com&amp;utm_medium=referral&amp;utm_content=arthurbdiniz/RedCup&amp;utm_campaign=Badge_Grade)
 
-[Google Play Store](https://play.google.com/store/apps/details?id=com.arthur.redcup&hl=pt-br)
+[![codebeat badge](https://codebeat.co/badges/d7ec4476-30e4-4c9a-ac91-415a8383006a)](https://codebeat.co/projects/github-com-arthurbdiniz-redcup-master)
 
 [Política de Privacidade](https://github.com/arthurbdiniz/RedCup/wiki/PoliticadePrivacidade)
 
