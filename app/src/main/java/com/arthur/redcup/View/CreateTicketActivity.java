@@ -798,17 +798,16 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
     }
 
     private boolean createTicket(String title, String description, String price, String codigoEnderecamentoPostal, String userId, String userEmail,
-                                        String userTelephone,String dateCreation, String dateExpiration, String uf, String location, String neighborhood, String category, String pathImage) throws JSONException {
-        // TODO
-        // In real apps this userId should be fetched
-        // by implementing firebase auth
+                                        String userTelephone,String dateCreation, String dateExpiration, String uf, String location, String neighborhood,
+                                            String category, String pathImage) throws JSONException {
+        
         if (TextUtils.isEmpty(ticketId)) {
             ticketId = mFirebaseDatabase.push().getKey();
         }
 
-        Ticket user = new Ticket(title, description, price, codigoEnderecamentoPostal, userId, userEmail, userTelephone, dateCreation, dateExpiration, uf,  location, neighborhood, category, pathImage);
+        Ticket ticket = new Ticket(title, description, price, codigoEnderecamentoPostal, userId, userEmail, userTelephone, dateCreation, dateExpiration, uf,  location, neighborhood, category, pathImage);
 
-        mFirebaseDatabase.child(ticketId).setValue(user);
+        mFirebaseDatabase.child(ticketId).setValue(ticket);
         //mFirebaseDatabase.child(ticketId).child("address").setValue("teste", "teste2");
 
         addUserChangeListener();
@@ -889,8 +888,9 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void selectImage() {
-
+        checkPermition(true);
         final CharSequence[] items = { getString(R.string.take_photo), getString(R.string.library),
                 getString(R.string.cancel) };
         AlertDialog.Builder builder = new AlertDialog.Builder(CreateTicketActivity.this);
