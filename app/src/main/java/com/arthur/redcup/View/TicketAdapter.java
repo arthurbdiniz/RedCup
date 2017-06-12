@@ -154,6 +154,12 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
                     if (ticket.getTitle().toLowerCase().contains(constraint.toString().toLowerCase())) {
                         tempList.add(ticket);
                     }
+                    if (ticket.getCategory().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        tempList.add(ticket);
+                    }
+                    if (ticket.getUf().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        tempList.add(ticket);
+                    }
                 }
                 filterResults.count = tempList.size();
                 filterResults.values = tempList;

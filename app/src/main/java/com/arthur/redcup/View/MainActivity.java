@@ -11,6 +11,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.ListFragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -25,12 +31,16 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Adapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.SearchView;
 
+import com.arthur.redcup.Model.Location;
+import com.arthur.redcup.Model.Category;
 import com.arthur.redcup.Model.User;
 import com.arthur.redcup.R;
 import com.arthur.redcup.Model.Ticket;
@@ -46,8 +56,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static com.arthur.redcup.R.id.fab;
-
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -64,9 +75,15 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView recyclerView;
     private AppBarLayout appBarLayout;
     final   ArrayList<Ticket> tickets = new ArrayList<Ticket>();
+    private static final int CATEGORY_PICKER = 3;
+    private static final int LOCATION_PICKER = 4;
 
 
     private  Toolbar toolbar;
+
+    private Button categoryButton;
+    private Button locationButton;
+
 
 
     public List<Ticket> listTickets;
@@ -74,6 +91,27 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+
+        ////FILTERS////
+        categoryButton = (Button) findViewById(R.id.category_btn);
+        categoryButton.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent firtGoCategory = new Intent(getApplicationContext(), CategoryActivity.class);
+                startActivityForResult(firtGoCategory, CATEGORY_PICKER);
+                return;
+            }
+        } );
+
+        locationButton = (Button) findViewById( R.id.location_btn );
+        locationButton.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent firtGoCategory = new Intent(getApplicationContext(), LocationActivity.class);
+                startActivityForResult(firtGoCategory, LOCATION_PICKER);
+                return;
+            }
+        } );
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         viewGroup = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
@@ -147,6 +185,7 @@ public class MainActivity extends AppCompatActivity
 
                     }
                     adapter = new TicketAdapter(tickets ,getApplicationContext(), recyclerView);
+
                     recyclerView.setAdapter(adapter);
                     RecyclerView.LayoutManager layout = new LinearLayoutManager(getApplicationContext(),
                             LinearLayoutManager.VERTICAL, false);
@@ -161,6 +200,32 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+
+            case CATEGORY_PICKER:
+                if(resultCode == RESULT_OK){
+                    Category category = (Category) data.getSerializableExtra("Category");
+                    adapter.getFilter().filter(category.getNome());
+                    categoryButton.setText(category.getNome());
+                    break;
+                }
+            case LOCATION_PICKER:
+                if(resultCode == RESULT_OK){
+                    Location location = (Location) data.getSerializableExtra("Location");
+                    adapter.getFilter().filter(location.getUf());
+                    locationButton.setText(location.getState());
+                    break;
+                }
+        }
+
+
+    }
+
+
 
     @Override
     public void onBackPressed() {
@@ -183,6 +248,7 @@ public class MainActivity extends AppCompatActivity
         searchView.setQueryHint("Search");
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);// Do not iconify the widget; expand it by defaul
+
 
         SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
             public boolean onQueryTextChange(String newText) {
