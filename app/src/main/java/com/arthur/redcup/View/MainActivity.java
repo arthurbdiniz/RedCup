@@ -75,9 +75,13 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton createTicketFloatingButton;
     private RecyclerView recyclerView;
     private AppBarLayout appBarLayout;
+    private String searchText;
     final   ArrayList<Ticket> tickets = new ArrayList<Ticket>();
     private static final int CATEGORY_PICKER = 3;
     private static final int LOCATION_PICKER = 4;
+
+    private Location location;
+    private Category category;
 
 
     private  Toolbar toolbar;
@@ -213,16 +217,18 @@ public class MainActivity extends AppCompatActivity
 
             case CATEGORY_PICKER:
                 if(resultCode == RESULT_OK){
-                    Category category = (Category) data.getSerializableExtra("Category");
-                    adapter.getFilter().filter(category.getNome());
+                    category = (Category) data.getSerializableExtra("Category");
                     categoryButton.setText(category.getNome());
+
+                    adapter.getFilter().filter(""+";"+locationButton.getText()+";"+category.getNome());
                     break;
                 }
             case LOCATION_PICKER:
                 if(resultCode == RESULT_OK){
-                    Location location = (Location) data.getSerializableExtra("Location");
-                    adapter.getFilter().filter(location.getUf());
-                    locationButton.setText(location.getState());
+                    location = (Location) data.getSerializableExtra("Location");
+                    locationButton.setText(location.getUf());
+
+                    adapter.getFilter().filter(""+";"+locationButton.getText()+";"+categoryButton.getText());
                     break;
                 }
         }
@@ -258,7 +264,8 @@ public class MainActivity extends AppCompatActivity
         SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
             public boolean onQueryTextChange(String newText) {
                 // This is your adapter that will be filtered
-                adapter.getFilter().filter(newText);
+                //adapter.getFilter().filter(newText);
+                adapter.getFilter().filter(newText+";"+locationButton.getText()+";"+categoryButton.getText());
                 return true;
             }
 

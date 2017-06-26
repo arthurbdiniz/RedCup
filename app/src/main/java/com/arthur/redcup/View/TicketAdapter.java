@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import java.util.regex.Pattern;
 
 import com.arthur.redcup.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -47,6 +48,7 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
     private FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private ArrayList<Ticket> tickets;
+    private ArrayList<Ticket> tempTickets;
     private ArrayList<Ticket> filteredTickets;
     private ArrayList<Ticket> tempList;
     private FriendFilter friendFilter;
@@ -60,6 +62,9 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
         this.filteredTickets = tickets;
         this.context = context;
         this.recyclerView = recyclerView;
+
+
+        this.tempTickets = tickets;
 
         getFilter();
     }
@@ -109,7 +114,7 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
     @Override
     public void onClick(View v) {
         int itemPosition = recyclerView.getChildLayoutPosition(v);
-        Ticket ticket = tickets.get(itemPosition);
+        Ticket ticket = filteredTickets.get(itemPosition);
         byte[] imageAsBytes = Base64.decode(ticket.getPathImage() .getBytes(), Base64.DEFAULT);
         //Bitmap bitmap = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
         Intent goTicket = new  Intent(context, TicketActivity.class);
@@ -148,21 +153,83 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults filterResults = new FilterResults();
             tempList = new ArrayList<Ticket>();
-            if (constraint!=null && constraint.length()>0) {
-                // search content in friend list
-                for (Ticket ticket : tickets) {
-                    if (ticket.getTitle().toLowerCase().contains(constraint.toString().toLowerCase())) {
-                        tempList.add(ticket);
-                    }
-                    if (ticket.getCategory().toLowerCase().contains(constraint.toString().toLowerCase())) {
-                        tempList.add(ticket);
-                    }
-                    if (ticket.getUf().toLowerCase().contains(constraint.toString().toLowerCase())) {
-                        tempList.add(ticket);
+            String search = (String) constraint;
+
+
+            String[] parts = search.split(";");
+
+            String searchField = parts[0];
+            String ufField = parts[1];
+            String categoryField = parts[2];
+
+            Log.d("SEARCH", " - " + searchField + " - " + ufField + " " + categoryField);
+
+            if(searchField.equals("")){
+                ufField.isEmpty();
+            }
+            if(ufField.equals("Localidade")){
+                ufField.isEmpty();
+            }
+            if(categoryField.equals("Categoria")){
+                categoryField.isEmpty();
+            }
+
+            if(constraint!=null && constraint.length()>0) {
+                //deu ruim
+                if(categoryField.isEmpty()){
+                    for (Ticket ticket : tempTickets){
+                        if (ticket.getCategory().equals(categoryField)) {
+
+                        }else{
+                            tempTickets.remove(ticket);
+                        }
                     }
                 }
+
+                //deu ruim
+                if(ufField.isEmpty()){
+                    for (Ticket ticket : tempTickets){
+
+                        if (ticket.getUf().equals(ufField)) {
+
+                        }else{
+                            tempTickets.remove(ticket);
+                        }
+                    }
+                }else{
+
+                }
+
+                //Search content by text
+                for (Ticket ticket : tempTickets) {
+                    if (ticket.getTitle().toLowerCase().contains(searchField.toLowerCase())) {
+                        tempList.add(ticket);
+                    }
+
+                }
+
+/*
+                //Filtro de Categoria
+
+                for (Ticket ticket : tempList){
+                    //Log.d("CATEGORY", ticket.getCategory() +"&&" + categoryField);
+                    if (ticket.getCategory() != categoryField) {
+                        tempList.remove(ticket);
+
+                    }
+                }
+*/
+
+
+
+
+
+
+
+
                 filterResults.count = tempList.size();
                 filterResults.values = tempList;
+
             } else {
                 filterResults.count = tickets.size();
                 filterResults.values = tickets;

@@ -17,6 +17,7 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -148,7 +149,8 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_create_ticket);
 
         initFirebase();
-        checkPermition(false);
+        //checkPermition(true);
+        ContextCompat.checkSelfPermission(getApplicationContext(), String.valueOf(CAMERA_REQUEST));
 
         initToolbar();
         initDate();
@@ -331,6 +333,7 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
+
                 selectImage();
             }
 
@@ -890,7 +893,8 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void selectImage() {
-        checkPermition(true);
+
+        //checkPermition(true);
         final CharSequence[] items = { getString(R.string.take_photo), getString(R.string.library),
                 getString(R.string.cancel) };
         AlertDialog.Builder builder = new AlertDialog.Builder(CreateTicketActivity.this);
