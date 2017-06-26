@@ -31,7 +31,7 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:text="Categoria"
-                android:background="@color/colorPrimary"/>
+                android:background="@color/Cinza"/>
 
             <Button
                 android:id="@+id/location_btn"
@@ -41,7 +41,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:text="Localidade"
-                android:background="@color/colorPrimary"/>
+                android:background="@color/Cinza"/>
 
         </LinearLayout>
 

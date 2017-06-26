@@ -33,7 +33,7 @@
 
     <string name="action_sign_in_short">Cadastre-se</string>
     <string name="btn_link_to_login">Já Cadastrado. Faça o Login!</string>
-    <string name="auth_failed_signup">Falha na autenticação, cheque o email e a senha.</string>
+    <string name="auth_failed_signup">Usuário logado com sucesso!</string>
 
     <!--ResetPassword-->
 

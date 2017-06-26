@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -99,6 +100,8 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 Intent firtGoCategory = new Intent(getApplicationContext(), CategoryActivity.class);
                 startActivityForResult(firtGoCategory, CATEGORY_PICKER);
+                categoryButton.setBackgroundColor( Color.parseColor("#3e3e3e"));
+                categoryButton.setClickable( true );
                 return;
             }
         } );
@@ -109,6 +112,8 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 Intent firtGoCategory = new Intent(getApplicationContext(), LocationActivity.class);
                 startActivityForResult(firtGoCategory, LOCATION_PICKER);
+                locationButton.setBackgroundColor( Color.parseColor("#3e3e3e"));
+                locationButton.setClickable( true );
                 return;
             }
         } );
