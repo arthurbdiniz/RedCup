@@ -53,6 +53,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity
     private AppBarLayout appBarLayout;
     private String searchText;
     final   ArrayList<Ticket> tickets = new ArrayList<Ticket>();
+    final   ArrayList<Ticket> userTickets = new ArrayList<Ticket>();
     private static final int CATEGORY_PICKER = 3;
     private static final int LOCATION_PICKER = 4;
 
@@ -169,6 +171,7 @@ public class MainActivity extends AppCompatActivity
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     progressBar.setVisibility(View.GONE);
                     tickets.clear();
+                    userTickets.clear();
                     for (DataSnapshot player : dataSnapshot.getChildren()) {
                         //player.child("title").getValue();
                         //Log.i("player", player.getKey());
@@ -191,8 +194,12 @@ public class MainActivity extends AppCompatActivity
 
                         ticket.setTicketId(player.getKey());
                         tickets.add(ticket);
+                        if(ticket.userId.equals(userLog.getId())){
+                            userTickets.add(ticket);
+                        }
 
                     }
+
                     adapter = new TicketAdapter(tickets ,getApplicationContext(), recyclerView);
 
                     recyclerView.setAdapter(adapter);
@@ -298,7 +305,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_create_ticket) {
             startActivity(new Intent(MainActivity.this, CreateTicketActivity.class));
-            // Handle the camera action
+
         }else if (id == R.id.nav_tickets) {
             //Back to main tickets
 
@@ -306,10 +313,16 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
 
         }else if(id == R.id.nav_my_tickets){
-            startActivity(new Intent(MainActivity.this, MyTicketsActivity.class));
+            Intent intentGoMyTickets = new Intent(getApplicationContext(), MyTicketsActivity.class);
 
-        }else if(id == R.id.nav_saved_tickets){
-            startActivity(new Intent(MainActivity.this, SavedTicketsActivity.class));
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("userTickets", userTickets);
+
+            intentGoMyTickets.putExtras(bundle);
+
+            startActivity(intentGoMyTickets);
+
+
 
         }else if (id == R.id.nav_talk) {
             talkWithUs();
@@ -324,9 +337,12 @@ public class MainActivity extends AppCompatActivity
             actionOpenGooglePLay();
 
         }else if (id == R.id.nav_use_terms) {
+            Intent useTermsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/arthurbdiniz/RedCup/wiki/Termos-de-Uso"));
+            startActivity(useTermsIntent);
 
-            Snackbar.make(viewGroup , "Estamos trabalhando em nossos Termos de Uso!"  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
+        }else if (id == R.id.nav_privacy_policy) {
+            Intent privacyPolicyIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/arthurbdiniz/RedCup/wiki/PoliticadePrivacidade"));
+            startActivity(privacyPolicyIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

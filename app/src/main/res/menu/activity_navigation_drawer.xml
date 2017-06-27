@@ -13,12 +13,9 @@
             android:title="Tickets" />
         <item
             android:id="@+id/nav_my_tickets"
-            android:icon="@drawable/ic_my_tickets"
-            android:title="Meus Tickets" />
-        <item
-            android:id="@+id/nav_saved_tickets"
             android:icon="@drawable/ic_saved_tickets"
-            android:title="Tickets Salvos" />
+            android:title="Meus Tickets" />
+
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
@@ -46,6 +43,10 @@
             <item
                 android:id="@+id/nav_use_terms"
                 android:title="Termos de Uso" />
+            <item
+                android:id="@+id/nav_privacy_policy"
+                android:title="Politica de Privacidade" />
+
         </menu>
     </item>
 
