@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
-        >
+       >
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -26,21 +27,42 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_gravity="center|bottom"
-        android:layout_marginBottom="270dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp" />
 
-    <include layout="@layout/content_navigation" />
+
+    <LinearLayout
+        android:id="@+id/no_ticket_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="Voce ainda não possui Tickets, anuncie agora!"
+            android:textSize="20dp"/>
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_saved_tickets_gray"
+            android:layout_gravity="center"/>
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="58dp"
-        android:clipToPadding="false"/>
+        android:clipToPadding="false" />
 
 
 
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>

@@ -29,11 +29,14 @@
         <TextView
             android:id="@+id/ticketTitle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="5dp"
             android:text="Ticket Title"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:maxLength="35"
             android:textColor="@android:color/black"
             android:textSize="20dp" />
 

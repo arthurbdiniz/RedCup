@@ -8,9 +8,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.arthur.redcup.Model.Category;
 import com.arthur.redcup.Model.Location;
@@ -25,6 +27,7 @@ public class MyTicketsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TicketAdapter adapter;
     private AppBarLayout appBarLayout;
+    private LinearLayout noTicketLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,11 @@ public class MyTicketsActivity extends AppCompatActivity {
         }
 
         userTickets = (ArrayList<Ticket>) getIntent().getExtras().getSerializable("userTickets");
+        if(userTickets.size() == 0){
+            noTicketLayout = (LinearLayout) findViewById(R.id.no_ticket_layout);
+            noTicketLayout.setVisibility(View.VISIBLE);
+
+        }
         adapter = new TicketAdapter(userTickets ,getApplicationContext(), recyclerView);
 
         recyclerView.setAdapter(adapter);

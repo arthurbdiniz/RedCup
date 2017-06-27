@@ -228,6 +228,7 @@ public class MainActivity extends AppCompatActivity
                     categoryButton.setText(category.getNome());
 
                     adapter.getFilter().filter(""+";"+locationButton.getText()+";"+category.getNome());
+                    //adapter.getFilter().filter(null+";"+locationButton.getText()+";"+categoryButton.getText());
                     break;
                 }
             case LOCATION_PICKER:
@@ -282,10 +283,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        adapter.getFilter().filter(""+";"+locationButton.getText()+";"+categoryButton.getText());
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
 
         switch (item.getItemId()) {
+            case R.id.action_reset_filter:
+                locationButton.setText("Localidade");
+                categoryButton.setText("Categoria");
+                adapter.getFilter().filter(""+";"+locationButton.getText()+";"+categoryButton.getText());
+                return true;
             case R.id.action_my_account:
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                 return true;

@@ -125,6 +125,7 @@
 
     <!-- Options MENU -->
     <string name="action_my_account">Minha Conta</string>
+    <string name="action_reset_filter">Resetar Filtro</string>
     <string name="action_create_ticket">Inserir Tickets</string>
     <string name="action_my_tickets">Meus Tickets</string>
     <string name="action_talk_with_us">Fale Conosco</string>

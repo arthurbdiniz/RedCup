@@ -67,10 +67,10 @@ public class LoginActivity extends AppCompatActivity {
 
                         //Its right
                     }
-                    Toast.makeText(LoginActivity.this, "Autenticado",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Usuário logado com sucesso, seja Bem-Vindo ao RedCup!" ,Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(LoginActivity.this, "User is Signout",
-                            Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(LoginActivity.this, "User is Signout",
+                      //      Toast.LENGTH_SHORT).show();
                     // User is signed out
                 }
             }

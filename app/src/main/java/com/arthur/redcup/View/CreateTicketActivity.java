@@ -458,12 +458,8 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-
-
             return null;
         }
-
 
         @Override
         protected void onPostExecute(String result) {
@@ -474,18 +470,14 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
             if (uf.isEmpty() || location.isEmpty() || neighborhood.isEmpty()) {
 
                 cepEditText.requestFocus();
-
                 cepEditText.setError(getString(R.string.cep_not_find));
-                
-
 
             }else{
-
                 cepLayout.setVisibility(VISIBLE);
                 cepEditText.setVisibility(GONE);
                 locationView.setText(location + " - " + uf + " - " + neighborhood);
             }
-            //finalResult.setText(result);
+
         }
 
 

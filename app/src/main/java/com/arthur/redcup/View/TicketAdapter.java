@@ -48,7 +48,11 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
     private FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private ArrayList<Ticket> tickets;
-    private ArrayList<Ticket> tempTickets;
+    private ArrayList<Ticket> tempTicketsText;
+    private ArrayList<Ticket> tempTicketsCategory;
+    private ArrayList<Ticket> tempTicketsLocation;
+
+
     private ArrayList<Ticket> filteredTickets;
     private ArrayList<Ticket> tempList;
     private FriendFilter friendFilter;
@@ -64,7 +68,7 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
         this.recyclerView = recyclerView;
 
 
-        this.tempTickets = tickets;
+
 
         getFilter();
     }
@@ -152,7 +156,10 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults filterResults = new FilterResults();
-            tempList = new ArrayList<Ticket>();
+            tempList = new ArrayList<>();
+            tempTicketsText = new ArrayList<>();
+            tempTicketsCategory = new ArrayList<>();
+            tempTicketsLocation = new ArrayList<>();
             String search = (String) constraint;
 
 
@@ -162,70 +169,33 @@ public class TicketAdapter extends RecyclerView.Adapter implements View.OnClickL
             String ufField = parts[1];
             String categoryField = parts[2];
 
-            Log.d("SEARCH", " - " + searchField + " - " + ufField + " " + categoryField);
-
-            if(searchField.equals("")){
-                ufField.isEmpty();
-            }
-            if(ufField.equals("Localidade")){
-                ufField.isEmpty();
-            }
-            if(categoryField.equals("Categoria")){
-                categoryField.isEmpty();
-            }
 
             if(constraint!=null && constraint.length()>0) {
-                //deu ruim
-                if(categoryField.isEmpty()){
-                    for (Ticket ticket : tempTickets){
-                        if (ticket.getCategory().equals(categoryField)) {
-
-                        }else{
-                            tempTickets.remove(ticket);
-                        }
-                    }
-                }
-
-                //deu ruim
-                if(ufField.isEmpty()){
-                    for (Ticket ticket : tempTickets){
-
-                        if (ticket.getUf().equals(ufField)) {
-
-                        }else{
-                            tempTickets.remove(ticket);
-                        }
-                    }
-                }else{
-
-                }
 
                 //Search content by text
-                for (Ticket ticket : tempTickets) {
+                for (Ticket ticket : tickets) {
                     if (ticket.getTitle().toLowerCase().contains(searchField.toLowerCase())) {
-                        tempList.add(ticket);
-                    }
-
-                }
-
-/*
-                //Filtro de Categoria
-
-                for (Ticket ticket : tempList){
-                    //Log.d("CATEGORY", ticket.getCategory() +"&&" + categoryField);
-                    if (ticket.getCategory() != categoryField) {
-                        tempList.remove(ticket);
-
+                        tempTicketsText.add(ticket);
                     }
                 }
-*/
 
+                for (Ticket ticket : tempTicketsText){
+                    if(categoryField.equals("Categoria")){
+                        tempTicketsCategory.add(ticket);
+                    }else if(ticket.getCategory().equals(categoryField)) {
+                        tempTicketsCategory.add(ticket);
+                    }
+                }
 
+                for (Ticket ticket : tempTicketsCategory){
+                    if(ufField.equals("Localidade")){
+                        tempTicketsLocation.add(ticket);
+                    }else if (ticket.getUf().equals(ufField)) {
+                        tempTicketsLocation.add(ticket);
+                    }
+                }
 
-
-
-
-
+                tempList = tempTicketsLocation;
 
                 filterResults.count = tempList.size();
                 filterResults.values = tempList;
