@@ -239,11 +239,7 @@ public class MainActivity extends AppCompatActivity
                     break;
                 }
         }
-
-
     }
-
-
 
     @Override
     public void onBackPressed() {
@@ -287,11 +283,24 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
+
 
         switch (item.getItemId()) {
-            case R.id.action_search: // should I need to add intent ?
+            case R.id.action_my_account:
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                return true;
+            case R.id.action_create_ticket:
+                startActivity(new Intent(MainActivity.this, CreateTicketActivity.class));
+                return true;
+            case R.id.action_my_tickets:
+                Intent intentGoMyTickets = new Intent(getApplicationContext(), MyTicketsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("userTickets", userTickets);
+                intentGoMyTickets.putExtras(bundle);
+                startActivity(intentGoMyTickets);
+                return true;
+            case R.id.action_talk_with_us:
+                talkWithUs();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -314,21 +323,17 @@ public class MainActivity extends AppCompatActivity
 
         }else if(id == R.id.nav_my_tickets){
             Intent intentGoMyTickets = new Intent(getApplicationContext(), MyTicketsActivity.class);
-
             Bundle bundle = new Bundle();
             bundle.putSerializable("userTickets", userTickets);
-
             intentGoMyTickets.putExtras(bundle);
-
             startActivity(intentGoMyTickets);
-
-
 
         }else if (id == R.id.nav_talk) {
             talkWithUs();
 
         }else if(id == R.id.nav_frequently_questions){
-            Snackbar.make(viewGroup , "Estamos trabalhando nessa funcionalidade..."  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            Intent useFrequentlyQuestions = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/arthurbdiniz/RedCup/wiki/D%C3%BAvidas-Frequentes"));
+            startActivity(useFrequentlyQuestions);
 
         }else if (id == R.id.nav_share) {
             actionShare();
@@ -373,7 +378,6 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
-
 
     private void collectPhoneNumbers(Map<String,Object> users) {
         ArrayList<Ticket> tickets = new ArrayList  <Ticket>();

@@ -39,9 +39,6 @@ public class MyTicketsActivity extends AppCompatActivity {
         }
 
         userTickets = (ArrayList<Ticket>) getIntent().getExtras().getSerializable("userTickets");
-
-        Log.d("SIZE", String.valueOf(userTickets.size()));
-
         adapter = new TicketAdapter(userTickets ,getApplicationContext(), recyclerView);
 
         recyclerView.setAdapter(adapter);
@@ -73,11 +70,7 @@ public class MyTicketsActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             userTickets = (ArrayList<Ticket>) data.getSerializableExtra("Category");
-            //categoryButton.setText(category.getNome());
-
         }
-
-
     }
 
     private void initRecyclerView(){
@@ -99,14 +92,10 @@ public class MyTicketsActivity extends AppCompatActivity {
 
     private void hideViews() {
         appBarLayout.animate().translationY(-appBarLayout.getHeight()).setInterpolator(new AccelerateInterpolator(2));
-        //FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) createTicketFloatingButton.getLayoutParams();
-        //int fabBottomMargin = lp.bottomMargin;
-        //createTicketFloatingButton.animate().translationY(createTicketFloatingButton.getHeight()+fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
     }
 
     private void showViews() {
         appBarLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
-        //createTicketFloatingButton.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
     }
 
 

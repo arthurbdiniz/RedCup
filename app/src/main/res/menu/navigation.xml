@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_my_account"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/action_my_account"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_create_ticket"
+        android:orderInCategory="100"
+        android:title="@string/action_create_ticket"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_my_tickets"
+        android:orderInCategory="100"
+        android:title="@string/action_my_tickets"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_talk_with_us"
+        android:orderInCategory="100"
+        android:title="@string/action_talk_with_us"
         app:showAsAction="never" />
 
     <item
@@ -15,6 +31,7 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView"
         android:actionViewClass="android.support.v7.widget.SearchView"/>
+
 
 
 </menu>
