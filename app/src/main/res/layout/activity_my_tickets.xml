@@ -23,18 +23,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_gravity="center|bottom"
-        android:visibility="gone"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp" />
-
-
     <LinearLayout
         android:id="@+id/no_ticket_layout"
         android:layout_width="wrap_content"
@@ -53,6 +41,14 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/ic_saved_tickets_gray"
+            android:layout_gravity="center"/>
+        <Button
+            android:id="@+id/create_ticket_button"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Anunciar"
+            android:background="@color/CinzaEscuro"
+            android:textColor="@color/white"
             android:layout_gravity="center"/>
     </LinearLayout>
 

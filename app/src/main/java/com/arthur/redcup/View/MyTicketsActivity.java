@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -28,6 +29,7 @@ public class MyTicketsActivity extends AppCompatActivity {
     private TicketAdapter adapter;
     private AppBarLayout appBarLayout;
     private LinearLayout noTicketLayout;
+    private Button createTicket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +39,29 @@ public class MyTicketsActivity extends AppCompatActivity {
         initAppBarLayout();
         initRecyclerView();
 
+        noTicketLayout = (LinearLayout) findViewById(R.id.no_ticket_layout);
+        createTicket = (Button) findViewById(R.id.create_ticket_button);
+
+
         if(userTickets != null){
             userTickets.clear();
         }
 
         userTickets = (ArrayList<Ticket>) getIntent().getExtras().getSerializable("userTickets");
         if(userTickets.size() == 0){
-            noTicketLayout = (LinearLayout) findViewById(R.id.no_ticket_layout);
+            recyclerView.setVisibility(View.GONE);
             noTicketLayout.setVisibility(View.VISIBLE);
-
         }
+
+
+        createTicket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(new Intent(MyTicketsActivity.this, CreateTicketActivity.class));
+            }
+        });
+
         adapter = new TicketAdapter(userTickets ,getApplicationContext(), recyclerView);
 
         recyclerView.setAdapter(adapter);
