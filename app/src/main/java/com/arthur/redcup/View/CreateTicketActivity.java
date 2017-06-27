@@ -17,6 +17,7 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -118,6 +119,7 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
     private Button buttonSend;
     private Button buttonCategory;
     private Button buttonDate;
+    private Button buttonSelectAnotherImage;
 
     private ImageButton buttonCamera;
 
@@ -148,7 +150,8 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_create_ticket);
 
         initFirebase();
-        checkPermition(false);
+        //checkPermition(true);
+        ContextCompat.checkSelfPermission(getApplicationContext(), String.valueOf(CAMERA_REQUEST));
 
         initToolbar();
         initDate();
@@ -304,7 +307,7 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
 
                     //we start verifying the worst case, many characters mask need to be added
                     //example: 999999999 <- 6+ digits already typed
-                    // masked: (999) 999-999
+                    // masked: (99) 99999-9999
                     if (phone.length() >= 5 && !backspacingFlag) {
                         //we will edit. next call on this textWatcher will be ignored
                         editedFlag = true;
@@ -316,7 +319,7 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
 
                         //we end at the most simple case, when just one character mask is needed
                         //example: 99999 <- 3+ digits already typed
-                        // masked: (999) 99
+                        // masked: (99) 99
                     }
                     // We just edited the field, ignoring this cicle of the watcher and getting ready for the next
                 } else {
@@ -342,6 +345,7 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
         cepLayout.setOnClickListener(this);
         categoryLayout.setOnClickListener(this);
         circleImageView.setOnClickListener(this);
+        buttonSelectAnotherImage.setOnClickListener(this);
 
     }
 
@@ -404,6 +408,12 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
                 goTicketImage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(goTicketImage);
                 break;
+
+            case R.id.select_another_image_btn:
+                buttonCamera.setVisibility(VISIBLE);
+                circleImageView.setVisibility(GONE);
+                buttonSelectAnotherImage.setVisibility(GONE);
+                break;
         }
     }
 
@@ -448,12 +458,8 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-
-
             return null;
         }
-
 
         @Override
         protected void onPostExecute(String result) {
@@ -464,18 +470,14 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
             if (uf.isEmpty() || location.isEmpty() || neighborhood.isEmpty()) {
 
                 cepEditText.requestFocus();
-
                 cepEditText.setError(getString(R.string.cep_not_find));
-                
-
 
             }else{
-
                 cepLayout.setVisibility(VISIBLE);
                 cepEditText.setVisibility(GONE);
                 locationView.setText(location + " - " + uf + " - " + neighborhood);
             }
-            //finalResult.setText(result);
+
         }
 
 
@@ -592,6 +594,8 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
         buttonCategory = (Button) findViewById(R.id.button_category);
         buttonDate = (Button) findViewById(R.id.button_date);
 
+        buttonSelectAnotherImage = (Button) findViewById(R.id.select_another_image_btn);
+
         progressBar = (ProgressBar) findViewById(R.id.progressBarCreateTicket);
 
         expirationDateView = (TextView) findViewById(R.id.text_view_event_date);
@@ -600,6 +604,7 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
         categoryView = (TextView) findViewById(R.id.text_view_category);
 
         circleImageView = (CircleImageView) findViewById(R.id.profile_image);
+
     }
 
     public void sendTicket() throws JSONException {
@@ -798,17 +803,16 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
     }
 
     private boolean createTicket(String title, String description, String price, String codigoEnderecamentoPostal, String userId, String userEmail,
-                                        String userTelephone,String dateCreation, String dateExpiration, String uf, String location, String neighborhood, String category, String pathImage) throws JSONException {
-        // TODO
-        // In real apps this userId should be fetched
-        // by implementing firebase auth
+                                        String userTelephone,String dateCreation, String dateExpiration, String uf, String location, String neighborhood,
+                                            String category, String pathImage) throws JSONException {
+        
         if (TextUtils.isEmpty(ticketId)) {
             ticketId = mFirebaseDatabase.push().getKey();
         }
 
-        Ticket user = new Ticket(title, description, price, codigoEnderecamentoPostal, userId, userEmail, userTelephone, dateCreation, dateExpiration, uf,  location, neighborhood, category, pathImage);
+        Ticket ticket = new Ticket(title, description, price, codigoEnderecamentoPostal, userId, userEmail, userTelephone, dateCreation, dateExpiration, uf,  location, neighborhood, category, pathImage);
 
-        mFirebaseDatabase.child(ticketId).setValue(user);
+        mFirebaseDatabase.child(ticketId).setValue(ticket);
         //mFirebaseDatabase.child(ticketId).child("address").setValue("teste", "teste2");
 
         addUserChangeListener();
@@ -889,8 +893,10 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void selectImage() {
 
+        //checkPermition(true);
         final CharSequence[] items = { getString(R.string.take_photo), getString(R.string.library),
                 getString(R.string.cancel) };
         AlertDialog.Builder builder = new AlertDialog.Builder(CreateTicketActivity.this);
@@ -958,6 +964,7 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
 
         buttonCamera.setVisibility(GONE);
         circleImageView.setVisibility(VISIBLE);
+        buttonSelectAnotherImage.setVisibility(VISIBLE);
         circleImageView.setImageBitmap(bm);
         saveToInternalStorage(bm);
         imageBitmap = new ImageBitmap();
@@ -1011,6 +1018,7 @@ public class CreateTicketActivity extends AppCompatActivity implements View.OnCl
         //buttonCamera.setImageBitmap(Bitmap.createScaledBitmap(thumbnail, 300, 300, false));
         buttonCamera.setVisibility(GONE);
         circleImageView.setVisibility(VISIBLE);
+        buttonSelectAnotherImage.setVisibility(VISIBLE);
         circleImageView.setImageBitmap(bm);
         imageBitmap = new ImageBitmap();
         imageBitmap.addPath(1, saveToInternalStorage(bm));

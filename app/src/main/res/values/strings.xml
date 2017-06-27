@@ -11,7 +11,6 @@
 
 
     <string name="prompt_password">Senha</string>
-    <string name="action_settings">Opções</string>
     <string name="title_activity_profile">Firebase</string>
     <string name="title_activity_login">Sign in</string>
     <string name="hint_name">Fullname</string>
@@ -33,7 +32,7 @@
 
     <string name="action_sign_in_short">Cadastre-se</string>
     <string name="btn_link_to_login">Já Cadastrado. Faça o Login!</string>
-    <string name="auth_failed_signup">Falha na autenticação, cheque o email e a senha.</string>
+    <string name="auth_failed_signup">Usuário logado com sucesso!</string>
 
     <!--ResetPassword-->
 
@@ -114,6 +113,24 @@
     <!--SavedTickets-->
     <string name="title_saved_tickets">Tickets Salvos</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="msg_welcome">Welcome to Admob. Click on the below button to launch the Interstitial ad.</string>
+    <string name="btn_fullscreen_ad">Show Fullscreen Ad</string>
+
+    <!-- AdMob ad unit IDs -->
+    <string name="banner_home_footer">ca-app-pub-4081783370587786/1072112550</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+
+    <!-- Options MENU -->
+    <string name="action_my_account">Minha Conta</string>
+    <string name="action_reset_filter">Resetar Filtro</string>
+    <string name="action_create_ticket">Inserir Tickets</string>
+    <string name="action_my_tickets">Meus Tickets</string>
+    <string name="action_talk_with_us">Fale Conosco</string>
+
+
+
+
 </resources>

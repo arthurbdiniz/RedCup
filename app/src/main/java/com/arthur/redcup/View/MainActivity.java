@@ -5,12 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.ListFragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -25,12 +32,16 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Adapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.SearchView;
 
+import com.arthur.redcup.Model.Location;
+import com.arthur.redcup.Model.Category;
 import com.arthur.redcup.Model.User;
 import com.arthur.redcup.R;
 import com.arthur.redcup.Model.Ticket;
@@ -42,12 +53,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static com.arthur.redcup.R.id.fab;
-
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -63,10 +76,21 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton createTicketFloatingButton;
     private RecyclerView recyclerView;
     private AppBarLayout appBarLayout;
+    private String searchText;
     final   ArrayList<Ticket> tickets = new ArrayList<Ticket>();
+    final   ArrayList<Ticket> userTickets = new ArrayList<Ticket>();
+    private static final int CATEGORY_PICKER = 3;
+    private static final int LOCATION_PICKER = 4;
+
+    private Location location;
+    private Category category;
 
 
     private  Toolbar toolbar;
+
+    private Button categoryButton;
+    private Button locationButton;
+
 
 
     public List<Ticket> listTickets;
@@ -74,6 +98,31 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+
+        ////FILTERS////
+        categoryButton = (Button) findViewById(R.id.category_btn);
+        categoryButton.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent firtGoCategory = new Intent(getApplicationContext(), CategoryActivity.class);
+                startActivityForResult(firtGoCategory, CATEGORY_PICKER);
+                categoryButton.setBackgroundColor( Color.parseColor("#3e3e3e"));
+                categoryButton.setClickable( true );
+                return;
+            }
+        } );
+
+        locationButton = (Button) findViewById( R.id.location_btn );
+        locationButton.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent firtGoCategory = new Intent(getApplicationContext(), LocationActivity.class);
+                startActivityForResult(firtGoCategory, LOCATION_PICKER);
+                locationButton.setBackgroundColor( Color.parseColor("#3e3e3e"));
+                locationButton.setClickable( true );
+                return;
+            }
+        } );
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         viewGroup = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
@@ -122,6 +171,7 @@ public class MainActivity extends AppCompatActivity
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     progressBar.setVisibility(View.GONE);
                     tickets.clear();
+                    userTickets.clear();
                     for (DataSnapshot player : dataSnapshot.getChildren()) {
                         //player.child("title").getValue();
                         //Log.i("player", player.getKey());
@@ -144,9 +194,14 @@ public class MainActivity extends AppCompatActivity
 
                         ticket.setTicketId(player.getKey());
                         tickets.add(ticket);
+                        if(ticket.userId.equals(userLog.getId())){
+                            userTickets.add(ticket);
+                        }
 
                     }
+
                     adapter = new TicketAdapter(tickets ,getApplicationContext(), recyclerView);
+
                     recyclerView.setAdapter(adapter);
                     RecyclerView.LayoutManager layout = new LinearLayoutManager(getApplicationContext(),
                             LinearLayoutManager.VERTICAL, false);
@@ -160,6 +215,31 @@ public class MainActivity extends AppCompatActivity
         });
 
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+
+            case CATEGORY_PICKER:
+                if(resultCode == RESULT_OK){
+                    category = (Category) data.getSerializableExtra("Category");
+                    categoryButton.setText(category.getNome());
+
+                    adapter.getFilter().filter(""+";"+locationButton.getText()+";"+category.getNome());
+                    //adapter.getFilter().filter(null+";"+locationButton.getText()+";"+categoryButton.getText());
+                    break;
+                }
+            case LOCATION_PICKER:
+                if(resultCode == RESULT_OK){
+                    location = (Location) data.getSerializableExtra("Location");
+                    locationButton.setText(location.getUf());
+
+                    adapter.getFilter().filter(""+";"+locationButton.getText()+";"+categoryButton.getText());
+                    break;
+                }
+        }
     }
 
     @Override
@@ -184,10 +264,12 @@ public class MainActivity extends AppCompatActivity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);// Do not iconify the widget; expand it by defaul
 
+
         SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
             public boolean onQueryTextChange(String newText) {
                 // This is your adapter that will be filtered
-                adapter.getFilter().filter(newText);
+                //adapter.getFilter().filter(newText);
+                adapter.getFilter().filter(newText+";"+locationButton.getText()+";"+categoryButton.getText());
                 return true;
             }
 
@@ -201,12 +283,36 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        adapter.getFilter().filter(""+";"+locationButton.getText()+";"+categoryButton.getText());
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
+
 
         switch (item.getItemId()) {
-            case R.id.action_search: // should I need to add intent ?
+            case R.id.action_reset_filter:
+                locationButton.setText("Localidade");
+                categoryButton.setText("Categoria");
+                adapter.getFilter().filter(""+";"+locationButton.getText()+";"+categoryButton.getText());
+                return true;
+            case R.id.action_my_account:
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                return true;
+            case R.id.action_create_ticket:
+                startActivity(new Intent(MainActivity.this, CreateTicketActivity.class));
+                return true;
+            case R.id.action_my_tickets:
+                Intent intentGoMyTickets = new Intent(getApplicationContext(), MyTicketsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("userTickets", userTickets);
+                intentGoMyTickets.putExtras(bundle);
+                startActivity(intentGoMyTickets);
+                return true;
+            case R.id.action_talk_with_us:
+                talkWithUs();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -220,7 +326,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_create_ticket) {
             startActivity(new Intent(MainActivity.this, CreateTicketActivity.class));
-            // Handle the camera action
+
         }else if (id == R.id.nav_tickets) {
             //Back to main tickets
 
@@ -228,16 +334,18 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
 
         }else if(id == R.id.nav_my_tickets){
-            startActivity(new Intent(MainActivity.this, MyTicketsActivity.class));
-
-        }else if(id == R.id.nav_saved_tickets){
-            startActivity(new Intent(MainActivity.this, SavedTicketsActivity.class));
+            Intent intentGoMyTickets = new Intent(getApplicationContext(), MyTicketsActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("userTickets", userTickets);
+            intentGoMyTickets.putExtras(bundle);
+            startActivity(intentGoMyTickets);
 
         }else if (id == R.id.nav_talk) {
             talkWithUs();
 
         }else if(id == R.id.nav_frequently_questions){
-            Snackbar.make(viewGroup , "Estamos trabalhando nessa funcionalidade..."  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            Intent useFrequentlyQuestions = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/arthurbdiniz/RedCup/wiki/D%C3%BAvidas-Frequentes"));
+            startActivity(useFrequentlyQuestions);
 
         }else if (id == R.id.nav_share) {
             actionShare();
@@ -246,9 +354,12 @@ public class MainActivity extends AppCompatActivity
             actionOpenGooglePLay();
 
         }else if (id == R.id.nav_use_terms) {
+            Intent useTermsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/arthurbdiniz/RedCup/wiki/Termos-de-Uso"));
+            startActivity(useTermsIntent);
 
-            Snackbar.make(viewGroup , "Estamos trabalhando em nossos Termos de Uso!"  , Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
+        }else if (id == R.id.nav_privacy_policy) {
+            Intent privacyPolicyIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/arthurbdiniz/RedCup/wiki/PoliticadePrivacidade"));
+            startActivity(privacyPolicyIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -279,7 +390,6 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
-
 
     private void collectPhoneNumbers(Map<String,Object> users) {
         ArrayList<Ticket> tickets = new ArrayList  <Ticket>();
