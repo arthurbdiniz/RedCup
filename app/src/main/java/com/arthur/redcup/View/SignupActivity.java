@@ -90,9 +90,8 @@ public class SignupActivity extends AppCompatActivity {
                 if (password.length() > 16){
                     inputPassword.setError(getString(R.string.maximum_password));
                     return;
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.auth_failed_signup), Toast.LENGTH_LONG).show();
+                } else {
+
 
                 }
 
@@ -108,9 +107,10 @@ public class SignupActivity extends AppCompatActivity {
                                 // If sign in fails, display a message to the user. If sign in succeeds
                                 // signed in user can be handled in the listener.
                                 if (!task.isSuccessful()) {
-                                    /*Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(),
-                                            Toast.LENGTH_SHORT).show();*/
+                                    Toast.makeText(getApplicationContext(), "Esse email ja foi cadastrado!", Toast.LENGTH_LONG).show();
+
                                 } else {
+                                    Toast.makeText(getApplicationContext(), getString(R.string.auth_failed_signup), Toast.LENGTH_LONG).show();
                                     startActivity(new Intent(SignupActivity.this, MainActivity.class));
                                     finish();
                                 }

@@ -42,7 +42,7 @@
     <string name="btn_reset_password">Trocar Senha</string>
     <string name="btn_back"><![CDATA[<< Voltar]]></string>
     <string name="registered_email">Insira sua identificação de email registrada.</string>
-    <string name="send_instructions">Enviamos instruções para redefinir sua senha!</string>
+    <string name="send_instructions">Enviamos instruções no seu email para você redefinir sua senha!</string>
     <string name="send_failed">Falha ao enviar email para redefinição de senha.</string>
 
     <!--MAIN-->

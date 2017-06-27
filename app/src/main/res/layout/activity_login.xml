@@ -93,8 +93,8 @@
         android:id="@+id/progressBar"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_gravity="center|bottom"
-        android:layout_marginBottom="325dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="140dp"
         android:visibility="gone" />
 
 </android.support.design.widget.CoordinatorLayout>
